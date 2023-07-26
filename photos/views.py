@@ -61,6 +61,8 @@ class AlbumListView(ListView):
             default_photo = album.photos.filter(is_default=True).first()
             if default_photo:
                 albums_with_default_photos[album] = default_photo
+            else:
+                albums_with_default_photos[album] = False
 
         context['albums_with_default_photos'] = albums_with_default_photos
         return context

@@ -16,7 +16,13 @@
       {% for album, default_photo in albums_with_default_photos.items %}
         <a href="{% url 'photos:album_detail' album.pk %}" class="group">
           <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-            <img src="{{ default_photo.image.url }}" alt="{{ album.title }}" class="h-full w-full object-cover object-center group-hover:opacity-75">
+            {% if default_photo %}
+              <img src="{{ default_photo.image.url }}" alt="{{ album.title }}" class="h-full w-full object-cover object-center group-hover:opacity-75">
+            {% else %}
+              <div class="grid place-content-center h-full w-full object-cover object-center group-hover:opacity-75">
+                <p class="text-lg font-semibold tracking-wide">Empty album</p>
+              </div>
+            {% endif %}
           </div>
           <h3 class="mt-4 text-sm">{{ album.photo_count }} photos | uploaded by {{ album.creator.first_name }} </h3>
           <p class="mt-1 text-lg font-medium">{{ album.title }}</p>
