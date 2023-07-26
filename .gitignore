@@ -8,6 +8,8 @@ db.sqlite3-journal
 **/migrations/__pycache__/
 media/
 jstoolchain/node_modules
+jstoolchain/package-lock.json
+static/
 
 .DS_Store
 
