@@ -1,8 +1,14 @@
+from django.http import HttpResponse
 from django.urls import reverse_lazy, reverse
 from django.views.generic import View, CreateView, ListView, DeleteView, UpdateView, DetailView
+from django.views.generic.edit import FormView
+
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib import messages #used in add_photos_to_album
+from django.http import HttpResponseForbidden
 
 from .models import Album, Photo
 from .forms import AlbumForm, PhotoForm
@@ -13,7 +19,7 @@ from .forms import AlbumForm, PhotoForm
 # ----------------------------
 
 
-class AlbumCreateView(CreateView):
+class AlbumCreateView(LoginRequiredMixin, CreateView):
     # -- template name is 'album_form.html'
     model = Album
     form_class = AlbumForm
@@ -41,7 +47,7 @@ class AlbumCreateView(CreateView):
 # ----------------------------
 # ------ LIST ALBUMS ---------
 # ----------------------------
-class AlbumListView(ListView):
+class AlbumListView(LoginRequiredMixin, ListView):
     model = Album
     template_name = 'photos/albums.html'
 
@@ -70,10 +76,19 @@ class AlbumListView(ListView):
 # ----------------------------
 # ------ UPDATE ALBUM --------
 # ----------------------------
-class AlbumUpdateView(UpdateView):
+class AlbumUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     # -- template name is 'album_form.html'
     model = Album
     form_class = AlbumForm
+
+    def test_func(self):
+        album_id = self.kwargs['pk']
+        album = Album.objects.get(id=album_id)
+        return self.request.user == album.creator  # Check if the logged-in user owns the album
+
+    def handle_no_permission(self):
+        return HttpResponseForbidden("<h2>You don't have permission to view this page.</h2>")
+
 
     def get_success_url(self) -> str:
         return reverse('photos:album_detail', kwargs={'pk': self.kwargs['pk']})
@@ -85,44 +100,100 @@ class AlbumUpdateView(UpdateView):
         context['photos'] = Photo.objects.filter(album=album_id)
         return context
 
-class AddPhotosToAlbumView(View):
-    def get(self, request, album_id):
+
+# def add_photos_to_album(request, album_id):
+#     album = get_object_or_404(Album, pk=album_id)
+#     existing_photos = Photo.objects.filter(album=album)
+
+#     if request.method == 'POST':
+#         data = request.POST
+#         images = request.FILES.getlist('images')
+
+#         if not existing_photos.exists():
+#             first_image = images.pop(0)
+#             photo = Photo.objects.create(album=album, image=first_image, is_default=True)
+
+#         for image in images:
+#             photo = Photo.objects.create(album=album, image=image)
+
+
+#         #The messages framework allows you to store messages that persist across requests and can be displayed to the user
+#         messages.success(request, 'New photos were uploaded successfully')
+#         return redirect('photos:album_detail', pk=album_id)
+
+#     context = {'album': album}
+#     return render(request, 'photos/add_photos_to_album.html', context)
+
+class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
+    template_name = 'photos/add_photos_to_album.html'
+    form_class = PhotoForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        album_id = self.kwargs['album_id']
+        context['album'] = get_object_or_404(Album, pk=album_id)
+        return context
+
+    def form_valid(self, form):
+        album_id = self.kwargs['album_id']
         album = get_object_or_404(Album, pk=album_id)
-        photo_form = PhotoForm()
         existing_photos = Photo.objects.filter(album=album)
-        return render(request, 'photos/add_photos_to_album.html', {'album': album, 'photo_form': photo_form, 'existing_photos': existing_photos})
 
-    def post(self, request, album_id):
-        album = get_object_or_404(Album, pk=album_id)
-        photo_form = PhotoForm(request.POST, request.FILES)
+        images = self.request.FILES.getlist('images')
 
-        if photo_form.is_valid():
-            new_photos = request.FILES.getlist('photos')
-            for image in new_photos:
-                Photo.objects.create(album=album, image=image)
+        if not existing_photos.exists():
+            first_image = images.pop(0)
+            photo = Photo.objects.create(album=album, image=first_image, is_default=True)
+        for image in images:
+            photo = Photo.objects.create(album=album, image=image)
 
-            return redirect('photos:album_detail', pk=album_id)
+        messages.success(self.request, 'Photos were uploaded successfully')
+        return super().form_valid(form)
 
-        return render(request, 'photos/add_photos_to_album.html', {'album': album, 'photo_form': photo_form})
+    def get_success_url(self):
+        return reverse_lazy('photos:album_detail', kwargs={'pk': self.kwargs['album_id']})
+
 
 # ----------------------------
 # ------ DETAIL ALBUM --------
 # ----------------------------
-class AlbumDetailView(DetailView):
+class AlbumDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Album
     template_name = "photos/album_detail.html"
+
+    def test_func(self):
+        album_id = self.kwargs['pk']
+        album = Album.objects.get(id=album_id)
+        return self.request.user == album.creator  # Check if the logged-in user owns the album
+
+    def handle_no_permission(self):
+        return HttpResponseForbidden("<h2>You don't have permission to view this page.</h2>")
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         album_id = self.kwargs['pk']
         context['photos'] = Photo.objects.filter(album=album_id)
+
+        success_message = self.request.GET.get('success_message')
+        if success_message:
+            context['success_message'] = success_message
+
         return context
 
 # ----------------------------
 # ------ DELETE ALBUM --------
 # ----------------------------
-class AlbumDeleteView(DeleteView):
+class AlbumDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Album
     fields = '__all__'
     success_url = reverse_lazy('photos:albums_view')
     context_object_name = 'album'
+
+    def test_func(self):
+        album_id = self.kwargs['pk']
+        album = Album.objects.get(id=album_id)
+        return self.request.user == album.creator  # Check if the logged-in user owns the album
+
+    def handle_no_permission(self):
+        return HttpResponseForbidden("<h2>You don't have permission to view this page.</h2>")
