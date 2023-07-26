@@ -1,0 +1,37 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Albums{% endblock title %}
+
+{% block body %}
+
+
+<div class="bg-base-100">
+  <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+    <h2 class="sr-only">My albums</h2>
+    <h2 class="text-3xl font-bold tracking-tight">Explore your albums</h2>
+
+
+    <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+
+      {% for album, default_photo in albums_with_default_photos.items %}
+        <a href="{% url 'photos:album_detail' album.pk %}" class="group">
+          <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+            <img src="{{ default_photo.image.url }}" alt="{{ album.title }}" class="h-full w-full object-cover object-center group-hover:opacity-75">
+          </div>
+          <h3 class="mt-4 text-sm">{{ album.photo_count }} photos | uploaded by {{ album.creator.first_name }} </h3>
+          <p class="mt-1 text-lg font-medium">{{ album.title }}</p>
+        </a>
+      {% endfor %}
+
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-2xl px-4  sm:px-6 lg:max-w-7xl lg:px-8">
+    <div class="flex items-end">
+      <a href="{% url 'photos:album_create' %}" class="btn btn-primary">Create new album</a>
+    </div>
+  </div>
+
+</div>
+
+{% endblock body %}

@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Your Album{% endblock title %}
+
+{% block body %}
+  <div class="prose">
+    <h1>{% if type_of_view == 'update' %} Edit your{% else %} Create a new {% endif %} album</h1>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <div class="block mt-10">
+        {% if type_of_view == 'update' %}
+          <button type="submit" class="mt-4 block btn btn-primary">Save changes</button>
+        {% else %}
+          <label for="images" class="text-2xl font-bold tracking-tight">Upload photos:</label>
+          <input type="file" name="images" multiple class="mt-4 block file-input file-input-bordered w-full max-w-xs">
+        {% endif %}
+      </div>
+    </form>
+  </div>
+
+{% endblock body %}

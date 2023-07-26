@@ -1,0 +1,48 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Albums{% endblock title %}
+
+{% block body %}
+
+<div class="bg-base-100">
+  <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+    <div class="">
+      <h2 class="sr-only">Album Detail</h2>
+      <h1 class="text-3xl font-bold tracking-tight">{{album.title|capfirst}}</h1>
+    </div>
+
+    <p></p>
+
+    <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+
+      {% if photos %}
+        {% for photo in photos %}
+          <a class="group">
+            <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+              <img src="{{photo.image.url}}" alt="{{ photo.pk }}" class="h-full w-full object-cover object-center group-hover:opacity-75">
+            </div>
+          </a>
+        {% endfor %}
+      {% else %}
+          <div class="prose prose-sm md:prose-base">
+            <h1>Your photo album is empty..!</h1>
+          </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div class="block mb-6">
+      <a href="{% url 'photos:add_photos_to_album' album.pk %}" class="btn btn-outline btn-accent">Add more photos</a>
+    </div>
+    <div class="flex gap-4 items-end">
+      <a href="{% url 'photos:album_edit' album.pk %}" class="btn btn-neutral">Edit album</a>
+      <a href="{% url 'photos:album_delete' album.pk %}" class="btn btn-outline btn-error">Delete album</a>
+    </div>
+  </div>
+
+
+</div>
+
+{% endblock body %}

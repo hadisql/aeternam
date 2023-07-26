@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Edit account{% endblock %}
+
+{% block body %}
+  <h1>Account editing</h1>
+
+  <div class="hidden textarea textarea-bordered"></div>
+
+  <form action="" method="POST">
+    {% csrf_token %}
+
+    {% for elem in form %}
+      <p>-----{{elem.name}}------</p>
+      {{ elem.label }}
+      {{ elem }}
+
+    {% endfor %}
+    <br>
+    <input class="mt-6 btn btn-primary" type="submit" value="Save">
+  </form>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Account{% endblock %}
+
+{% block body %}
+
+  {% for name, value in account.get_fields %}
+    {% if value %}
+      <div class="prose prose-sm md:prose-base w-full max-w-4xl pt-10">
+        <h3>{{ name|capfirst }}</h3>
+        <h2>{{ value }}</h2>
+      </div>
+    {% endif %}
+  {% endfor %}
+
+  {% if user == account %}
+    <a href="{% url 'accounts:edit_account' user.pk %}" class="mt-10 btn btn-primary">Edit</a>
+  {% endif %}
+
+
+{% endblock %}
