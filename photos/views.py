@@ -1,14 +1,13 @@
-from django.http import HttpResponse
 from django.urls import reverse_lazy, reverse
-from django.views.generic import View, CreateView, ListView, DeleteView, UpdateView, DetailView
+from django.views.generic import CreateView, ListView, DeleteView, UpdateView, DetailView
 from django.views.generic.edit import FormView
 
 from django.db.models import Count
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages #used in add_photos_to_album
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponseRedirect
 
 from .models import Album, Photo
 from .forms import AlbumForm, PhotoForm
@@ -155,7 +154,7 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
 
 
 # ----------------------------
-# ------ DETAIL ALBUM --------
+# --------- DETAIL  ----------
 # ----------------------------
 class AlbumDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Album
@@ -169,7 +168,6 @@ class AlbumDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def handle_no_permission(self):
         return HttpResponseForbidden("<h2>You don't have permission to view this page.</h2>")
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         album_id = self.kwargs['pk']
@@ -181,9 +179,29 @@ class AlbumDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
         return context
 
-# ----------------------------
-# ------ DELETE ALBUM --------
-# ----------------------------
+class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = Photo
+    template_name = "photos/photo_detail.html"
+
+    def test_func(self):
+        photo_id = self.kwargs['pk']
+        photo = Photo.objects.get(id=photo_id)
+        return self.request.user == photo.album.creator  # Check if the logged-in user owns the photo
+
+    def handle_no_permission(self):
+        return HttpResponseForbidden("<h2>You don't have permission to view this page.</h2>")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        photo = context['photo']
+        album = photo.album
+        photos = Photo.objects.filter(album=album)
+        context['photos'] = photos
+        return context
+
+# -----------------------------
+# --------- DELETE  -----------
+# -----------------------------
 class AlbumDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Album
     fields = '__all__'
@@ -197,3 +215,29 @@ class AlbumDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def handle_no_permission(self):
         return HttpResponseForbidden("<h2>You don't have permission to view this page.</h2>")
+
+
+class PhotosDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Photo
+    fields = '__all__'
+    context_object_name = 'photo'
+
+
+    def test_func(self):
+        photo_id = self.kwargs['pk']
+        photo = Photo.objects.get(id=photo_id)
+        return self.request.user == photo.album.creator  # Check if the logged-in user owns the album
+
+    def handle_no_permission(self):
+        return HttpResponseForbidden("<h2>You don't have permission to view this page.</h2>")
+
+    def get_success_url(self):
+        album_id = self.object.album.pk
+        return reverse('photos:album_detail', kwargs={'pk':album_id})
+
+    def delete(self, request, *args, **kwargs):
+        # Override the delete method to handle success URL redirection
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
