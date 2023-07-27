@@ -14,7 +14,7 @@ def album_directory_path(instance, filename):
 
 class Album(models.Model):
     title = models.CharField(max_length=255)
-    description = models.TextField(null=True)
+    description = models.TextField(null=True, blank=True)
     creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='created_albums')
 
     def delete(self, *args, **kwargs):
@@ -57,6 +57,18 @@ class Photo(models.Model):
     def delete(self, *args, **kwargs):
         # Delete the photo file from storage when the Photo object is deleted
         os.remove(self.image.path)
+
+        # Check if the photo being deleted is the default photo
+        if self.is_default:
+            album = self.album
+            self.is_default = False # necessary to respect the unique constraint
+            self.save()
+            # Get the next photo in the album to set as the new default photo
+            next_photo = Photo.objects.filter(album=album).exclude(pk=self.pk).first()
+            if next_photo:
+                next_photo.is_default = True
+                next_photo.save()
+
         super().delete(*args, **kwargs)
 
     def __str__(self) -> str:
