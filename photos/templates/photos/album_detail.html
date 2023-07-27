@@ -6,41 +6,107 @@
 
 <div class="bg-base-100">
   <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-    <div class="">
+    <div class="flex justify-between">
       <h2 class="sr-only">Album Detail</h2>
       <h1 class="text-3xl font-bold tracking-tight">{{album.title|capfirst}}</h1>
+      <div class="flex items-center tooltip tooltip-left" data-tip="Edit the Title and Description">
+        <a href="{% url 'photos:album_edit' album.pk %}">
+          <svg viewBox="0 0 24 24" class="stroke-current opacity-50 hover:opacity-100 stroke-2 h-10 w-10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 7C3 4.79086 4.79086 3 7 3H17C19.2091 3 21 4.79086 21 7V17C21 19.2091 19.2091 21 17 21H7C4.79086 21 3 19.2091 3 17V7Z"></path> <path d="M16.2739 11.1377C16.6644 10.7472 16.6644 10.114 16.2739 9.7235L14.4823 7.9319C14.0918 7.54137 13.4586 7.54138 13.0681 7.9319L8.96106 12.0389L8.34768 15.7477C8.3365 15.8154 8.39516 15.874 8.4628 15.8627L12.1669 15.2448L16.2739 11.1377Z"></path></svg>
+        </a>
+      </div>
     </div>
 
-    <p></p>
+    <div class="my-6">
+      <h2 class="text-xl font-semibold">{{album.description}}</h2>
+    </div>
 
-    <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+    <!-- View / Swipe buttons -->
+    {% if photos %}
+    <div class="flex place-content-center">
+      <div class="inline-flex rounded-lg border border-gray-100 bg-gray-100 p-1">
+        <button id="view-button" class="inline-flex items-center gap-2 rounded-md bg-white px-4 py-2 text-sm text-blue-500 shadow-sm focus:relative">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
+            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-259.000000, -680.000000)" class="fill-current"><g id="icons" transform="translate(56.000000, 160.000000)">
+              <path d="M209.3,538 L206.15,538 C205.5704,538 205.1,537.552 205.1,537 C205.1,536.448 205.5704,536 206.15,536 L209.3,536 C209.8796,536 210.35,536.448 210.35,537 C210.35,537.552 209.8796,538 209.3,538 L209.3,538 Z M210.35,534 L205.1,534 C203.93975,534 203,534.895 203,536 L203,538 C203,539.105 203.93975,540 205.1,540 L210.35,540 C211.51025,540 212.45,539.105 212.45,538 L212.45,536 C212.45,534.895 211.51025,534 210.35,534 L210.35,534 Z M220.85,524 L217.7,524 C217.1204,524 216.65,523.552 216.65,523 C216.65,522.448 217.1204,522 217.7,522 L220.85,522 C221.4296,522 221.9,522.448 221.9,523 C221.9,523.552 221.4296,524 220.85,524 L220.85,524 Z M221.9,520 L216.65,520 C215.48975,520 214.55,520.895 214.55,522 L214.55,524 C214.55,525.105 215.48975,526 216.65,526 L221.9,526 C223.06025,526 224,525.105 224,524 L224,522 C224,520.895 223.06025,520 221.9,520 L221.9,520 Z M221.9,537 C221.9,537.552 221.4296,538 220.85,538 L217.7,538 C217.1204,538 216.65,537.552 216.65,537 L216.65,531 C216.65,530.448 217.1204,530 217.7,530 L220.85,530 C221.4296,530 221.9,530.448 221.9,531 L221.9,537 Z M221.9,528 L216.65,528 C215.48975,528 214.55,528.895 214.55,530 L214.55,538 C214.55,539.105 215.48975,540 216.65,540 L221.9,540 C223.06025,540 224,539.105 224,538 L224,530 C224,528.895 223.06025,528 221.9,528 L221.9,528 Z M210.35,529 C210.35,529.552 209.8796,530 209.3,530 L206.15,530 C205.5704,530 205.1,529.552 205.1,529 L205.1,523 C205.1,522.448 205.5704,522 206.15,522 L209.3,522 C209.8796,522 210.35,522.448 210.35,523 L210.35,529 Z M210.35,520 L205.1,520 C203.93975,520 203,520.895 203,522 L203,530 C203,531.105 203.93975,532 205.1,532 L210.35,532 C211.51025,532 212.45,531.105 212.45,530 L212.45,522 C212.45,520.895 211.51025,520 210.35,520 L210.35,520 Z"> </path></g></g></g>
+          </svg>
+          Gallery
+        </button>
 
-      {% if photos %}
-        {% for photo in photos %}
-          <a class="group">
-            <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-              <img src="{{photo.image.url}}" alt="{{ photo.pk }}" class="h-full w-full object-cover object-center group-hover:opacity-75">
+        <button id="swipe-button" class="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+            <path d="M21.707,11.293a1,1,0,0,1,0,1.414l-4,4a1,1,0,0,1-1.414-1.414L19.586,12,16.293,8.707a1,1,0,1,1,1.414-1.414ZM7,17a1,1,0,0,0,.707-1.707L4.414,12,7.707,8.707A1,1,0,1,0,6.293,7.293l-4,4a1,1,0,0,0,0,1.414l4,4A1,1,0,0,0,7,17Z"></path></g>
+          </svg>
+          Swipe
+        </button>
+      </div>
+    </div>
+    {% endif %}
+
+    <div>
+      <!-- All photos layout -->
+      <div id="photo-gallery-layout" class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+
+        {% if photos %}
+          {% for photo in photos %}
+            <a class="group" href="{% url 'photos:photo_detail' photo.pk %}">
+              <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+                <img src="{{photo.image.url}}" alt="{{ photo.pk }}" class="h-full w-full object-cover object-center group-hover:opacity-75">
+              </div>
+            </a>
+          {% endfor %}
+        {% else %}
+            <div class="prose prose-sm md:prose-base">
+              <h1>Your photo album is empty..!</h1>
             </div>
-          </a>
-        {% endfor %}
-      {% else %}
-          <div class="prose prose-sm md:prose-base">
-            <h1>Your photo album is empty..!</h1>
-          </div>
-      {% endif %}
+        {% endif %}
 
+      </div>
+
+      <!-- Swipe container -->
+      {% if photos %}
+      <div id="photo-swipe-layout" class="hidden p-8">
+        <div class="h-full relative">
+          <swiper-container class="mySwiper w-full h-full" pagination="true" pagination-clickable="true" navigation="true">
+            {% for photo in photos %}
+              <swiper-slide class="flex justify-center align-middle">
+                <a class="hover:opacity-75" href="{% url 'photos:photo_detail' photo.pk %}"><img src="{{photo.image.url}}" alt="{{ photo.pk }}" class="block w-full h-full rounded-xl"></a>
+              </swiper-slide>
+            {% endfor %}
+          </swiper-container>
+        </div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-element-bundle.min.js"></script>
+      {% endif %}
     </div>
   </div>
+
+  {% if messages %}
+    {% for message in messages %}
+    <div class="my-6 alert alert-success mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <span>{{message}}</span>
+    </div>
+    {% endfor %}
+  {% endif %}
 
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-    <div class="block mb-6">
-      <a href="{% url 'photos:add_photos_to_album' album.pk %}" class="btn btn-outline btn-accent">Add more photos</a>
+    <div class="flex mb-6">
+      <a href="{% url 'photos:add_photos_to_album' album.pk %}" class="btn btn-outline btn-accent">
+        <svg viewBox="0 0 24 24" class="stroke-current stroke-2 h-5 w-5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 4H8.8C7.11984 4 6.27976 4 5.63803 4.32698C5.07354 4.6146 4.6146 5.07354 4.32698 5.63803C4 6.27976 4 7.11984 4 8.8V15.2C4 16.8802 4 17.7202 4.32698 18.362C4.6146 18.9265 5.07354 19.3854 5.63803 19.673C6.27976 20 7.11984 20 8.8 20H15.2C16.8802 20 17.7202 20 18.362 19.673C18.9265 19.3854 19.3854 18.9265 19.673 18.362C20 17.7202 20 16.8802 20 15.2V11" ></path> <path d="M4 16L8.29289 11.7071C8.68342 11.3166 9.31658 11.3166 9.70711 11.7071L13 15M13 15L15.7929 12.2071C16.1834 11.8166 16.8166 11.8166 17.2071 12.2071L20 15M13 15L15.25 17.25" ></path> <path d="M18.5 3V5.5M18.5 8V5.5M18.5 5.5H16M18.5 5.5H21" ></path> </svg>
+         Add more photos
+      </a>
     </div>
     <div class="flex gap-4 items-end">
-      <a href="{% url 'photos:album_edit' album.pk %}" class="btn btn-neutral">Edit album</a>
-      <a href="{% url 'photos:album_delete' album.pk %}" class="btn btn-outline btn-error">Delete album</a>
+      <a href="{% url 'photos:album_delete' album.pk %}" class="btn btn-outline btn-error">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
+      </svg>
+        Delete album</a>
     </div>
   </div>
+
+
 
 
 </div>

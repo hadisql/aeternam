@@ -1,11 +1,12 @@
 {% extends 'core/base.html' %}
 
+{% block title %}Add photos{% endblock title %}
 
 {% block body %}
 
 <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
 
-  {% if existing_photos %}
+  <!-- {% if existing_photos %}
     {% for photo in existing_photos %}
       <a class="group">
         <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
@@ -17,18 +18,20 @@
       <div class="prose prose-sm md:prose-base">
         <h1>Your photo album is empty..!</h1>
       </div>
-  {% endif %}
+  {% endif %} -->
+
 
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {% for field in photo_form %}
-      <label for="{{ field.auto_id }}" class="pb-4 text-2xl font-bold tracking-tight">Add more {{ field.label_tag }}</label>
-      <input type="file" name="{{ field.field.widget.input_type }}" id="{{ field.html_name }}" {% if field.field.required %}required{% endif %} class="mt-4 block file-input file-input-bordered w-full max-w-xs" multiple>
-    {% endfor %}
+
+
+    <label for="images" class="text-2xl font-bold tracking-tight">Upload new photos:</label>
+    <input type="file" name="images" required multiple class="mt-4 block file-input file-input-bordered w-full max-w-xs">
+
 
     <div class="block mt-10 space-x-4">
       <button class="btn btn-primary" type="submit">Add Photos</button>
-      <a href="{% url 'photos:album_detail' album.pk %}" class="btn btn-default">Back</a>
+      <a href="{% url 'photos:albums_view' %}" class="btn btn-neutral">Back</a>
     </div>
   </form>
 

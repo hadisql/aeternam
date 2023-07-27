@@ -62,7 +62,7 @@
     </div>
   </header>
 
-  <main class="p-6">
+  <main>
     <div class="min-h-screen place-content-center">
       {% block body %}
       {% endblock body %}
@@ -75,5 +75,7 @@
   <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
   <!-- Alpine js scripts -->
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <script src="{% static 'js/script.js' %}"></script>
 
 </html>
