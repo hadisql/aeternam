@@ -42,7 +42,7 @@ class CustomUser(AbstractUser):
     username = None
 
     email = models.EmailField(_('email address'), blank=True, unique=True)
-    profile_picture = models.ImageField(_('profile picture'), upload_to='profile_pictures/', blank=True, null=True)
+    profile_picture = models.ImageField(_('profile picture'), upload_to='profile_pictures/', blank=True, null=True, default='profile_pictures/default.jpg')
     age = models.PositiveIntegerField(_('age'), blank=True, null=True)
     country = models.CharField(_('country'), max_length=100, blank=True)
     bio = models.TextField(_('bio/description'), blank=True)
@@ -59,3 +59,55 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+
+class Relation(models.Model):
+    user_receiving = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='relation_receiver')
+    user_sending = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='relation_sender')
+
+    RELATION_CHOICES =(
+        ("UNDEFINED", "UNDEFINED"),
+        ("SIBLING", "SIBLING"),
+        ("PARENT/CHILDREN", "PARENT/CHILDREN"),
+        ("COUSIN", "COUSIN"),
+        ("AUNT-UNCLE/NEPHEW-NIECE", "AUNT-UNCLE/NEPHEW-NIECE"),
+        ("GRANDPARENT/GRANDCHILDREN", "GRANDPARENT/GRANDCHILDREN"),
+        ("BROTHER/SISTER IN LAW", "BROTHER/SISTER IN LAW"),
+        ("FRIEND", "FRIEND"),
+        )
+
+    relation_type = models.CharField(max_length=50, choices=RELATION_CHOICES, default="UNDEFINED")
+
+    class Meta:
+        # Unique_together constraint to ensure unique pairs of users
+        unique_together = ['user_receiving', 'user_sending']
+
+    def save(self, *args, **kwargs):
+        # Check if the interchangeable relation already exists
+        if Relation.objects.filter(user_receiving=self.user_sending, user_sending=self.user_receiving).exists():
+            # If it exists, don't save the new relation
+            return
+        super(Relation, self).save(*args, **kwargs)
+
+
+class RelationRequest(models.Model):
+    user_receiving = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='relation_req_receiver')
+    user_sending = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='relation_req_sender')
+
+    RELATION_CHOICES =(
+    ("UNDEFINED", "UNDEFINED"),
+    ("SIBLING", "SIBLING"),
+    ("PARENT/CHILDREN", "PARENT/CHILDREN"),
+    ("COUSIN", "COUSIN"),
+    ("AUNT-UNCLE/NEPHEW-NIECE", "AUNT-UNCLE/NEPHEW-NIECE"),
+    ("GRANDPARENT/GRANDCHILDREN", "GRANDPARENT/GRANDCHILDREN"),
+    ("BROTHER/SISTER IN LAW", "BROTHER/SISTER IN LAW"),
+    ("FRIEND", "FRIEND"),
+    )
+
+    relation_type = models.CharField(max_length=50, choices=RELATION_CHOICES, default="UNDEFINED")
+
+    class Meta:
+        # Unique_together constraint to ensure unique pairs of users
+        unique_together = ['user_receiving', 'user_sending']
