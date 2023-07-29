@@ -10,8 +10,8 @@ from .forms import CustomUserChangeForm
 
 from django.db.models import Q
 
-from access.models import RelationRequest, Relation
-from access.forms import RelationRequestForm, RelationAcceptForm, RelationRequestUndoForm, RelationDeleteForm
+from .models import RelationRequest, Relation
+from .forms import RelationRequestForm, RelationAcceptForm, RelationRequestUndoForm, RelationDeleteForm
 
 
 
