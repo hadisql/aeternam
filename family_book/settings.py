@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     "accounts",
     "core",
     "photos",
+    "albums",
+    "access",
     "django_browser_reload",
     "django.contrib.admin",
     "django.contrib.auth",

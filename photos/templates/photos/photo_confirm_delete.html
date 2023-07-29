@@ -10,7 +10,7 @@
       {% csrf_token %}
       <div class="flex gap-2 py-4 justify-center">
         <input type="submit" value="Yes" class="btn btn-error hover:brightness-75">
-        <a href="{% url 'photos:album_detail' photo.album.pk %}" class="btn btn-neutral">No</a>
+        <a href="{% url 'albums:album_detail' photo.album.pk %}" class="btn btn-neutral">No</a>
       </div>
 
 

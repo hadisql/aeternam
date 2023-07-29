@@ -23,11 +23,13 @@ from django.conf.urls.static import static
 import core.urls
 import accounts.urls
 import photos.urls
+import albums.urls
 
 urlpatterns = [
     path("", include(core.urls)),
     path("accounts/", include(accounts.urls)),
     path("albums/", include(photos.urls)),
+    path("albums/", include(albums.urls)),
     path("admin/", admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
