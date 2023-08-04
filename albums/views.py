@@ -9,12 +9,14 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib import messages #used in add_photos_to_album
-from django.http import HttpResponseForbidden, HttpResponseRedirect
+from django.http import HttpResponseForbidden
 
 from .models import Album
 from .forms import AlbumForm
 from photos.models import Photo
+from access.models import AlbumAccess
+
+
 
 # ----------------------------
 # ------ CREATE ALBUM --------
@@ -58,9 +60,11 @@ class AlbumListView(LoginRequiredMixin, ListView):
 
         # retrieving albums specific to the creator of the albums
         my_albums = Album.objects.filter(creator=self.request.user)
+        shared_albums = Album.objects.filter(accesses__user__exact=self.request.user) #'accesses' is the related name in the AlbumAccess model for the album FK
 
         # Annotate each album with the count of photos associated with it
         my_albums = my_albums.annotate(photo_count=Count('photos'))
+        shared_albums = shared_albums.annotate(photo_count=Count('photos'))
 
         # Create a dictionary to hold album objects and their default photos
         albums_with_default_photos = {}
@@ -72,8 +76,19 @@ class AlbumListView(LoginRequiredMixin, ListView):
             else:
                 albums_with_default_photos[album] = False
 
+        shared_albums_with_default_photos = {}
+        for album in shared_albums:
+            default_photo = album.photos.filter(is_default=True).first()
+            if default_photo:
+                shared_albums_with_default_photos[album] = default_photo
+            else:
+                shared_albums_with_default_photos[album] = False
+
         context['albums_with_default_photos'] = albums_with_default_photos
+        context['shared_albums_with_default_photos'] = shared_albums_with_default_photos
+
         return context
+
 
 # ----------------------------
 # ------ UPDATE ALBUM --------
@@ -113,7 +128,8 @@ class AlbumDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def test_func(self):
         album_id = self.kwargs['pk']
         album = Album.objects.get(id=album_id)
-        return self.request.user == album.creator  # Check if the logged-in user owns the album
+        has_access = AlbumAccess.objects.filter(album=album, user=self.request.user)
+        return self.request.user == album.creator or has_access  # Check if the logged-in user owns the album or has access to it
 
     def handle_no_permission(self):
         return HttpResponseForbidden("<h2>You don't have permission to view this page.</h2>")
@@ -123,11 +139,13 @@ class AlbumDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         album_id = self.kwargs['pk']
         context['photos'] = Photo.objects.filter(album=album_id)
 
+
         success_message = self.request.GET.get('success_message')
         if success_message:
             context['success_message'] = success_message
 
         return context
+
 
 # -----------------------------
 # --------- DELETE  -----------
