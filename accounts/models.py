@@ -90,6 +90,9 @@ class Relation(models.Model):
             return
         super(Relation, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return f"{self.user_sending} -> {self.user_receiving}"
+
 
 class RelationRequest(models.Model):
     user_receiving = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='relation_req_receiver')

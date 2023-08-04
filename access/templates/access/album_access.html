@@ -1,0 +1,119 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Album access{% endblock title %}
+
+{% block body %}
+
+<div class="bg-base-100">
+  <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+    <div class="prose">
+      <h1 class="sr-only">Profile page</h1>
+      <h1>Album settings</h1>
+    </div>
+
+      <section class="my-8">
+        <div class="prose">
+          <h3>Has access to your album :</h3>
+        </div>
+        <form method="POST">
+          {% csrf_token %}
+          <div class="overflow-x-auto">
+            <table class="table">
+
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Name</th>
+                  <th>Relation</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for relation, relation_type in relations_dict.items %}
+                {% if relation in users_with_access %}
+                <tr>
+                  <th>
+                    <label>
+                      <input type="checkbox" class="checkbox checkbox-error" name="users_to_revoke_access" value="{{ relation.pk }}" id="id_users_to_revoke_access_{{ forloop.counter }}" />
+                    </label>
+                  </th>
+                  <td>
+                    <div class="flex items-center space-x-3">
+                      <div class="avatar">
+                        <div class="mask mask-squircle w-12 h-12">
+                          <img src="{{relation.profile_picture.url}}" alt="user profile pic" />
+                        </div>
+                      </div>
+                      <div>
+                        <div class="font-bold">{{relation.first_name}} {{relation.last_name}}</div>
+                        <div class="text-sm opacity-50">{{relation.email}}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge badge-ghost badge-sm">{{relation_type}}</span>
+                  </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <input type="submit" name="revoke_access_form" class="mt-6 btn btn-outline btn-error" value="Revoke access">
+        </form>
+      </section>
+
+
+    <section class="my-8">
+      <div class="prose">
+        <h3>Grant Access to :</h3>
+      </div>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="overflow-x-auto">
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Relation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for relation, relation_type in relations_dict.items %}
+              {% if relation not in users_with_access %}
+              <tr>
+                <th>
+                  <label>
+                    <input type="checkbox" class="checkbox checkbox-success" name="users_to_grant_access" value="{{ relation.pk }}" id="id_users_to_grant_access_{{ forloop.counter }}" />
+                  </label>
+                </th>
+                <td>
+                  <div class="flex items-center space-x-3">
+                    <div class="avatar">
+                      <div class="mask mask-squircle w-12 h-12">
+                        <img src="{{relation.profile_picture.url}}" alt="user profile pic" />
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-bold">{{relation.first_name}} {{relation.last_name}}</div>
+                      <div class="text-sm opacity-50">{{relation.email}}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge badge-ghost badge-sm">{{relation_type}}</span>
+                </td>
+              </tr>
+              {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <input type="submit" name="add_access_form" class="mt-6 btn btn-outline btn-success" value="Grant access">
+      </form>
+    </section>
+
+  </div>
+</div>
+
+{% endblock body %}

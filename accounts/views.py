@@ -48,12 +48,13 @@ class UserView(LoginRequiredMixin, ListView):
 
         context['search_input'] = search
 
+        # retrieving the Relation objects if logged user in the Relation object (either as sender or receiver)
+        context['relations'] = Relation.objects.filter(Q(user_sending__exact=self.request.user.id)|Q(user_receiving__exact=self.request.user.id))
+
         context['relation_request_form'] = RelationRequestForm()
         context['accept_form'] = RelationAcceptForm()
         context['undo_request_form'] = RelationRequestUndoForm()
 
-        context['user_friends_to'] = Relation.objects.filter(user_sending_id=self.request.user.id)
-        context['user_friends_from'] = Relation.objects.filter(user_receiving_id=self.request.user.id)
 
         context['friendship_exists'] = (Relation.objects.filter(user_sending_id=self.request.user.id, user_receiving_id=account_id).exists() or Relation.objects.filter(user_sending_id=account_id, user_receiving_id=self.request.user.id).exists())
         context['request_from_exists'] = RelationRequest.objects.filter(user_sending_id=account_id, user_receiving=self.request.user.id).exists()

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import AlbumAccess, AlbumAccessRequest
+from .models import AlbumAccess#, AlbumAccessRequest
 # Register your models here.
 
 admin.site.register(AlbumAccess)
-admin.site.register(AlbumAccessRequest)
+#admin.site.register(AlbumAccessRequest)

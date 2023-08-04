@@ -24,12 +24,14 @@ import core.urls
 import accounts.urls
 import photos.urls
 import albums.urls
+import access.urls
 
 urlpatterns = [
     path("", include(core.urls)),
     path("accounts/", include(accounts.urls)),
     path("albums/", include(photos.urls)),
     path("albums/", include(albums.urls)),
+    path("albums/", include(access.urls)),
     path("admin/", admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
