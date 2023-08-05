@@ -68,8 +68,12 @@ class AlbumListView(LoginRequiredMixin, ListView):
 
         # Create a dictionary to hold album objects and their default photos
         albums_with_default_photos = {}
+        number_of_access = []
 
         for album in my_albums:
+            # we save the number of users having access to the album -> if 0, no access was given
+            number_of_access.append(len(AlbumAccess.objects.filter(album=album)))
+
             default_photo = album.photos_album.filter(is_default=True).first()
             if default_photo:
                 albums_with_default_photos[album] = default_photo
@@ -84,6 +88,8 @@ class AlbumListView(LoginRequiredMixin, ListView):
             else:
                 shared_albums_with_default_photos[album] = False
 
+
+        context['number_of_access'] = number_of_access
         context['albums_with_default_photos'] = albums_with_default_photos
         context['shared_albums_with_default_photos'] = shared_albums_with_default_photos
 
