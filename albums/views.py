@@ -37,7 +37,7 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
 
         # Save associated photos to the album
         for image in self.request.FILES.getlist('images'):
-            Photo.objects.create(album=album, image=image)
+            Photo.objects.create(album=album, image=image, uploaded_by=self.request.user)
 
         # Set the first photo as the default photo
         default_photos = Photo.objects.filter(album=album)
@@ -63,14 +63,14 @@ class AlbumListView(LoginRequiredMixin, ListView):
         shared_albums = Album.objects.filter(accesses__user__exact=self.request.user) #'accesses' is the related name in the AlbumAccess model for the album FK
 
         # Annotate each album with the count of photos associated with it
-        my_albums = my_albums.annotate(photo_count=Count('photos'))
-        shared_albums = shared_albums.annotate(photo_count=Count('photos'))
+        my_albums = my_albums.annotate(photo_count=Count('photos_album'))
+        shared_albums = shared_albums.annotate(photo_count=Count('photos_album'))
 
         # Create a dictionary to hold album objects and their default photos
         albums_with_default_photos = {}
 
         for album in my_albums:
-            default_photo = album.photos.filter(is_default=True).first()
+            default_photo = album.photos_album.filter(is_default=True).first()
             if default_photo:
                 albums_with_default_photos[album] = default_photo
             else:
@@ -78,7 +78,7 @@ class AlbumListView(LoginRequiredMixin, ListView):
 
         shared_albums_with_default_photos = {}
         for album in shared_albums:
-            default_photo = album.photos.filter(is_default=True).first()
+            default_photo = album.photos_album.filter(is_default=True).first()
             if default_photo:
                 shared_albums_with_default_photos[album] = default_photo
             else:
@@ -139,6 +139,11 @@ class AlbumDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         album_id = self.kwargs['pk']
         context['photos'] = Photo.objects.filter(album=album_id)
 
+        album_accesses = AlbumAccess.objects.filter(album=album_id) #all users concerned
+        users_with_access = [album_access.user for album_access in album_accesses]
+        users_with_access_count = len(users_with_access)
+        context['users_with_access'] = users_with_access
+        context['users_with_access_count'] = users_with_access_count
 
         success_message = self.request.GET.get('success_message')
         if success_message:

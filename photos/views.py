@@ -12,6 +12,7 @@ from .models import Photo
 from .forms import PhotoForm
 
 from albums.models import Album
+from access.models import AlbumAccess
 
 
 
@@ -57,9 +58,9 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
 
         if not existing_photos.exists():
             first_image = images.pop(0)
-            photo = Photo.objects.create(album=album, image=first_image, is_default=True)
+            photo = Photo.objects.create(album=album, image=first_image, is_default=True, uploaded_by=self.request.user)
         for image in images:
-            photo = Photo.objects.create(album=album, image=image)
+            photo = Photo.objects.create(album=album, image=image, uploaded_by=self.request.user)
 
         messages.success(self.request, 'Photos were uploaded successfully')
         return super().form_valid(form)
@@ -77,7 +78,8 @@ class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def test_func(self):
         photo_id = self.kwargs['pk']
         photo = Photo.objects.get(id=photo_id)
-        return self.request.user == photo.album.creator  # Check if the logged-in user owns the photo
+        has_access = AlbumAccess.objects.filter(album__photos_album = photo, user=self.request.user)
+        return self.request.user == photo.album.creator or has_access  # Check if the logged-in user owns the photo
 
     def handle_no_permission(self):
         return HttpResponseForbidden("<h2>You don't have permission to view this page.</h2>")
@@ -103,7 +105,8 @@ class PhotosDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         photo_id = self.kwargs['pk']
         photo = Photo.objects.get(id=photo_id)
-        return self.request.user == photo.album.creator  # Check if the logged-in user owns the album
+        has_uploaded = photo.uploaded_by == self.request.user
+        return self.request.user == photo.album.creator or has_uploaded  # Check if the logged-in user owns the album
 
     def handle_no_permission(self):
         return HttpResponseForbidden("<h2>You don't have permission to view this page.</h2>")

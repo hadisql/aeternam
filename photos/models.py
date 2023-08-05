@@ -1,6 +1,7 @@
 from django.db import models
 
 from albums.models import Album
+from accounts.models import CustomUser
 import os
 
 
@@ -14,9 +15,10 @@ def album_photo_directory_path(instance, filename):
     return f"albums/{instance.album.id}/{filename}"
 
 class Photo(models.Model):
-    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='photos')
+    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='photos_album')
     image = models.ImageField(upload_to=album_photo_directory_path)
     is_default = models.BooleanField(default=False)
+    uploaded_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         # Add a unique constraint to ensure only one default photo per album
