@@ -2,6 +2,8 @@
 
 {% block title %}Album access{% endblock title %}
 
+{% load thumbnail %}
+
 {% block body %}
 
 <div class="bg-base-100">
@@ -33,14 +35,17 @@
                 <tr>
                   <th>
                     <label>
-                      <input type="checkbox" class="checkbox checkbox-error" name="users_to_revoke_access" value="{{ relation.pk }}" id="id_users_to_revoke_access_{{ forloop.counter }}" />
+                      <input type="checkbox" class="toggle toggle-error" name="users_to_revoke_access" value="{{ relation.pk }}" id="id_users_to_revoke_access_{{ forloop.counter }}" />
                     </label>
                   </th>
                   <td>
                     <div class="flex items-center space-x-3">
                       <div class="avatar">
                         <div class="mask mask-squircle w-12 h-12">
-                          <img src="{{relation.profile_picture.url}}" alt="user profile pic" />
+                          <!-- <img src="{{relation.profile_picture.url}}" alt="user profile pic" /> -->
+                          {% thumbnail relation.profile_picture "50x50" crop="center" as im %}
+                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{% firstof relation.first_name user.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
+                          {% endthumbnail %}
                         </div>
                       </div>
                       <div>
@@ -84,7 +89,7 @@
               <tr>
                 <th>
                   <label>
-                    <input type="checkbox" class="checkbox checkbox-success" name="users_to_grant_access" value="{{ relation.pk }}" id="id_users_to_grant_access_{{ forloop.counter }}" />
+                    <input type="checkbox" class="toggle toggle-success" name="users_to_grant_access" value="{{ relation.pk }}" id="id_users_to_grant_access_{{ forloop.counter }}" />
                   </label>
                 </th>
                 <td>
@@ -109,7 +114,7 @@
             </tbody>
           </table>
         </div>
-        <input type="submit" name="add_access_form" class="mt-6 btn btn-outline btn-success" value="Grant access">
+        <input type="submit" name="add_access_form" class="mt-6 btn btn-outline btn-success" value="Apply changes">
       </form>
     </section>
 
