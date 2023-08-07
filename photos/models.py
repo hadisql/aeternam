@@ -1,4 +1,5 @@
 from django.db import models
+from sorl.thumbnail import ImageField
 
 from albums.models import Album
 from accounts.models import CustomUser
@@ -16,7 +17,7 @@ def album_photo_directory_path(instance, filename):
 
 class Photo(models.Model):
     album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='photos_album')
-    image = models.ImageField(upload_to=album_photo_directory_path)
+    image = ImageField(upload_to=album_photo_directory_path, null=True)
     is_default = models.BooleanField(default=False)
     uploaded_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
 

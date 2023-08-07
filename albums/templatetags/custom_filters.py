@@ -8,3 +8,5 @@ def list_item(lst, i):
         return lst[i]
     except:
         return None
+
+#https://stackoverflow.com/questions/53287022/django-template-access-to-list-item-by-forloop-counter
