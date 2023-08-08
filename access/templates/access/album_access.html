@@ -9,36 +9,74 @@
 <div class="bg-base-100">
   <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
     <div class="prose">
-      <h1 class="sr-only">Profile page</h1>
+      <h1 class="sr-only">Album settings</h1>
       <h1>Album settings</h1>
     </div>
 
-      <section class="my-8">
-        <div class="prose">
-          <h3>Has access to your album :</h3>
+    <section>
+      <form  method="POST">
+        {% csrf_token %}
+        <div class="block py-8 space-y-4 w-full max-w-xs">
+          <div class="flex gap-4 prose">
+            <h2 class="mb-4">Edit your album infos</h2>
+            <svg viewBox="0 0 24 24" class="fill-transparent stroke-current stroke-2 h-8 w-8"  xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 7C3 4.79086 4.79086 3 7 3H17C19.2091 3 21 4.79086 21 7V17C21 19.2091 19.2091 21 17 21H7C4.79086 21 3 19.2091 3 17V7Z"></path>
+              <path d="M16.2739 11.1377C16.6644 10.7472 16.6644 10.114 16.2739 9.7235L14.4823 7.9319C14.0918 7.54137 13.4586 7.54138 13.0681 7.9319L8.96106 12.0389L8.34768 15.7477C8.3365 15.8154 8.39516 15.874 8.4628 15.8627L12.1669 15.2448L16.2739 11.1377Z"></path></svg>
+          </div>
+          {% for field in album_form %}
+            <div class="block ">
+              <label class="block text-sm font-medium" for="id_{{field.label}}">{{field.label|capfirst}}</label>
+              {{field}}
+            </div>
+          {% endfor %}
+          <div class="flex gap-4">
+            <input type="submit" name="album_form" class="block btn btn-primary" value="Save changes">
+            <a href="{% url 'albums:album_delete' album.pk %}" class="btn btn-outline btn-error">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
+              </svg>
+              Delete album
+            </a>
+          </div>
         </div>
-        <form method="POST">
-          {% csrf_token %}
-          <div class="overflow-x-auto">
-            <table class="table">
+      </form>
 
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Name</th>
-                  <th>Relation</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for relation, relation_type in relations_dict.items %}
-                {% if relation in users_with_access %}
-                <tr>
-                  <th>
-                    <label>
-                      <input type="checkbox" class="toggle toggle-error" name="users_to_revoke_access" value="{{ relation.pk }}" id="id_users_to_revoke_access_{{ forloop.counter }}" />
-                    </label>
-                  </th>
-                  <td>
+    </section>
+
+    <section class="my-8" >
+      <a name="access_control"></a>
+      <div class="flex gap-4 prose">
+        <h2 class="mb-4">Control who can access your album</h2>
+        <svg class=" w-7 h-7 fill-current" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4.8,10.9953976 L4.8,10.9953976 L4.8,19.0046024 C4.8,19.5443356 5.20329495,20 5.70078449,20 L18.2992155,20 C18.7998322,20 19.2,19.5543453 19.2,19.0046024 L19.2,10.9953976 C19.2,10.4556644 18.796705,10 18.2992155,10 L5.70078449,10 C5.20016778,10 4.8,10.4456547 4.8,10.9953976 L4.8,10.9953976 Z M3,10.9953976 C3,9.33850596 4.2083756,8 5.70078449,8 L18.2992155,8 C19.7882905,8 21,9.34828102 21,10.9953976 L21,19.0046024 C21,20.661494 19.7916244,22 18.2992155,22 L5.70078449,22 C4.2117095,22 3,20.651719 3,19.0046024 L3,10.9953976 Z M18,8 L16,8 C16,5.790861 14.209139,4 12,4 C9.790861,4 8,5.790861 8,8 L6,8 C6,4.6862915 8.6862915,2 12,2 C15.3137085,2 18,4.6862915 18,8 Z M12,16 C12.5522847,16 13,15.5522847 13,15 C13,14.4477153 12.5522847,14 12,14 C11.4477153,14 11,14.4477153 11,15 C11,15.5522847 11.4477153,16 12,16 Z"> </path>
+        </svg>
+      </div>
+      <div class="prose">
+        <h3 class="mb-4">Has access to your album :</h3>
+      </div>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="overflow-x-auto">
+          <table class="table">
+
+            <thead>
+              <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Relation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for relation, relation_type in relations_dict.items %}
+              {% if relation in users_with_access %}
+              <tr>
+                <th>
+                  <label>
+                    <input type="checkbox" class="toggle toggle-error" name="users_to_revoke_access" value="{{ relation.pk }}" id="id_users_to_revoke_access_{{ forloop.counter }}" />
+                  </label>
+                </th>
+                <td>
+                  <a href="{% url 'accounts:account_view' relation.pk %}" class="cursor-pointer">
                     <div class="flex items-center space-x-3">
                       <div class="avatar">
                         <div class="mask mask-squircle w-12 h-12">
@@ -53,24 +91,25 @@
                         <div class="text-sm opacity-50">{{relation.email|truncatechars:12}}</div>
                       </div>
                     </div>
-                  </td>
-                  <td>
-                    <span class="badge badge-ghost badge-sm">{{relation_type}}</span>
-                  </td>
-                </tr>
-                {% endif %}
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-          <input type="submit" name="revoke_access_form" class="mt-6 btn btn-outline btn-error" value="Revoke access">
-        </form>
-      </section>
+                  </a>
+                </td>
+                <td>
+                  <span class="badge badge-ghost badge-sm">{{relation_type}}</span>
+                </td>
+              </tr>
+              {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <input type="submit" name="revoke_access_form" class="mt-6 btn btn-outline btn-error" value="Revoke access">
+      </form>
+    </section>
 
 
     <section class="my-8">
       <div class="prose">
-        <h3>Grant Access to :</h3>
+        <h3 class="mb-4">Grant Access to :</h3>
       </div>
       <form method="POST">
         {% csrf_token %}
@@ -93,17 +132,20 @@
                   </label>
                 </th>
                 <td>
-                  <div class="flex items-center space-x-3">
-                    <div class="avatar">
-                      <div class="mask mask-squircle w-12 h-12">
-                        <img src="{{relation.profile_picture.url}}" alt="user profile pic" />
+                  <a href="{% url 'accounts:account_view' relation.pk %}" class="cursor-pointer">
+                    <div class="flex items-center space-x-3">
+                      <div class="avatar">
+                        <div class="mask mask-squircle w-12 h-12">
+                          {% thumbnail relation.profile_picture "50x50" crop="center" as im %}
+                          <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{% firstof relation.first_name user.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
+                          {% endthumbnail %}                        </div>
+                      </div>
+                      <div>
+                        <div class="font-bold">{{relation.first_name}} {{relation.last_name}}</div>
+                        <div class="text-sm opacity-50">{{relation.email|truncatechars:12}}</div>
                       </div>
                     </div>
-                    <div>
-                      <div class="font-bold">{{relation.first_name}} {{relation.last_name}}</div>
-                      <div class="text-sm opacity-50">{{relation.email|truncatechars:12}}</div>
-                    </div>
-                  </div>
+                  </a>
                 </td>
                 <td>
                   <span class="badge badge-ghost badge-sm">{{relation_type}}</span>
@@ -119,7 +161,7 @@
     </section>
 
     <div>
-      <a href="{% url 'albums:album_detail' album.pk %}" class="btn btn-default">Back</a>
+      <a href="{% url 'albums:album_detail' album.pk %}" class="btn btn-neutral">Back</a>
     </div>
   </div>
 </div>

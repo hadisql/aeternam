@@ -3,8 +3,9 @@
 {% block title %}Add photos{% endblock title %}
 
 {% block body %}
-
-<div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+<div class="bg-base-100">
+  <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-20 lg:max-w-7xl lg:px-8">
+    <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
 
   <!-- {% if existing_photos %}
     {% for photo in existing_photos %}
@@ -21,20 +22,21 @@
   {% endif %} -->
 
 
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
 
 
-    <label for="images" class="text-2xl font-bold tracking-tight">Upload new photos:</label>
-    <input type="file" name="images" required multiple class="mt-4 block file-input file-input-bordered w-full max-w-xs">
+        <label for="images" class="text-2xl font-bold tracking-tight">Upload new photos:</label>
+        <input type="file" name="images" required multiple class="mt-4 block file-input file-input-bordered w-full max-w-xs">
 
 
-    <div class="block mt-10 space-x-4">
-      <button class="btn btn-primary" type="submit">Add Photos</button>
-      <a href="{% url 'albums:albums_view' %}" class="btn btn-neutral">Back</a>
+        <div class="block mt-10 space-x-4">
+          <button class="btn btn-primary" type="submit">Add Photos</button>
+          <a href="{% url 'albums:album_detail' album.pk %}" class="btn btn-neutral">Back</a>
+        </div>
+      </form>
     </div>
-  </form>
-
+  </div>
 
 </div>
 

@@ -11,10 +11,9 @@
     <div class="flex justify-between">
       <h2 class="sr-only">Album Detail</h2>
       <h1 class="text-3xl font-bold tracking-tight">{{album.title|capfirst}}</h1>
-      <div class="flex items-center tooltip tooltip-left" data-tip="Edit the Title and Description">
-        <a href="{% url 'albums:album_edit' album.pk %}">
-          <svg viewBox="0 0 24 24" class="stroke-current opacity-50 hover:opacity-100 stroke-2 h-10 w-10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 7C3 4.79086 4.79086 3 7 3H17C19.2091 3 21 4.79086 21 7V17C21 19.2091 19.2091 21 17 21H7C4.79086 21 3 19.2091 3 17V7Z"></path> <path d="M16.2739 11.1377C16.6644 10.7472 16.6644 10.114 16.2739 9.7235L14.4823 7.9319C14.0918 7.54137 13.4586 7.54138 13.0681 7.9319L8.96106 12.0389L8.34768 15.7477C8.3365 15.8154 8.39516 15.874 8.4628 15.8627L12.1669 15.2448L16.2739 11.1377Z"></path></svg>
-        </a>
+      <div class="flex items-center tooltip tooltip-left" data-tip="Album settings">
+        <a href="{% url 'access:album-access' album.pk %}">
+          <svg class="w-10 h-10 p-2 hover:bg-gray-100/75 hover:rounded-full stroke-current" width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>        </a>
       </div>
     </div>
 
@@ -53,15 +52,15 @@
             <a class="group" href="{% url 'photos:photo_detail' photo.pk %}">
               <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
                 <!-- <img src="{{photo.image.url}}" alt="{{ photo.pk }}" class="h-full w-full object-cover object-center group-hover:opacity-75"> -->
-                {% thumbnail photo.image "300x300" crop="center" as im %}
+                {% thumbnail photo.image "600x600" crop="center" as im %}
                   <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}" class="h-full w-full object-cover object-center group-hover:opacity-75">
                 {% endthumbnail %}
               </div>
             </a>
           {% endfor %}
         {% endif %}
-          <a href="{% url 'photos:add_photos_to_album' album.pk %}" class="tooltip tooltip-top tooltip-primary group" data-tip="add photos">
-            <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+          <a href="{% url 'photos:add_photos_to_album' album.pk %}" class="tooltip tooltip-bottom tooltip-neutral group" data-tip="add photos">
+            <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-300 xl:aspect-h-8 xl:aspect-w-7">
               <div class="grid place-content-center h-full w-full object-cover object-center group-hover:opacity-75">
                 <p class="text-8xl font-base text-slate-600">+</p>
               </div>
@@ -77,7 +76,11 @@
           <swiper-container class="mySwiper w-full h-full" pagination="true" pagination-clickable="true" navigation="true">
             {% for photo in photos %}
               <swiper-slide class="flex justify-center align-middle">
-                <a class="hover:opacity-75" href="{% url 'photos:photo_detail' photo.pk %}"><img src="{{photo.image.url}}" alt="{{ photo.pk }}" class="block w-full h-full rounded-xl"></a>
+                <a class="hover:opacity-75" href="{% url 'photos:photo_detail' photo.pk %}">
+                  {% thumbnail photo.image "600x600" crop="center" as im %}
+                  <img src="{{im.url}}" alt="{{ photo.pk }}" class="block w-full h-full rounded-xl">
+                  {% endthumbnail %}
+                </a>
               </swiper-slide>
             {% endfor %}
           </swiper-container>
@@ -91,7 +94,7 @@
       <!-- Who has access -->
     {% if user == album.creator %}
     <div class="flex place-content-end">
-      <a href="{% url 'access:album-access' album.pk %}" class="btn-ghost hover:btn-ghost rounded-lg px-6 hover:px-6 pb-6 hover:pb-6">
+      <a href="{% url 'access:album-access' album.pk %}#access_control" class="btn-ghost hover:btn-ghost rounded-lg px-6 hover:px-6 pb-6 hover:pb-6">
         <div class="mt-6">
           <div class="flex items-center space-x-2 text-base">
             <h4 class="font-semibold mb-2">Shared with: </h4>

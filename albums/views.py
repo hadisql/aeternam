@@ -99,29 +99,32 @@ class AlbumListView(LoginRequiredMixin, ListView):
 # ----------------------------
 # ------ UPDATE ALBUM --------
 # ----------------------------
-class AlbumUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    # -- template name is 'album_form.html'
-    model = Album
-    form_class = AlbumForm
 
-    def test_func(self):
-        album_id = self.kwargs['pk']
-        album = Album.objects.get(id=album_id)
-        return self.request.user == album.creator  # Check if the logged-in user owns the album
+# -----> defined in "album_access" function view, in accounts app
 
-    def handle_no_permission(self):
-        return HttpResponseForbidden("<h2>You don't have permission to view this page.</h2>")
+# class AlbumUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+#     # -- template name is 'album_form.html'
+#     model = Album
+#     form_class = AlbumForm
+
+#     def test_func(self):
+#         album_id = self.kwargs['pk']
+#         album = Album.objects.get(id=album_id)
+#         return self.request.user == album.creator  # Check if the logged-in user owns the album
+
+#     def handle_no_permission(self):
+#         return HttpResponseForbidden("<h2>You don't have permission to view this page.</h2>")
 
 
-    def get_success_url(self) -> str:
-        return reverse('albums:album_detail', kwargs={'pk': self.kwargs['pk']})
+#     def get_success_url(self) -> str:
+#         return reverse('albums:album_detail', kwargs={'pk': self.kwargs['pk']})
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['type_of_view'] = 'update'
-        album_id = self.kwargs['pk']
-        context['photos'] = Photo.objects.filter(album=album_id)
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['type_of_view'] = 'update'
+#         album_id = self.kwargs['pk']
+#         context['photos'] = Photo.objects.filter(album=album_id)
+#         return context
 
 
 # ----------------------------

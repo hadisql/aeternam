@@ -1,11 +1,13 @@
 {% extends 'core/base.html' %}
-
+{% load thumbnail %}
 {% block title %}Photos{% endblock title %}
 
 {% block body %}
 <div class="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-16 lg:max-w-7xl lg:px-8">
   <div class="block">
-    <img class="rounded-2xl" src="{{photo.image.url}}" alt="{{photo.pk}}">
+    {% thumbnail photo.image "1000x1000" as im %}
+    <img class="rounded-2xl" src="{{im.url}}" width="{{ im.width }}" height="{{ im.height }}" alt="{{photo.pk}}">
+    {% endthumbnail %}
     <p class="mt-2 text-sm text-right">Uploaded by <span class="font-semibold">{% firstof photo.uploaded_by.first_name photo.uploaded_by.email %}</span></p>
   </div>
 

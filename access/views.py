@@ -1,22 +1,22 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from .models import AlbumAccess, Album
-from accounts.models import CustomUser
-
 from django.shortcuts import get_object_or_404
-
 from django.http import HttpResponseRedirect, HttpResponseForbidden
-
+from django.db.models import Q
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 from django.views.generic import CreateView
-from accounts.models import Relation
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
+from .models import AlbumAccess, Album
+from accounts.models import CustomUser, Relation
+
 from .forms import AlbumAccessGrantForm, AlbumAccessRevokeForm
+from albums.forms import AlbumForm
 
-from django.db.models import Q
 
-from django.contrib.auth.decorators import login_required, user_passes_test
+
+
 
 
 @login_required
@@ -42,11 +42,17 @@ def album_access(request, pk):
             relations_dict[relation.user_receiving] = relation.relation_type
 
     # GET
+    album_form = AlbumForm(instance=album) #title and description update
     add_access_form = AlbumAccessGrantForm(queryset=CustomUser.objects.exclude(pk__in=users_id_with_access))
     revoke_access_form = AlbumAccessRevokeForm(queryset=CustomUser.objects.filter(pk__in=users_id_with_access))
 
+    if 'album_form' in request.POST:
+        album_form = AlbumForm(request.POST, instance=album)
+        if album_form.is_valid():
+            album_form.save()
+            return HttpResponseRedirect(request.path_info)
 
-    if request.method == 'POST' and 'add_access_form' in request.POST:
+    if 'add_access_form' in request.POST:
         add_access_form = AlbumAccessGrantForm(request.POST, queryset=CustomUser.objects.exclude(pk__in=users_id_with_access))
         if add_access_form.is_valid():
             selected_users = add_access_form.cleaned_data['users_to_grant_access']
@@ -57,7 +63,7 @@ def album_access(request, pk):
                 )
         return HttpResponseRedirect(request.path_info)
 
-    elif request.method == 'POST' and 'revoke_access_form' in request.POST:
+    elif 'revoke_access_form' in request.POST:
         revoke_access_form = AlbumAccessRevokeForm(request.POST, queryset=CustomUser.objects.filter(pk__in=users_id_with_access))
         if revoke_access_form.is_valid():
             selected_users = revoke_access_form.cleaned_data['users_to_revoke_access']
@@ -71,6 +77,7 @@ def album_access(request, pk):
 
     context = {
         'album': album,
+        'album_form':album_form,
         'existing_access': existing_access,
         'relations': relations,
         'relations_to_album_creator': relations_to_album_creator,

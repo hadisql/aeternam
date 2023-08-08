@@ -13,11 +13,11 @@
         <div class="flex flex-wrap px-6 gap-10">
           <div class="">
             {% thumbnail user.profile_picture "200x200" crop="center" as im %}
-            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.user }} profile pic" class="h-48 w-48 rounded-full ring-offset-base-100 ring-offset-2 ring-4 ring-primary">
+            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.user }} profile pic" class="h-48 w-48 rounded-full ring-offset-base-100 ring-offset-2 ring-4 ring-gray-100">
             {% endthumbnail %}
           </div>
 
-          <div class="stats lg:stats-vertical shadow">
+          <div class="stats max-[555px]:stats-vertical lg:stats-vertical shadow">
 
             <div class="stat">
               <div class="stat-figure text-primary">
@@ -138,10 +138,10 @@
             {{form.bio}}
           </div>
 
-          <div class="mt-4">
+          <div>
             <button
               type="submit"
-              class="inline-block w-full btn btn-accent px-5 py-3 font-medium text-white sm:w-auto"
+              class="mt-6 inline-block w-full btn btn-accent px-5 py-3 font-medium text-white sm:w-auto"
             >
               Save changes
             </button>
