@@ -50,7 +50,7 @@
                       </div>
                       <div>
                         <div class="font-bold">{{relation.first_name}} {{relation.last_name}}</div>
-                        <div class="text-sm opacity-50">{{relation.email}}</div>
+                        <div class="text-sm opacity-50">{{relation.email|truncatechars:12}}</div>
                       </div>
                     </div>
                   </td>
@@ -101,7 +101,7 @@
                     </div>
                     <div>
                       <div class="font-bold">{{relation.first_name}} {{relation.last_name}}</div>
-                      <div class="text-sm opacity-50">{{relation.email}}</div>
+                      <div class="text-sm opacity-50">{{relation.email|truncatechars:12}}</div>
                     </div>
                   </div>
                 </td>

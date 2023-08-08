@@ -28,19 +28,26 @@ class RegisterForm(UserCreationForm):
         widget=forms.PasswordInput(attrs={'class':input_class, 'id':'PasswordConfirmation'}))
 
 
-class CustomUserCreationForm(UserCreationForm):
-    class Meta:
-        model = CustomUser
-        fields = ('email',)
+# class CustomUserCreationForm(UserCreationForm):
+#     class Meta:
+#         model = CustomUser
+#         fields = ('email',)
 
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = '__all__' #email, profile_picture, age, country, bio
+        fields = ('first_name','last_name','email','date_of_birth','bio')
+        input_class = 'w-full input input-bordered text-sm'
+        textarea_class = 'w-full textarea textarea-bordered p-3 text-sm'
         widgets = {
-            'bio': forms.Textarea(attrs={'class':'textarea textarea-bordered'})
+            'first_name': forms.TextInput(attrs={'class': input_class, 'placeholder':'First Name', 'id':'first_name'}),
+            'last_name': forms.TextInput(attrs={'class': input_class, 'placeholder':'Last Name', 'id':'last_name'}),
+            'email': forms.EmailInput(attrs={'class':input_class,'placeholder':'Email Adress', 'id':'email'}),
+            'date_of_birth': forms.DateInput(attrs={'class': input_class, 'id':'date_of_birth','type':'date'}),
+            'bio': forms.Textarea(attrs={'class':textarea_class, 'placeholder':'Bio','rows':8, 'id':'bio'})
         }
+        # date_of_birth = forms.DateField(widget=forms.DateInput(attrs={'class': input_class, 'id':'date_of_birth','type':'date'}))
 
 class RelationRequestForm(forms.Form):
     pass

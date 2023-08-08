@@ -2,19 +2,20 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext, gettext_lazy as _
 
-from .forms import CustomUserCreationForm, CustomUserChangeForm
+from .forms import CustomUserChangeForm, RegisterForm #CustomUserCreationForm
 from .models import CustomUser, RelationRequest, Relation
 
-
+from django.contrib.auth.models import User
 
 class CustomUserAdmin(UserAdmin):
-    add_form = CustomUserCreationForm
+    # add_form = CustomUserCreationForm
+    add_form = RegisterForm
     form = CustomUserChangeForm
     model = CustomUser
     list_display = ('email', 'is_staff', 'is_active',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'age', 'profile_picture', 'bio', 'country')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'date_of_birth', 'profile_picture', 'bio', 'country')}),
         (_('Permissions'), {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),
@@ -28,7 +29,6 @@ class CustomUserAdmin(UserAdmin):
     )
     search_fields = ('email',)
     ordering = ('email',)
-
 
 
 admin.site.register(CustomUser, CustomUserAdmin)

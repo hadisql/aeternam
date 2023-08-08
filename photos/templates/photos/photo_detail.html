@@ -6,7 +6,7 @@
 <div class="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-16 lg:max-w-7xl lg:px-8">
   <div class="block">
     <img class="rounded-2xl" src="{{photo.image.url}}" alt="{{photo.pk}}">
-    <p class="text-lg">Uploaded by {% firstof photo.uploaded_by.first_name photo.uploaded_by %}</p>
+    <p class="mt-2 text-sm text-right">Uploaded by <span class="font-semibold">{% firstof photo.uploaded_by.first_name photo.uploaded_by.email %}</span></p>
   </div>
 
   <div class="mt-10 flex gap-4 items-end">
