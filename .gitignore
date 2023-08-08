@@ -12,7 +12,7 @@ jstoolchain/package-lock.json
 static/
 
 .DS_Store
-
+albums/templates/albums/account_copy.html
 
 # Byte-compiled / optimized / DLL files
 *.py[cod]
