@@ -1,9 +1,12 @@
+from typing import Any
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
-from django.http import HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 
-from django.views.generic import CreateView, UpdateView, ListView
+from django.views.generic import FormView, UpdateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
+from django.contrib.auth import login
 
 from .models import CustomUser
 from .forms import CustomUserChangeForm
@@ -11,8 +14,49 @@ from .forms import CustomUserChangeForm
 from django.db.models import Q
 
 from .models import RelationRequest, Relation
-from .forms import RelationRequestForm, RelationAcceptForm, RelationRequestUndoForm, RelationDeleteForm
+from .forms import RelationRequestForm, RelationAcceptForm, RelationRequestUndoForm, RelationDeleteForm, RegisterForm
 
+from django.contrib.auth import authenticate
+
+
+class RegisterPage(FormView):
+    template_name = 'accounts/register.html'
+    form_class = RegisterForm
+    redirect_authenticated_user = True # we want to redirect authenticated users if trying to access the register page -> doesn't seem to work
+    success_url = reverse_lazy('albums:albums_view')
+
+    def form_valid(self, form):
+        # we override the form_valid function so it logs the user in after registering
+        user = form.save()
+        if user is not None:
+            # if the user form is successfully saved, go ahead and login the user
+            login(self.request, user)
+        return super(RegisterPage, self).form_valid(form)
+
+    def get(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('albums:albums_view') #forces to redirect to main page when user is authenticated
+        return super(RegisterPage, self).get(*args, **kwargs) #otherwise we apply the original method
+
+
+def loginpage(request):
+
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+
+        print(email, password)
+
+        # Use eamail to authenticate instead of username
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect(reverse_lazy('albums:albums_view'))
+        else:
+            return HttpResponse('User doesnt exist')   #FOR ERROR PURPOSE
+
+    else:
+        return render(request, 'accounts/login.html')
 
 
 class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
