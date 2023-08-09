@@ -9,26 +9,28 @@
       <h1 class="sr-only">Create a new album</h1>
       <h1>Create a new album</h1>
 
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="block py-8 space-y-4 w-full max-w-xs">
-          {% for field in form %}
-          <div class="block ">
-            <label class="block text-sm font-medium" for="id_{{field.label}}">{{field.label|capfirst}}</label>
-            {{field}}
-          </div>
-          {% endfor %}
-        </div>
-
-        <div class="block">
-            <label for="images" class="text-2xl font-bold tracking-tight">Upload photos:</label>
-            <input type="file" name="images" multiple class="mt-4 block file-input file-input-bordered w-full max-w-xs">
-            <div class="flex gap-4 my-8">
-              <button type="submit" class="block btn btn-primary">Save</button>
-              <a href="{% url 'albums:albums_view' %}" class="btn btn-default">Back</a>
+      <div class="rounded-lg bg-base-200 p-8 shadow-lg lg:p-12">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="grid grid-cols-1 gap-4 w-full max-w-xs">
+            {% for field in form %}
+            <div>
+              <label class="text-sm font-medium" for="id_{{field.label}}">{{field.label|capfirst}}</label>
+              {{field}}
             </div>
-        </div>
-      </form>
+            {% endfor %}
+          </div>
+
+          <div class="mt-4">
+              <label for="images" class="text-xl font-bold tracking-tight">Upload photos:</label>
+              <input type="file" name="images" multiple class="mt-4 block file-input file-input-bordered file-input-primary w-full max-w-xs">
+              <div class="flex gap-4 mt-8">
+                <button type="submit" class="inline-block btn btn-primary">Save</button>
+                <a href="{% url 'albums:albums_view' %}" class="btn btn-default">Back</a>
+              </div>
+          </div>
+        </form>
+      </div>
 
 
   </div>

@@ -13,7 +13,7 @@
       <h1 class="text-3xl font-bold tracking-tight">{{album.title|capfirst}}</h1>
       <div class="flex items-center tooltip tooltip-left" data-tip="Album settings">
         <a href="{% url 'access:album-access' album.pk %}">
-          <svg class="w-10 h-10 p-2 hover:bg-gray-100/75 hover:rounded-full stroke-current" width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>        </a>
+          <svg class="w-12 h-12 sm:w-10 sm:h-10 p-2 hover:bg-gray-100/75 hover:rounded-full stroke-current" width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>        </a>
       </div>
     </div>
 
@@ -94,7 +94,7 @@
       <!-- Who has access -->
     {% if user == album.creator %}
     <div class="flex place-content-end">
-      <a href="{% url 'access:album-access' album.pk %}#access_control" class="btn-ghost hover:btn-ghost rounded-lg px-6 hover:px-6 pb-6 hover:pb-6">
+      <a href="{% url 'access:album-access' album.pk %}#access_control" class="">
         <div class="mt-6">
           <div class="flex items-center space-x-2 text-base">
             <h4 class="font-semibold mb-2">Shared with: </h4>

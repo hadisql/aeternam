@@ -10,14 +10,16 @@
   <div class="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 gap-x-16 gap-y-8 lg:grid-cols-5">
       <div class="lg:col-span-2 lg:py-12">
-        <div class="flex flex-wrap px-6 gap-10">
+        <div class="flex flex-wrap max-lg:place-content-center px-6 gap-10">
+          <!-- PROFILE PIC-->
           <div class="">
             {% thumbnail user.profile_picture "200x200" crop="center" as im %}
             <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.user }} profile pic" class="h-48 w-48 rounded-full ring-offset-base-100 ring-offset-2 ring-4 ring-gray-100">
             {% endthumbnail %}
           </div>
 
-          <div class="stats max-[555px]:stats-vertical lg:stats-vertical shadow">
+          <!-- STATS -->
+          <div class="max-[555px]:stats-vertical stats lg:stats-vertical shadow">
 
             <div class="stat">
               <div class="stat-figure text-primary">
@@ -43,7 +45,7 @@
         </div>
       </div>
 
-
+      <!-- FORM UPDATE -->
       <div class="rounded-lg bg-base-200 p-8 shadow-lg lg:col-span-3 lg:p-12">
         <form class="space-y-4" method="POST">
           {% csrf_token %}
