@@ -2,18 +2,19 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView, DetailView
 from django.views.generic.edit import FormView
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages #used in add_photos_to_album
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 
 from .models import Photo
-from .forms import PhotoForm
+from .forms import PhotoForm, CommentForm
 
 from albums.models import Album
 from access.models import AlbumAccess
 
+from comments_likes.models import Comment
 
 
 # def add_photos_to_album(request, album_id):
@@ -87,10 +88,32 @@ class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         photo = context['photo']
-        album = photo.album
-        photos = Photo.objects.filter(album=album)
-        context['photos'] = photos
+
+        comments = Comment.objects.filter(commented_photo=photo)
+        comment_form = CommentForm()
+
+        context['comments'] = comments
+        context['comment_form'] = comment_form
         return context
+
+    def post(self, request, *args, **kwargs):
+        photo_id = self.kwargs['pk']
+        photo = Photo.objects.get(id=photo_id)
+
+        if "body" in request.POST:
+            comment_form = CommentForm(request.POST, instance=photo)
+
+            if comment_form.is_valid():
+                comment_body = comment_form.cleaned_data['body']
+                Comment.objects.create(
+                    author=request.user,
+                    commented_photo=photo,
+                    body=comment_body
+                    )
+                return HttpResponseRedirect(request.path_info)
+
+        return redirect('photos:photo_detail', pk=photo_id)
+        # return HttpResponseRedirect(request.path_info)
 
 # -----------------------------
 # --------- DELETE  -----------

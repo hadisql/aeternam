@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "photos",
     "albums",
     "access",
+    "comments_likes",
     "sorl.thumbnail",
     "django_browser_reload",
     "django.contrib.admin",
