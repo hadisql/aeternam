@@ -10,5 +10,5 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['body']
         widgets = {
-            'body': forms.Textarea(attrs={'class':'textarea textarea-primary textarea-xs w-full max-w-lg', 'placeholder': 'Send a comment..','rows':4})
+            'body': forms.Textarea(attrs={'class':'textarea textarea-primary textarea-sm w-full max-w-lg', 'placeholder': 'Send a comment..','rows':2})
             }

@@ -3,7 +3,7 @@ from django.db import models
 from accounts.models import CustomUser
 from photos.models import Photo
 
-# Create your models here.
+
 class Comment(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="author_comment")
     commented_photo = models.ForeignKey(Photo, on_delete=models.CASCADE, related_name="photo_comment")

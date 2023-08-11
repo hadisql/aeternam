@@ -7,7 +7,7 @@ from .models import Photo
 
 
 class PhotoAdmin(AdminImageMixin, admin.ModelAdmin):
-
+    #https://stackoverflow.com/questions/1385094/django-admin-and-showing-thumbnail-images?rq=3
     def image_thumbnail(self, obj):
         if obj.image:
             t = get_thumbnail(obj.image, "50x50", crop='center', quality=99)
