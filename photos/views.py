@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView, DetailView
 from django.views.generic.edit import FormView
@@ -9,12 +10,17 @@ from django.contrib import messages #used in add_photos_to_album
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 
 from .models import Photo
-from .forms import PhotoForm, CommentForm
+from .forms import PhotoForm, CommentForm, PhotoUpdateForm, PhotoRotationForm
 
 from albums.models import Album
 from access.models import AlbumAccess
 
 from comments_likes.models import Comment
+
+import os
+from PIL import Image
+from io import BytesIO
+from django.core.files.images import ImageFile
 
 
 # def add_photos_to_album(request, album_id):
@@ -70,6 +76,99 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
         return reverse_lazy('albums:album_detail', kwargs={'pk': self.kwargs['album_id']})
 
 
+class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
+    template_name = "photos/photo_edit.html"
+    form_class = PhotoUpdateForm
+    rotation_form_class = PhotoRotationForm
+
+    def test_func(self):
+        photo_id = self.kwargs['pk']
+        photo = Photo.objects.get(id=photo_id)
+        return self.request.user == (photo.album.creator or photo.uploaded_by) #only creator of album or photo uploader can edit it
+
+    def handle_no_permission(self):
+        return HttpResponseForbidden("<h2>You don't have permission to edit this photo</h2>")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        photo_id = self.kwargs['pk']
+        photo = Photo.objects.get(id=photo_id)
+
+        context['photo'] = photo
+        context['photo_update_form'] = PhotoUpdateForm()
+        context['rotation_form'] = self.rotation_form_class()
+
+        return context
+
+    # def form_valid(self, form):
+    #     photo_id = self.kwargs['pk']
+    #     new_photo = form.cleaned_data['upload_photo']
+    #     if new_photo :
+    #         print('photo in form----!!!!')
+    #         old_photo = Photo.objects.get(pk=photo_id)
+    #         old_photo.image.delete(save=False)
+
+    #         old_photo.image = new_photo
+    #         old_photo.save()
+
+    #     if 'rotate' in self.request.POST:
+    #         print('ROTATE IN REQUEST.POST')
+    #         rotation_form = self.rotation_form_class(self.request.POST)
+    #         if rotation_form.is_valid():
+    #             angle = rotation_form.cleaned_data['rotation_angle']
+    #             print('FORM IS VALID AND ROTATION ANGLE TO APPLY IS', angle)
+    #             photo = Photo.objects.get(pk=self.kwargs['pk'])
+
+    #             # Rotation using PIL then saving image
+    #             image = Image.open(photo.image.path)
+    #             rotated_image = image.rotate(angle, expand=True) #PIL docs: "If true, expands the output image to make it large enough to hold the entire rotated image."
+    #             rotated_image_io = BytesIO()
+    #             rotated_image.save(rotated_image_io, format='JPEG')
+    #             photo.image.save(
+    #                 os.path.basename(photo.image.name),
+    #                 ImageFile(rotated_image_io),
+    #                 save=False
+    #             )
+    #             photo.save()
+
+    #     return super().form_valid(form)
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        rotation_form = self.rotation_form_class(self.request.POST)
+
+        if 'rotate' in request.POST:
+            print('ROTATE !!!!------')
+            if rotation_form.is_valid():
+                angle = rotation_form.cleaned_data['rotation_angle']
+                photo = Photo.objects.get(pk=self.kwargs['pk'])
+
+                image = Image.open(photo.image.path)
+                rotated_image = image.rotate(angle, expand=True)
+                rotated_image_io = BytesIO()
+                rotated_image.save(rotated_image_io, format='JPEG')
+                photo.image.save(
+                    os.path.basename(photo.image.name),
+                    ImageFile(rotated_image_io),
+                    save=False
+                )
+                photo.save()
+                return HttpResponseRedirect(request.path_info)
+
+        elif form.is_valid():
+            photo_id = self.kwargs['pk']
+            new_photo = form.cleaned_data['upload_photo']
+            if new_photo:
+                old_photo = Photo.objects.get(pk=photo_id)
+                old_photo.image.delete(save=False)
+
+                old_photo.image = new_photo
+                old_photo.save()
+
+        return self.form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('photos:photo_edit', kwargs={'pk': self.kwargs['pk']})
 
 
 class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):

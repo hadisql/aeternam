@@ -38,9 +38,9 @@
     <section class="my-8 max-w-lg" >
       <a name="access_control"></a>
       <div class="flex gap-4 prose">
-        <h2 class="mb-4">Control who can access your album</h2>
-        <svg class=" w-7 h-7 fill-current" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4.8,10.9953976 L4.8,10.9953976 L4.8,19.0046024 C4.8,19.5443356 5.20329495,20 5.70078449,20 L18.2992155,20 C18.7998322,20 19.2,19.5543453 19.2,19.0046024 L19.2,10.9953976 C19.2,10.4556644 18.796705,10 18.2992155,10 L5.70078449,10 C5.20016778,10 4.8,10.4456547 4.8,10.9953976 L4.8,10.9953976 Z M3,10.9953976 C3,9.33850596 4.2083756,8 5.70078449,8 L18.2992155,8 C19.7882905,8 21,9.34828102 21,10.9953976 L21,19.0046024 C21,20.661494 19.7916244,22 18.2992155,22 L5.70078449,22 C4.2117095,22 3,20.651719 3,19.0046024 L3,10.9953976 Z M18,8 L16,8 C16,5.790861 14.209139,4 12,4 C9.790861,4 8,5.790861 8,8 L6,8 C6,4.6862915 8.6862915,2 12,2 C15.3137085,2 18,4.6862915 18,8 Z M12,16 C12.5522847,16 13,15.5522847 13,15 C13,14.4477153 12.5522847,14 12,14 C11.4477153,14 11,14.4477153 11,15 C11,15.5522847 11.4477153,16 12,16 Z"> </path>
+        <h2>Control who can access your album</h2>
+        <svg class="w-8 h-8 stroke-current stroke-2 fill-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
         </svg>
       </div>
       <div class="prose">
@@ -52,7 +52,7 @@
           <table class="table">
 
             <thead>
-              <tr class="bg-green-300/30 text-green-700">
+              <tr class="bg-green-300/30 text-green-700 dark:bg-green-50/75">
                 <th></th>
                 <th>Name</th>
                 <th>Relation</th>
@@ -61,7 +61,7 @@
             <tbody>
               {% for relation, relation_type in relations_dict.items %}
               {% if relation in users_with_access %}
-              <tr class="bg-green-50/75">
+              <tr class="bg-green-50/75 dark:bg-green-400/30">
                 <th>
                   <label>
                     <input type="checkbox" class="toggle toggle-error" name="users_to_revoke_access" value="{{ relation.pk }}" id="id_users_to_revoke_access_{{ forloop.counter }}" />
@@ -113,7 +113,7 @@
         <div class="overflow-x-auto rounded-lg">
           <table class="table">
             <thead>
-              <tr class="bg-red-300/30 text-red-700">
+              <tr class="bg-red-300/30 text-red-700 dark:bg-red-50/75">
                 <th></th>
                 <th>Name</th>
                 <th>Relation</th>
@@ -122,7 +122,7 @@
             <tbody>
               {% for relation, relation_type in relations_dict.items %}
               {% if relation not in users_with_access %}
-              <tr class="bg-red-50/75">
+              <tr class="bg-red-50/75 dark:bg-red-400/30">
                 <th>
                   <label>
                     <input type="checkbox" class="toggle toggle-success" name="users_to_grant_access" value="{{ relation.pk }}" id="id_users_to_grant_access_{{ forloop.counter }}" />
@@ -165,7 +165,13 @@
 
     <hr>
     <div class="mt-10 flex gap-4">
-      <a href="{% url 'albums:album_detail' album.pk %}" class="btn btn-neutral">Back</a>
+      <a href="{% url 'albums:album_detail' album.pk %}" class="btn btn-neutral">
+        <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+          <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
+          <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
+        </svg>
+        Back
+      </a>
       <a href="{% url 'albums:album_delete' album.pk %}" class="btn btn-outline btn-error">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
