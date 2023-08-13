@@ -46,6 +46,7 @@
       <div class="prose">
         <h3 class="mb-4">Has access to your album :</h3>
       </div>
+      {% if users_with_access %}
       <form method="POST">
         {% csrf_token %}
         <div class="overflow-x-auto rounded-lg">
@@ -101,6 +102,9 @@
           Revoke access
         </button>
       </form>
+      {% else %}
+      <p>Nobody has access to your album</p>
+      {% endif %}
     </section>
 
     {% if relations|length != users_with_access|length %}

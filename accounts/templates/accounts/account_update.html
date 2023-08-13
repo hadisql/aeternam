@@ -19,7 +19,7 @@
           </div>
 
           <!-- STATS -->
-          <div class="max-[555px]:stats-vertical stats lg:stats-vertical shadow">
+          <!-- <div class="max-[555px]:stats-vertical stats lg:stats-vertical shadow">
 
             <div class="stat">
               <div class="stat-figure text-primary">
@@ -40,7 +40,7 @@
             </div>
 
 
-          </div>
+          </div> -->
 
         </div>
       </div>
@@ -140,10 +140,17 @@
             {{form.bio}}
           </div>
 
-          <div>
+          <div class="mt-6 flex gap-4">
+            <a href="{% url 'accounts:account_view' account.pk  %}" class="btn btn-neutral">
+              <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
+                <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
+              </svg>
+              Back
+            </a>
             <button
               type="submit"
-              class="mt-6 inline-block w-full btn btn-accent px-5 py-3 font-medium text-white sm:w-auto"
+              class="inline-block w-full btn btn-accent px-5 py-3 font-medium text-white sm:w-auto"
             >
               Save changes
             </button>

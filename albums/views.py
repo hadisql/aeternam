@@ -185,8 +185,8 @@ class AlbumDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         album = Album.objects.get(id=album_id)
         default_photo = Photo.objects.get(album=album, is_default=True)
 
-        displayed_photos = 3
         album_photos = Photo.objects.filter(album=album)
+        displayed_photos = min(3, len(album_photos))
         rest = len(album_photos) - displayed_photos
         context['default_photo'] = default_photo
         context['album_photos'] = album_photos[:displayed_photos]

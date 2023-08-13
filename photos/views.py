@@ -53,7 +53,13 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         album_id = self.kwargs['album_id']
+        album_photos = Photo.objects.filter(album=album_id)
+        displayed_photos = min(3, len(album_photos))
+        rest = len(album_photos) - displayed_photos
+
         context['album'] = get_object_or_404(Album, pk=album_id)
+        context['album_photos'] = album_photos[:displayed_photos]
+        context['rest'] = rest
         return context
 
     def form_valid(self, form):
@@ -65,9 +71,11 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
 
         if not existing_photos.exists():
             first_image = images.pop(0)
-            photo = Photo.objects.create(album=album, image=first_image, is_default=True, uploaded_by=self.request.user)
+            photo = Photo(album=album, image=first_image, is_default=True, uploaded_by=self.request.user)
+            photo.save() #save the instance, applying resize from model save method
         for image in images:
-            photo = Photo.objects.create(album=album, image=image, uploaded_by=self.request.user)
+            photo = Photo(album=album, image=image, uploaded_by=self.request.user)
+            photo.save() #save the instance, applying resize from model save method
 
         messages.success(self.request, 'Photos were uploaded successfully')
         return super().form_valid(form)
@@ -100,45 +108,11 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
         return context
 
-    # def form_valid(self, form):
-    #     photo_id = self.kwargs['pk']
-    #     new_photo = form.cleaned_data['upload_photo']
-    #     if new_photo :
-    #         print('photo in form----!!!!')
-    #         old_photo = Photo.objects.get(pk=photo_id)
-    #         old_photo.image.delete(save=False)
-
-    #         old_photo.image = new_photo
-    #         old_photo.save()
-
-    #     if 'rotate' in self.request.POST:
-    #         print('ROTATE IN REQUEST.POST')
-    #         rotation_form = self.rotation_form_class(self.request.POST)
-    #         if rotation_form.is_valid():
-    #             angle = rotation_form.cleaned_data['rotation_angle']
-    #             print('FORM IS VALID AND ROTATION ANGLE TO APPLY IS', angle)
-    #             photo = Photo.objects.get(pk=self.kwargs['pk'])
-
-    #             # Rotation using PIL then saving image
-    #             image = Image.open(photo.image.path)
-    #             rotated_image = image.rotate(angle, expand=True) #PIL docs: "If true, expands the output image to make it large enough to hold the entire rotated image."
-    #             rotated_image_io = BytesIO()
-    #             rotated_image.save(rotated_image_io, format='JPEG')
-    #             photo.image.save(
-    #                 os.path.basename(photo.image.name),
-    #                 ImageFile(rotated_image_io),
-    #                 save=False
-    #             )
-    #             photo.save()
-
-    #     return super().form_valid(form)
-
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         rotation_form = self.rotation_form_class(self.request.POST)
 
         if 'rotate' in request.POST:
-            print('ROTATE !!!!------')
             if rotation_form.is_valid():
                 angle = rotation_form.cleaned_data['rotation_angle']
                 photo = Photo.objects.get(pk=self.kwargs['pk'])
@@ -191,8 +165,26 @@ class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         comments = Comment.objects.filter(commented_photo=photo)
         comment_form = CommentForm()
 
+        # we list the Album photo pk in order to know "where" the displayed photo is in the list
+        album_id = Album.objects.get(photos_album=photo)
+        album_photo_pk_list = [photo.pk for photo in Photo.objects.filter(album=album_id)]
+
+        previous = next = None
+        if len(album_photo_pk_list)==1: #if album contains 1 photo only
+            previous = next = None
+        elif album_photo_pk_list.index(photo.id) == 0:
+            next = album_photo_pk_list[album_photo_pk_list.index(photo.id)+1]
+        elif album_photo_pk_list.index(photo.id)+1 == len(album_photo_pk_list):
+            previous = album_photo_pk_list[album_photo_pk_list.index(photo.id)-1]
+        else:
+            next = album_photo_pk_list[album_photo_pk_list.index(photo.id)+1]
+            previous = album_photo_pk_list[album_photo_pk_list.index(photo.id)-1]
+
+        context['previous'] = previous
+        context['next'] = next
         context['comments'] = comments
         context['comment_form'] = comment_form
+
         return context
 
     def post(self, request, *args, **kwargs):
