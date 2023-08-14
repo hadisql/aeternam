@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from sorl.thumbnail import ImageField
 
+
 class CustomUserManager(UserManager):
 
     def _create_user(self, email, password, **extra_fields):
@@ -99,16 +100,7 @@ class RelationRequest(models.Model):
     user_receiving = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='relation_req_receiver')
     user_sending = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='relation_req_sender')
 
-    RELATION_CHOICES =(
-    ("UNDEFINED", "UNDEFINED"),
-    ("SIBLING", "SIBLING"),
-    ("PARENT/CHILDREN", "PARENT/CHILDREN"),
-    ("COUSIN", "COUSIN"),
-    ("AUNT-UNCLE/NEPHEW-NIECE", "AUNT-UNCLE/NEPHEW-NIECE"),
-    ("GRANDPARENT/GRANDCHILDREN", "GRANDPARENT/GRANDCHILDREN"),
-    ("BROTHER/SISTER IN LAW", "BROTHER/SISTER IN LAW"),
-    ("FRIEND", "FRIEND"),
-    )
+    RELATION_CHOICES = Relation.RELATION_CHOICES
 
     relation_type = models.CharField(max_length=50, choices=RELATION_CHOICES, default="UNDEFINED")
 
