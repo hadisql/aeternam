@@ -1,5 +1,5 @@
 {% extends 'core/base.html' %}
-
+{% load thumbnail %}
 {% block title %}Add photos{% endblock title %}
 
 {% block body %}
@@ -28,6 +28,16 @@
           <label for="images" class="text-2xl font-bold tracking-tight">Upload new photos:</label>
           <input type="file" name="images" required multiple class="mt-6 block file-input file-input-bordered file-input-primary w-full max-w-xs">
 
+          <div class="mt-3 flex -space-x-8 overflow-hidden">
+            {% for photo in album_photos %}
+            {% thumbnail photo.image "600x600" crop="center" as im %}
+              <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}" class="inline-block h-36 w-36 ring-2 ring-white rounded-full">
+            {% endthumbnail %}
+            {% endfor %}
+          </div>
+          <div class="mt-3 font-medium">
+            <a>{% if rest > 0 %}+ {{rest}} other{{rest|pluralize}}{% endif %}</a>
+          </div>
 
           <div class="block mt-6 space-x-4">
             <button class="btn btn-primary" type="submit">Add Photos</button>

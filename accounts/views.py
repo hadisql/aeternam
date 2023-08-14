@@ -2,7 +2,7 @@ from typing import Any
 from django.forms.models import BaseModelForm
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
-from django.http import HttpRequest, HttpResponse, HttpResponseForbidden, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 
 from django.views.generic import FormView, UpdateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -18,6 +18,11 @@ from .models import RelationRequest, Relation
 from .forms import RelationRequestForm, RelationAcceptForm, RelationRequestUndoForm, RelationDeleteForm, RegisterForm
 
 from django.contrib.auth import authenticate
+
+import os
+from PIL import Image
+from io import BytesIO
+from django.core.files.images import ImageFile
 
 
 class RegisterPage(FormView):
@@ -76,7 +81,13 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_success_url(self):
         # cannot use reverse_lazy with pk to get back to user's profile
-        return reverse('accounts:account_view', kwargs={'pk':self.kwargs['pk']})
+        return reverse('accounts:edit_account', kwargs={'pk':self.kwargs['pk']})
+
+    def form_valid(self, form):
+        print(form.changed_data)
+        print("self.request.post", self.request.POST)
+        return super().form_valid(form)
+
 
 class UserView(LoginRequiredMixin, ListView):
     model = CustomUser
@@ -104,12 +115,9 @@ class UserView(LoginRequiredMixin, ListView):
         context['accept_form'] = RelationAcceptForm()
         context['undo_request_form'] = RelationRequestUndoForm()
 
-
         context['friendship_exists'] = (Relation.objects.filter(user_sending_id=self.request.user.id, user_receiving_id=account_id).exists() or Relation.objects.filter(user_sending_id=account_id, user_receiving_id=self.request.user.id).exists())
         context['request_from_exists'] = RelationRequest.objects.filter(user_sending_id=account_id, user_receiving=self.request.user.id).exists()
         context['request_to_exists'] = RelationRequest.objects.filter(user_sending_id=self.request.user.id, user_receiving=account_id).exists()
-
-
 
         return context
 

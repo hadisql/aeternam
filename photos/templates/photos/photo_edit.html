@@ -1,0 +1,62 @@
+{% extends 'core/base.html' %}
+{% load thumbnail %}
+
+{% block title %}Photo Editing{% endblock title %}
+
+{% block body %}
+<div class="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-16 lg:max-w-4xl lg:px-8">
+  <!-- Detailed Photo -->
+  <section class="block">
+    <div class="mx-auto w-full sm:w-3/4">
+
+      <img class="rounded-lg" src="{{photo.image.url}}" alt="{{photo.pk}}" id="current_photo">
+
+      <p class="mt-2 text-sm text-right">Uploaded by <span class="font-semibold">{% firstof photo.uploaded_by.first_name photo.uploaded_by.email %}</span></p>
+    </div>
+  </section>
+  <br>
+
+
+  <div class="flex flex-col w-full lg:flex-row">
+    <div class="grid flex-grow h-32 card bg-base-300 rounded-box place-items-center">
+      <form method="POST" id="rotation-form" class="flex flex-wrap place-content-center gap-2">
+        {% csrf_token %}
+        {{rotation_form.as_p}}
+        <button type="button" class="btn btn-accent" onclick="rotateImage(90)">
+          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="matrix(-1, 0, 0, 1, 0, 0)"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.23706 2.0007C6.78897 2.02117 7.21978 2.48517 7.19931 3.03708L7.10148 5.67483C8.45455 4.62548 10.154 4.00001 12 4.00001C16.4183 4.00001 20 7.58174 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 11.4477 4.44772 11 5 11C5.55228 11 6 11.4477 6 12C6 15.3137 8.68629 18 12 18C15.3137 18 18 15.3137 18 12C18 8.68631 15.3137 6.00001 12 6.00001C10.4206 6.00001 8.98317 6.60994 7.91098 7.60891L11.3161 8.00677C11.8646 8.07087 12.2573 8.56751 12.1932 9.11607C12.1291 9.66462 11.6325 10.0574 11.0839 9.99326L5.88395 9.38567C5.36588 9.32514 4.98136 8.87659 5.00069 8.35536L5.20069 2.96295C5.22116 2.41104 5.68516 1.98023 6.23706 2.0007Z"></path></svg>
+        </button>
+        <button type="button" class="btn btn-accent" onclick="rotateImage(-90)">
+          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M6.23706 2.0007C6.78897 2.02117 7.21978 2.48517 7.19931 3.03708L7.10148 5.67483C8.45455 4.62548 10.154 4.00001 12 4.00001C16.4183 4.00001 20 7.58174 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 11.4477 4.44772 11 5 11C5.55228 11 6 11.4477 6 12C6 15.3137 8.68629 18 12 18C15.3137 18 18 15.3137 18 12C18 8.68631 15.3137 6.00001 12 6.00001C10.4206 6.00001 8.98317 6.60994 7.91098 7.60891L11.3161 8.00677C11.8646 8.07087 12.2573 8.56751 12.1932 9.11607C12.1291 9.66462 11.6325 10.0574 11.0839 9.99326L5.88395 9.38567C5.36588 9.32514 4.98136 8.87659 5.00069 8.35536L5.20069 2.96295C5.22116 2.41104 5.68516 1.98023 6.23706 2.0007Z"></path></svg>
+        </button>
+        <input type="submit" value="Save rotation" name="rotate" class="btn btn-accent">
+      </form>
+    </div>
+    <div class="divider lg:divider-horizontal">OR</div>
+    <div class="grid flex-grow h-32 card bg-base-300 rounded-box place-items-center">
+      <p class="font-semibold text-lg">Replace the current photo with a new one :</p>
+      <form method="POST" enctype="multipart/form-data" class="flex flex-wrap place-content-center gap-4">
+        {% csrf_token %}
+        {{ photo_update_form }}
+        <input type="submit" value="Save" class="btn btn-primary max-[469px]:w-[351px] px-4">
+      </form>
+    </div>
+    <br>
+    <div class="mt-10">
+      <a href="{% url 'photos:photo_detail' photo.pk %}" class="btn btn-neutral">
+        <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+          <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
+          <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
+        </svg>
+        Back
+      </a>
+    </div>
+  </div>
+
+
+
+
+
+
+
+</div>
+{% endblock body %}

@@ -7,76 +7,102 @@
 <div class="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-16 lg:max-w-4xl lg:px-8">
   <!-- Detailed Photo -->
   <section class="block">
-    <div class="mx-auto w-3/4">
-      {% thumbnail photo.image "1000x1000" as im %}
-      <img class="rounded-2xl" src="{{im.url}}" width="{{ im.width }}" height="{{ im.height }}" alt="{{photo.pk}}">
-      {% endthumbnail %}
+    <div class="relative mx-auto w-full group">
+      <img class="rounded-lg" src="{{photo.image.url}}" alt="{{photo.pk}}">
+      {% if previous %}
+        <div class="absolute bottom-1/2 left-1">
+          <a href="{% url 'photos:photo_detail' previous %}">
+            <svg class="w-12 h-12 opacity-0 group-hover:opacity-80 fill-gray-100"  version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 330 330" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path id="XMLID_6_" d="M165,0C74.019,0,0,74.019,0,165s74.019,165,165,165s165-74.019,165-165S255.981,0,165,0z M205.606,234.394 c5.858,5.857,5.858,15.355,0,21.213C202.678,258.535,198.839,260,195,260s-7.678-1.464-10.606-4.394l-80-79.998 c-2.813-2.813-4.394-6.628-4.394-10.606c0-3.978,1.58-7.794,4.394-10.607l80-80.002c5.857-5.858,15.355-5.858,21.213,0 c5.858,5.857,5.858,15.355,0,21.213l-69.393,69.396L205.606,234.394z"></path> </g></svg>
+          </a>
+        </div>
+      {% endif %}
+
       <p class="mt-2 text-sm text-right">Uploaded by <span class="font-semibold">{% firstof photo.uploaded_by.first_name photo.uploaded_by.email %}</span></p>
+
+      {% if next %}
+      <div class="absolute bottom-1/2 right-1">
+        <a href="{% url 'photos:photo_detail' next %}">
+          <svg class="w-12 h-12 opacity-0 group-hover:opacity-80 fill-gray-100" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 330 330" xml:space="preserve" transform="matrix(-1, 0, 0, 1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path id="XMLID_6_" d="M165,0C74.019,0,0,74.019,0,165s74.019,165,165,165s165-74.019,165-165S255.981,0,165,0z M205.606,234.394 c5.858,5.857,5.858,15.355,0,21.213C202.678,258.535,198.839,260,195,260s-7.678-1.464-10.606-4.394l-80-79.998 c-2.813-2.813-4.394-6.628-4.394-10.606c0-3.978,1.58-7.794,4.394-10.607l80-80.002c5.857-5.858,15.355-5.858,21.213,0 c5.858,5.857,5.858,15.355,0,21.213l-69.393,69.396L205.606,234.394z"></path> </g></svg>
+        </a>
+      </div>
+      {% endif %}
     </div>
   </section>
   <br>
   <!-- Comments -->
   <!-- https://tailwindcomponents.com/component/facebook-comments-column -->
 
-
-  {% for comment in comments %}
-  <div class="flex items-center w-full bg-base-100 ">
-    <div class="bg-base-100 p-4 antialiased flex max-w-lg">
-      {% thumbnail comment.author.profile_picture "50x50" crop="center" as im %}
-        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.user }} profile pic" class="rounded-full h-12 w-12 mr-2 mt-1">
-      {% endthumbnail %}
-      <div>
-        <div class="bg-base-300 dark:bg-slate-700 dark:text-gray-200 rounded-2xl px-4 pt-2 pb-2.5">
-          <div class="font-semibold text-sm leading-relaxed">{{comment.author.first_name}} {{comment.author.last_name}}</div>
-          <div class="text-normal leading-snug md:leading-normal">
-            {{comment.body}}
+  <div class="max-w-xl mx-auto">
+    {% for comment in comments %}
+    <div class="flex items-center w-full bg-base-100 ">
+      <div class="bg-base-100 p-4 antialiased flex max-w-lg">
+        {% thumbnail comment.author.profile_picture "50x50" crop="center" as im %}
+          <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.user }} profile pic" class="rounded-full h-12 w-12 mr-2 mt-1">
+        {% endthumbnail %}
+        <div>
+          <div class="bg-base-300 dark:bg-slate-700 dark:text-gray-200 rounded-xl px-4 pt-2 pb-2.5">
+            <div class="font-semibold text-sm leading-relaxed">{{comment.author.first_name}} {{comment.author.last_name}}</div>
+            <div class="text-normal leading-snug md:leading-normal">
+              {{comment.body}}
+            </div>
           </div>
+          <div class="text-sm ml-4 mt-0.5 text-gray-500 dark:text-gray-400">{{comment.created|timesince|up_to:','}} ago{% if comment.updated|date != comment.created|date %}(edited){% endif %}</div>
+          <!-- <div class="bg-white dark:bg-gray-700 border border-white dark:border-gray-700 rounded-full float-right -mt-8 mr-0.5 flex shadow items-center ">
+            <svg class="p-0.5 h-5 w-5 rounded-full z-20 bg-white dark:bg-gray-700" xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 16 16'><defs><linearGradient id='a1' x1='50%' x2='50%' y1='0%' y2='100%'><stop offset='0%' stop-color='#18AFFF'/><stop offset='100%' stop-color='#0062DF'/></linearGradient><filter id='c1' width='118.8%' height='118.8%' x='-9.4%' y='-9.4%' filterUnits='objectBoundingBox'><feGaussianBlur in='SourceAlpha' result='shadowBlurInner1' stdDeviation='1'/><feOffset dy='-1' in='shadowBlurInner1' result='shadowOffsetInner1'/><feComposite in='shadowOffsetInner1' in2='SourceAlpha' k2='-1' k3='1' operator='arithmetic' result='shadowInnerInner1'/><feColorMatrix in='shadowInnerInner1' values='0 0 0 0 0 0 0 0 0 0.299356041 0 0 0 0 0.681187726 0 0 0 0.3495684 0'/></filter><path id='b1' d='M8 0a8 8 0 00-8 8 8 8 0 1016 0 8 8 0 00-8-8z'/></defs><g fill='none'><use fill='url(#a1)' xlink:href='#b1'/><use fill='black' filter='url(#c1)' xlink:href='#b1'/><path fill='white' d='M12.162 7.338c.176.123.338.245.338.674 0 .43-.229.604-.474.725a.73.73 0 01.089.546c-.077.344-.392.611-.672.69.121.194.159.385.015.62-.185.295-.346.407-1.058.407H7.5c-.988 0-1.5-.546-1.5-1V7.665c0-1.23 1.467-2.275 1.467-3.13L7.361 3.47c-.005-.065.008-.224.058-.27.08-.079.301-.2.635-.2.218 0 .363.041.534.123.581.277.732.978.732 1.542 0 .271-.414 1.083-.47 1.364 0 0 .867-.192 1.879-.199 1.061-.006 1.749.19 1.749.842 0 .261-.219.523-.316.666zM3.6 7h.8a.6.6 0 01.6.6v3.8a.6.6 0 01-.6.6h-.8a.6.6 0 01-.6-.6V7.6a.6.6 0 01.6-.6z'/></g></svg>
+            <svg class="p-0.5 h-5 w-5 rounded-full -ml-1.5 bg-white dark:bg-gray-700" xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 16 16'><defs><linearGradient id='a2' x1='50%' x2='50%' y1='0%' y2='100%'><stop offset='0%' stop-color='#FF6680'/><stop offset='100%' stop-color='#E61739'/></linearGradient><filter id='c2' width='118.8%' height='118.8%' x='-9.4%' y='-9.4%' filterUnits='objectBoundingBox'><feGaussianBlur in='SourceAlpha' result='shadowBlurInner1' stdDeviation='1'/><feOffset dy='-1' in='shadowBlurInner1' result='shadowOffsetInner1'/><feComposite in='shadowOffsetInner1' in2='SourceAlpha' k2='-1' k3='1' operator='arithmetic' result='shadowInnerInner1'/><feColorMatrix in='shadowInnerInner1' values='0 0 0 0 0.710144928 0 0 0 0 0 0 0 0 0 0.117780134 0 0 0 0.349786932 0'/></filter><path id='b2' d='M8 0a8 8 0 100 16A8 8 0 008 0z'/></defs><g fill='none'><use fill='url(#a2)' xlink:href='#b2'/><use fill='black' filter='url(#c2)' xlink:href='#b2'/><path fill='white' d='M10.473 4C8.275 4 8 5.824 8 5.824S7.726 4 5.528 4c-2.114 0-2.73 2.222-2.472 3.41C3.736 10.55 8 12.75 8 12.75s4.265-2.2 4.945-5.34c.257-1.188-.36-3.41-2.472-3.41'/></g></svg>
+            <span class="text-sm ml-1 pr-1.5 text-gray-500 dark:text-gray-300">3</span>
+          </div> -->
         </div>
-        <div class="text-sm ml-4 mt-0.5 text-gray-500 dark:text-gray-400">{{comment.created|timesince|up_to:','}} ago{% if comment.updated|date != comment.created|date %}(edited){% endif %}</div>
-        <!-- <div class="bg-white dark:bg-gray-700 border border-white dark:border-gray-700 rounded-full float-right -mt-8 mr-0.5 flex shadow items-center ">
-          <svg class="p-0.5 h-5 w-5 rounded-full z-20 bg-white dark:bg-gray-700" xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 16 16'><defs><linearGradient id='a1' x1='50%' x2='50%' y1='0%' y2='100%'><stop offset='0%' stop-color='#18AFFF'/><stop offset='100%' stop-color='#0062DF'/></linearGradient><filter id='c1' width='118.8%' height='118.8%' x='-9.4%' y='-9.4%' filterUnits='objectBoundingBox'><feGaussianBlur in='SourceAlpha' result='shadowBlurInner1' stdDeviation='1'/><feOffset dy='-1' in='shadowBlurInner1' result='shadowOffsetInner1'/><feComposite in='shadowOffsetInner1' in2='SourceAlpha' k2='-1' k3='1' operator='arithmetic' result='shadowInnerInner1'/><feColorMatrix in='shadowInnerInner1' values='0 0 0 0 0 0 0 0 0 0.299356041 0 0 0 0 0.681187726 0 0 0 0.3495684 0'/></filter><path id='b1' d='M8 0a8 8 0 00-8 8 8 8 0 1016 0 8 8 0 00-8-8z'/></defs><g fill='none'><use fill='url(#a1)' xlink:href='#b1'/><use fill='black' filter='url(#c1)' xlink:href='#b1'/><path fill='white' d='M12.162 7.338c.176.123.338.245.338.674 0 .43-.229.604-.474.725a.73.73 0 01.089.546c-.077.344-.392.611-.672.69.121.194.159.385.015.62-.185.295-.346.407-1.058.407H7.5c-.988 0-1.5-.546-1.5-1V7.665c0-1.23 1.467-2.275 1.467-3.13L7.361 3.47c-.005-.065.008-.224.058-.27.08-.079.301-.2.635-.2.218 0 .363.041.534.123.581.277.732.978.732 1.542 0 .271-.414 1.083-.47 1.364 0 0 .867-.192 1.879-.199 1.061-.006 1.749.19 1.749.842 0 .261-.219.523-.316.666zM3.6 7h.8a.6.6 0 01.6.6v3.8a.6.6 0 01-.6.6h-.8a.6.6 0 01-.6-.6V7.6a.6.6 0 01.6-.6z'/></g></svg>
-          <svg class="p-0.5 h-5 w-5 rounded-full -ml-1.5 bg-white dark:bg-gray-700" xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 16 16'><defs><linearGradient id='a2' x1='50%' x2='50%' y1='0%' y2='100%'><stop offset='0%' stop-color='#FF6680'/><stop offset='100%' stop-color='#E61739'/></linearGradient><filter id='c2' width='118.8%' height='118.8%' x='-9.4%' y='-9.4%' filterUnits='objectBoundingBox'><feGaussianBlur in='SourceAlpha' result='shadowBlurInner1' stdDeviation='1'/><feOffset dy='-1' in='shadowBlurInner1' result='shadowOffsetInner1'/><feComposite in='shadowOffsetInner1' in2='SourceAlpha' k2='-1' k3='1' operator='arithmetic' result='shadowInnerInner1'/><feColorMatrix in='shadowInnerInner1' values='0 0 0 0 0.710144928 0 0 0 0 0 0 0 0 0 0.117780134 0 0 0 0.349786932 0'/></filter><path id='b2' d='M8 0a8 8 0 100 16A8 8 0 008 0z'/></defs><g fill='none'><use fill='url(#a2)' xlink:href='#b2'/><use fill='black' filter='url(#c2)' xlink:href='#b2'/><path fill='white' d='M10.473 4C8.275 4 8 5.824 8 5.824S7.726 4 5.528 4c-2.114 0-2.73 2.222-2.472 3.41C3.736 10.55 8 12.75 8 12.75s4.265-2.2 4.945-5.34c.257-1.188-.36-3.41-2.472-3.41'/></g></svg>
-          <span class="text-sm ml-1 pr-1.5 text-gray-500 dark:text-gray-300">3</span>
-        </div> -->
       </div>
-    </div>
-    </div>
-  {% endfor %}
-
-  <form method="POST" class="mt-8">
-    {% csrf_token %}
-    <div class="grid grid-rows-2 space-y-2 mx-6">
-      <!-- <textarea class="textarea textarea-primary textarea-xs w-full max-w-lg " name="new_comment" id="id_new_comment" placeholder="Send a comment.."></textarea> -->
-      {{comment_form.body}}
-      <div class="flex place-content-end w-full max-w-lg">
-        <button type="submit" class="btn btn-primary btn-sm md:btn-md lg:btn-lg rounded-2xl">
-          <svg class="w-5 h-5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg"><path d="M10.3009 13.6949L20.102 3.89742M10.5795 14.1355L12.8019 18.5804C13.339 19.6545 13.6075 20.1916 13.9458 20.3356C14.2394 20.4606 14.575 20.4379 14.8492 20.2747C15.1651 20.0866 15.3591 19.5183 15.7472 18.3818L19.9463 6.08434C20.2845 5.09409 20.4535 4.59896 20.3378 4.27142C20.2371 3.98648 20.013 3.76234 19.7281 3.66167C19.4005 3.54595 18.9054 3.71502 17.9151 4.05315L5.61763 8.2523C4.48114 8.64037 3.91289 8.83441 3.72478 9.15032C3.56153 9.42447 3.53891 9.76007 3.66389 10.0536C3.80791 10.3919 4.34498 10.6605 5.41912 11.1975L9.86397 13.42C10.041 13.5085 10.1295 13.5527 10.2061 13.6118C10.2742 13.6643 10.3352 13.7253 10.3876 13.7933C10.4468 13.87 10.491 13.9585 10.5795 14.1355Z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-        </button>
       </div>
-    </div>
-  </form>
+    {% endfor %}
 
-  <br><br>
-  <hr>
-  <!-- Back / Delete-->
-  <section class="mt-10 flex gap-4 items-end">
-    <a href="{% url 'albums:album_detail' photo.album.pk %}" class="flex place-content-center btn btn-neutral">
-      <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-        <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
-        <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
-      </svg>
-      Back
-    </a>
+    <form method="POST" class="mt-8">
+      {% csrf_token %}
+      <div class="grid grid-rows-2 space-y-2 ">
+        <!-- <textarea class="textarea textarea-primary textarea-xs w-full max-w-lg " name="new_comment" id="id_new_comment" placeholder="Send a comment.."></textarea> -->
+        {{comment_form.body}}
+        <div class="flex place-content-end">
+          <button type="submit" class="btn btn-primary btn-sm md:btn-md lg:btn-lg rounded-xl">
+            <svg class="w-5 h-5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg"><path d="M10.3009 13.6949L20.102 3.89742M10.5795 14.1355L12.8019 18.5804C13.339 19.6545 13.6075 20.1916 13.9458 20.3356C14.2394 20.4606 14.575 20.4379 14.8492 20.2747C15.1651 20.0866 15.3591 19.5183 15.7472 18.3818L19.9463 6.08434C20.2845 5.09409 20.4535 4.59896 20.3378 4.27142C20.2371 3.98648 20.013 3.76234 19.7281 3.66167C19.4005 3.54595 18.9054 3.71502 17.9151 4.05315L5.61763 8.2523C4.48114 8.64037 3.91289 8.83441 3.72478 9.15032C3.56153 9.42447 3.53891 9.76007 3.66389 10.0536C3.80791 10.3919 4.34498 10.6605 5.41912 11.1975L9.86397 13.42C10.041 13.5085 10.1295 13.5527 10.2061 13.6118C10.2742 13.6643 10.3352 13.7253 10.3876 13.7933C10.4468 13.87 10.491 13.9585 10.5795 14.1355Z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+        </div>
+      </div>
+    </form>
 
-    {% if photo.uploaded_by == user %}
-    <a href="{% url 'photos:photo_delete' photo.pk %}" class="btn btn-outline btn-error">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
-      </svg>
-      Delete Photo
-    </a>
-    {% endif %}
-  </section>
+    <br>
+    <hr>
+    <!-- Back / Delete-->
+    <section class="mt-10 flex gap-4">
+      <a href="{% url 'albums:album_detail' photo.album.pk %}" class="btn btn-neutral">
+        <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+          <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
+          <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
+        </svg>
+        Back
+      </a>
+
+      {% if photo.uploaded_by == user or photo.album.creator == user %}
+      <div class="tooltip tooltip-top" data-tip="edit photo">
+        <a href="{% url 'photos:photo_edit' photo.pk %}" class="btn">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </a>
+      </div>
+
+      <div class="tooltip tooltip-top" data-tip="delete photo">
+        <a href="{% url 'photos:photo_delete' photo.pk %}" class="btn btn-outline btn-error">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
+          </svg>
+        </a>
+      </div>
+      {% endif %}
+    </section>
+  </div>
+
 </div>
 
 {% endblock %}

@@ -3,8 +3,10 @@ from sorl.thumbnail import ImageField
 
 from albums.models import Album
 from accounts.models import CustomUser
-import os
 
+import os
+from PIL import Image
+from io import BytesIO
 
 
 # -------------------------
@@ -26,6 +28,34 @@ class Photo(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['album'], condition=models.Q(is_default=True), name='unique_default_photo_per_album'),
         ]
+
+    def save(self, *args, **kwargs):
+        # Call the parent class's save method
+        super().save(*args, **kwargs)
+
+        size_limit = 1024*1024 # 1MB (1024*1024=1048576 bytes)
+
+        # Check if the image size exceeds size limit
+        if self.image.size > size_limit:
+            image = Image.open(self.image.path)
+            width, height = image.size
+
+            # Calculate a new quality value to get the image size under 1MB
+            quality = int((size_limit / self.image.size) * 100)
+
+            # Create a BytesIO object to store the modified image data
+            image_io = BytesIO()
+            image.save(image_io, format='JPEG', quality=quality)
+            image_io.seek(0)
+
+            # Create a new ImageFile object and save it to the image field
+            from django.core.files.images import ImageFile
+            self.image.save(
+                os.path.basename(self.image.name),
+                ImageFile(image_io),
+                save=False
+            )
+            super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         # Delete the photo file from storage when the Photo object is deleted
