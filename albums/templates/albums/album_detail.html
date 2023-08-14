@@ -7,14 +7,14 @@
 {% block body %}
 
 <div class="bg-base-100">
-  <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+  <div class="mx-auto max-w-2xl px-6 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
     <div class="flex justify-between">
       <h2 class="sr-only">Album Detail</h2>
       <h1 class="text-3xl font-bold tracking-tight">{{album.title|capfirst}}</h1>
       {% if user == album.creator %}
       <div class="flex items-center tooltip tooltip-left" data-tip="Album settings">
         <a href="{% url 'access:album-access' album.pk %}">
-          <svg class="w-12 h-12 sm:w-10 sm:h-10 p-2 hover:bg-gray-100/75 hover:rounded-full stroke-current" width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>        </a>
+          <svg class="w-10 h-10 sm:w-12 sm:h-12 p-2 hover:bg-gray-100/75 hover:rounded-full stroke-current"  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>        </a>
       </div>
       {% endif %}
     </div>
@@ -26,20 +26,17 @@
     <!-- View / Swipe buttons -->
     {% if photos %}
     <div class="flex place-content-center">
-      <div class="inline-flex rounded-lg border border-gray-100 bg-gray-100 p-1">
-        <button id="view-button" class="inline-flex items-center gap-2 rounded-md bg-white px-4 py-2 text-sm text-blue-500 shadow-sm focus:relative">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
-            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-259.000000, -680.000000)" class="fill-current"><g id="icons" transform="translate(56.000000, 160.000000)">
-              <path d="M209.3,538 L206.15,538 C205.5704,538 205.1,537.552 205.1,537 C205.1,536.448 205.5704,536 206.15,536 L209.3,536 C209.8796,536 210.35,536.448 210.35,537 C210.35,537.552 209.8796,538 209.3,538 L209.3,538 Z M210.35,534 L205.1,534 C203.93975,534 203,534.895 203,536 L203,538 C203,539.105 203.93975,540 205.1,540 L210.35,540 C211.51025,540 212.45,539.105 212.45,538 L212.45,536 C212.45,534.895 211.51025,534 210.35,534 L210.35,534 Z M220.85,524 L217.7,524 C217.1204,524 216.65,523.552 216.65,523 C216.65,522.448 217.1204,522 217.7,522 L220.85,522 C221.4296,522 221.9,522.448 221.9,523 C221.9,523.552 221.4296,524 220.85,524 L220.85,524 Z M221.9,520 L216.65,520 C215.48975,520 214.55,520.895 214.55,522 L214.55,524 C214.55,525.105 215.48975,526 216.65,526 L221.9,526 C223.06025,526 224,525.105 224,524 L224,522 C224,520.895 223.06025,520 221.9,520 L221.9,520 Z M221.9,537 C221.9,537.552 221.4296,538 220.85,538 L217.7,538 C217.1204,538 216.65,537.552 216.65,537 L216.65,531 C216.65,530.448 217.1204,530 217.7,530 L220.85,530 C221.4296,530 221.9,530.448 221.9,531 L221.9,537 Z M221.9,528 L216.65,528 C215.48975,528 214.55,528.895 214.55,530 L214.55,538 C214.55,539.105 215.48975,540 216.65,540 L221.9,540 C223.06025,540 224,539.105 224,538 L224,530 C224,528.895 223.06025,528 221.9,528 L221.9,528 Z M210.35,529 C210.35,529.552 209.8796,530 209.3,530 L206.15,530 C205.5704,530 205.1,529.552 205.1,529 L205.1,523 C205.1,522.448 205.5704,522 206.15,522 L209.3,522 C209.8796,522 210.35,522.448 210.35,523 L210.35,529 Z M210.35,520 L205.1,520 C203.93975,520 203,520.895 203,522 L203,530 C203,531.105 203.93975,532 205.1,532 L210.35,532 C211.51025,532 212.45,531.105 212.45,530 L212.45,522 C212.45,520.895 211.51025,520 210.35,520 L210.35,520 Z"> </path></g></g></g>
+      <div class="inline-flex rounded-lg border border-base-content bg-base-100 p-1">
+        <button id="view-button" class="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm focus:relative">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 sm:w-8 sm:h-8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
           </svg>
-          Gallery
         </button>
 
-        <button id="swipe-button" class="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-            <path d="M21.707,11.293a1,1,0,0,1,0,1.414l-4,4a1,1,0,0,1-1.414-1.414L19.586,12,16.293,8.707a1,1,0,1,1,1.414-1.414ZM7,17a1,1,0,0,0,.707-1.707L4.414,12,7.707,8.707A1,1,0,1,0,6.293,7.293l-4,4a1,1,0,0,0,0,1.414l4,4A1,1,0,0,0,7,17Z"></path></g>
+        <button id="swipe-button" class="inline-flex items-center gap-2 rounded-md bg-base-300 shadow-sm px-4 py-2 text-sm hover:text-accent-content focus:relative">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 sm:w-8 sm:h-8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
           </svg>
-          Swipe
         </button>
       </div>
     </div>
@@ -47,12 +44,12 @@
 
     <div>
       <!-- All photos layout -->
-      <div id="photo-gallery-layout" class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+      <div id="photo-gallery-layout" class="hidden mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
 
         {% if photos %}
           {% for photo in photos %}
             <a class="group" href="{% url 'photos:photo_detail' photo.pk %}">
-              <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+              <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-xl bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
                 <!-- <img src="{{photo.image.url}}" alt="{{ photo.pk }}" class="h-full w-full object-cover object-center group-hover:opacity-75"> -->
                 {% thumbnail photo.image "600x600" crop="center" as im %}
                   <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}" class="h-full w-full object-cover object-center group-hover:opacity-75">
@@ -73,7 +70,7 @@
 
       <!-- Swipe container -->
       {% if photos %}
-      <div id="photo-swipe-layout" class="hidden p-8">
+      <div id="photo-swipe-layout" class="pt-6">
         <div class="h-full relative">
           <swiper-container class="mySwiper w-full h-full" pagination="true" pagination-clickable="true" navigation="true">
             {% for photo in photos %}
@@ -89,13 +86,14 @@
         </div>
       </div>
 
+      <!-- SWIPER SCRIPT -->
       <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-element-bundle.min.js"></script>
       {% endif %}
     </div>
 
       <!-- Who has access -->
     {% if user == album.creator %}
-    <div class="flex place-content-end">
+    <div class="flex place-content-end px-6">
       <a href="{% url 'access:album-access' album.pk %}#access_control" class="">
         <div class="mt-6">
           <div class="flex items-center space-x-2 text-base">
