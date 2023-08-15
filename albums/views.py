@@ -153,9 +153,8 @@ class AlbumDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
         album_accesses = AlbumAccess.objects.filter(album=album_id) #all users concerned
         users_with_access = [album_access.user for album_access in album_accesses]
-        users_with_access_count = len(users_with_access)
         context['users_with_access'] = users_with_access
-        context['users_with_access_count'] = users_with_access_count
+        context['avatar_show_number'] = 3
 
         success_message = self.request.GET.get('success_message')
         if success_message:
