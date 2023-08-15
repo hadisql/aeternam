@@ -25,5 +25,6 @@ class Album(models.Model):
             shutil.rmtree(album_directory)
         super().delete(*args, **kwargs)
 
+
     def __str__(self) -> str:
-        return f"Album {self.pk} created by {self.creator.first_name or self.creator}"
+        return f"Album {self.pk} '{self.title}' created by {self.creator.first_name or self.creator}"

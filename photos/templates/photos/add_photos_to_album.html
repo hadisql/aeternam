@@ -39,9 +39,16 @@
             <a>{% if rest > 0 %}+ {{rest}} other{{rest|pluralize}}{% endif %}</a>
           </div>
 
-          <div class="block mt-6 space-x-4">
+          <div class="mt-6 flex gap-4">
+            <a href="{% url 'albums:album_detail' album.pk %}" class="btn btn-neutral">
+              <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
+                <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
+              </svg>
+              Back
+            </a>
             <button class="btn btn-primary" type="submit">Add Photos</button>
-            <a href="{% url 'albums:album_detail' album.pk %}" class="btn btn-neutral">Back</a>
+
           </div>
         </form>
       </div>

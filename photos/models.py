@@ -75,4 +75,4 @@ class Photo(models.Model):
         super().delete(*args, **kwargs)
 
     def __str__(self) -> str:
-      return f"Photo {self.pk} (in Album {self.album.pk})"
+      return f"Photo {self.pk} (in Album {self.album.pk}) uploaded by {self.uploaded_by}"

@@ -1,5 +1,3 @@
-from typing import Any
-from django.forms.models import BaseModelForm
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
@@ -7,7 +5,7 @@ from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirec
 from django.views.generic import FormView, UpdateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 
 from .models import CustomUser
 from .forms import CustomUserChangeForm
@@ -17,12 +15,8 @@ from django.db.models import Q
 from .models import RelationRequest, Relation
 from .forms import RelationRequestForm, RelationAcceptForm, RelationRequestUndoForm, RelationDeleteForm, RegisterForm
 
-from django.contrib.auth import authenticate
-
-import os
-from PIL import Image
-from io import BytesIO
-from django.core.files.images import ImageFile
+from photos.models import Photo
+from comments_likes.models import Comment
 
 
 class RegisterPage(FormView):
@@ -118,6 +112,11 @@ class UserView(LoginRequiredMixin, ListView):
         context['friendship_exists'] = (Relation.objects.filter(user_sending_id=self.request.user.id, user_receiving_id=account_id).exists() or Relation.objects.filter(user_sending_id=account_id, user_receiving_id=self.request.user.id).exists())
         context['request_from_exists'] = RelationRequest.objects.filter(user_sending_id=account_id, user_receiving=self.request.user.id).exists()
         context['request_to_exists'] = RelationRequest.objects.filter(user_sending_id=self.request.user.id, user_receiving=account_id).exists()
+
+        # retrieving user data for profile dashboard
+        context['number_of_photos'] = Photo.objects.filter(uploaded_by=account_id).count
+        context['number_of_comments'] = Comment.objects.filter(author=account_id).count
+        context['number_of_relations'] = Relation.objects.filter(Q(user_sending=account_id)|Q(user_receiving=account_id)).count
 
         return context
 

@@ -8,6 +8,14 @@
 
 <div class="bg-base-100">
   <div class="mx-auto max-w-2xl px-6 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+    {% if messages %}
+    {% for message in messages %}
+      <div class="my-6 alert alert-success mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span>{{message}}</span>
+      </div>
+    {% endfor %}
+    {% endif %}
     <div class="flex justify-between">
       <h2 class="sr-only">Album Detail</h2>
       <h1 class="text-3xl font-bold tracking-tight">{{album.title|capfirst}}</h1>
@@ -131,17 +139,6 @@
     </div>
   </div>
 
-
-
-
-  {% if messages %}
-    {% for message in messages %}
-    <div class="my-6 alert alert-success mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-      <span>{{message}}</span>
-    </div>
-    {% endfor %}
-  {% endif %}
 
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="flex mb-6 gap-4">

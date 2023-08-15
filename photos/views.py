@@ -1,9 +1,9 @@
-from typing import Any, Dict
+
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, ListView, DeleteView, UpdateView, DetailView
+from django.views.generic import DeleteView, DetailView
 from django.views.generic.edit import FormView
 
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages #used in add_photos_to_album
@@ -77,7 +77,10 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
             photo = Photo(album=album, image=image, uploaded_by=self.request.user)
             photo.save() #save the instance, applying resize from model save method
 
-        messages.success(self.request, 'Photos were uploaded successfully')
+        if len(images)==1:
+            messages.success(self.request, '1 photo was uploaded successfully')
+        else:
+            messages.success(self.request, f'{len(images)} photos were uploaded successfully')
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -115,10 +118,11 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         if 'rotate' in request.POST:
             if rotation_form.is_valid():
                 angle = rotation_form.cleaned_data['rotation_angle']
+                print('rotaation angle : ', angle)
                 photo = Photo.objects.get(pk=self.kwargs['pk'])
 
                 image = Image.open(photo.image.path)
-                rotated_image = image.rotate(angle, expand=True)
+                rotated_image = image.rotate(-angle, expand=True)
                 rotated_image_io = BytesIO()
                 rotated_image.save(rotated_image_io, format='JPEG')
                 photo.image.save(

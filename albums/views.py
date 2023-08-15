@@ -1,22 +1,20 @@
-from typing import Any, Dict
-from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
+from django.shortcuts import redirect
 
-
-from django.views.generic import CreateView, ListView, DeleteView, UpdateView, DetailView
-from django.views.generic.edit import FormView
+from django.views.generic import CreateView, ListView, DeleteView, DetailView
 
 from django.db.models import Count
-from django.shortcuts import get_object_or_404
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponseRedirect
 
 from .models import Album
 from .forms import AlbumForm
 from photos.models import Photo
 from access.models import AlbumAccess
 
+from django.contrib import messages #used in AlbumCreateView
+from django.contrib.messages.views import SuccessMessageMixin # used in AlbumDeleteView
 
 
 # ----------------------------
@@ -28,7 +26,7 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
     # -- template name is 'album_form.html'
     model = Album
     form_class = AlbumForm
-    success_url = reverse_lazy('albums:albums_view')
+    # success_url = reverse_lazy('albums:albums_view')
     # "redirect" didn't work : The reverse_lazy function is used to lazily reverse the URL, ensuring that it's only evaluated when the view is executed.
 
     def form_valid(self, form):
@@ -37,15 +35,19 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
         album.save()
 
         # Save associated photos to the album
-        for image in self.request.FILES.getlist('images'):
-            Photo.objects.create(album=album, image=image, uploaded_by=self.request.user)
+        images = self.request.FILES.getlist('images')
 
-        # Set the first photo as the default photo
-        default_photos = Photo.objects.filter(album=album)
-        if default_photos.exists():
-            default_photo = default_photos.first()
-            default_photo.is_default = True
-            default_photo.save()
+        first_image = images.pop(0)
+        photo = Photo(album=album, image=first_image, is_default=True, uploaded_by=self.request.user)
+        photo.save() #calls the customized save method (photo resize)
+
+        for image in images:
+            photo = Photo(album=album, image=image, uploaded_by=self.request.user)
+            photo.save()
+
+        if form.is_valid():
+            messages.success(self.request, f'Album successfully created, with {len(images)+1} photos')
+            return redirect('albums:album_detail', album.id)
 
         return super().form_valid(form)
 
@@ -165,11 +167,12 @@ class AlbumDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 # -----------------------------
 # --------- DELETE  -----------
 # -----------------------------
-class AlbumDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class AlbumDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
     model = Album
     fields = '__all__'
     success_url = reverse_lazy('albums:albums_view')
     context_object_name = 'album'
+    success_message = "Album was deleted successfully"
 
     def test_func(self):
         album_id = self.kwargs['pk']
