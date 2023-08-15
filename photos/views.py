@@ -167,6 +167,7 @@ class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         photo = context['photo']
 
         comments = Comment.objects.filter(commented_photo=photo)
+        comments_from_user = comments.filter(author=self.request.user)
         comment_form = CommentForm()
 
         # we list the Album photo pk in order to know "where" the displayed photo is in the list
@@ -187,6 +188,7 @@ class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         context['previous'] = previous
         context['next'] = next
         context['comments'] = comments
+        context['comments_from_user'] = comments_from_user
         context['comment_form'] = comment_form
 
         return context
@@ -205,6 +207,15 @@ class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
                     commented_photo=photo,
                     body=comment_body
                     )
+                return HttpResponseRedirect(request.path_info)
+
+        # Comment deletion
+        comments = Comment.objects.filter(commented_photo=photo)
+        comments_from_user = comments.filter(author=self.request.user)
+        for comment in comments_from_user:
+            delete_comment_key = f"delete_comment_{comment.id}"
+            if delete_comment_key in request.POST:
+                comment.delete()
                 return HttpResponseRedirect(request.path_info)
 
         return redirect('photos:photo_detail', pk=photo_id)
