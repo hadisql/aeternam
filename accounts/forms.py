@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 from django import forms
 
-from .models import CustomUser, RelationRequest
+from .models import CustomUser, RelationRequest, Relation
 
 class RegisterForm(UserCreationForm):
     class Meta:
@@ -68,3 +68,11 @@ class RelationRequestUndoForm(forms.Form):
 
 class RelationDeleteForm(forms.Form):
     pass
+
+class RelationChangeForm(forms.Form):
+    change_relation = forms.ChoiceField(choices=Relation.RELATION_CHOICES, required=False)
+
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     # Set the initial value for the relation_type field
+    #     self.fields['change_relation'].initial = 'UNDEFINED'

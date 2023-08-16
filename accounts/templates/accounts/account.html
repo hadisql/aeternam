@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %}
 {% load static %}
+{% load get_custom %}
 
 {% load thumbnail %}
 
@@ -49,7 +50,7 @@
             <div class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
               <!-- CONNECTION BUTTONS -->
               <div class="max-[640px]:text-center py-6 px-3 mt-32 sm:mt-0">
-                {% if friendship_exists %}
+                {% if relation_exists %}
                   <button class="btn btn-disabled">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
@@ -189,46 +190,32 @@
                 {% if relations %}
                 <div class="overflow-x-auto">
                   <table class="table">
-                    {% for relation in relations %}
+                    {% for relation_user, relation in users_relations_dict.items %}
                     <tbody>
                       <tr class="hover">
                         <th class="p-2">
-                          <a href="{% if user != relation.user_sending %}{% url 'accounts:account_view' relation.user_sending.id %}{% elif user != relation.user_receiving %}{% url 'accounts:account_view' relation.user_receiving.id %}{% endif %}" class="cursor-pointer">
+                          <a href="{% url 'accounts:account_view' relation_user.id %}" class="cursor-pointer">
                             <div class="flex items-center space-x-3">
                               <div class="avatar">
                                 <div class="mask mask-squircle w-10 h-10">
                                   <!-- <img src="{% if user != relation.user_sending %}{{relation.user_sending.profile_picture.url}}{% elif user != relation.user_receiving %}{{relation.user_receiving.profile_picture.url}} {% endif %}" alt="Avatar Tailwind CSS Component" /> -->
-                                  {% if user != relation.user_sending %}
-                                    {% thumbnail relation.user_sending.profile_picture "50x50" crop="center" as im %}
-                                      <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{% firstof relation.user_sending.first_name relation.user_sending.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
-                                    {% endthumbnail %}
-                                  {% elif user != relation.user_receiving %}
-                                    {% thumbnail relation.user_receiving.profile_picture "50x50" crop="center" as im %}
-                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{% firstof relation.user_receiving.first_name relation.user_receiving.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
-                                    {% endthumbnail %}
-                                  {% endif %}
+                                  {% thumbnail relation_user.profile_picture "50x50" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{% firstof relation_user.first_name relation_user.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
+                                  {% endthumbnail %}
                                 </div>
                               </div>
                               <div>
                                 <div class="font-bold">
-                                  {% if user != relation.user_sending %}
-                                    {% firstof relation.user_sending.first_name relation.user_sending.last_name "-" %}
-                                  {% elif user != relation.user_receiving %}
-                                    {% firstof relation.user_receiving.first_name relation.user_receiving.last_name "-" %}
-                                  {% endif %}
+                                  {% firstof relation_user.first_name relation_user.last_name "-" %}
                                 </div>
                                 <div class="text-sm opacity-50">
-                                  {% if user != relation.user_sending %}
-                                    {{relation.user_sending.email|truncatechars:12}}
-                                  {% elif user != relation.user_receiving %}
-                                    {{relation.user_receiving.email|truncatechars:12}}
-                                  {% endif %}
+                                  {{relation_user.email|truncatechars:12}}
                                 </div>
                               </div>
                             </div>
                           </a>
                         </th>
-                        <th class="p-2">{{relation.relation_type}}</th>
+                        <th><p class="badge badge-sm sm:badge-md ">{{relation.relation_type}}</p></th>
                       </tr>
                     </tbody>
                     {% endfor %}
@@ -254,21 +241,21 @@
                       <th>User</th>
                     </tr>
                   </thead>
-                  {% for user in searched_users %}
-                    {% if user not in relations_users %}
+                  {% for searched_user in searched_users %}
+                    {% if searched_user not in relations_users %}
                     <tbody>
                       <tr class="hover">
                         <th>
-                          <a href="{% url 'accounts:account_view' user.id %}" class="cursor-pointer">
+                          <a href="{% url 'accounts:account_view' searched_user.id %}" class="cursor-pointer">
                             <div class="flex items-center space-x-3">
                               <div class="avatar">
                                 <div class="mask mask-squircle w-12 h-12">
-                                  <img src="{% if user.profile_picture %}{{user.profile_picture.url}}{% else %} {% endif %}" alt="Avatar Tailwind CSS Component" />
+                                  <img src="{% if searched_user.profile_picture %}{{searched_user.profile_picture.url}}{% else %} {% endif %}" alt="Avatar Tailwind CSS Component" />
                                 </div>
                               </div>
                               <div>
-                                <div class="font-bold">{% firstof user.first_name user.last_name "-" %}</div>
-                                <div class="text-sm opacity-50">{{user.email}}</div>
+                                <div class="font-bold">{% firstof searched_user.first_name searched_user.last_name "-" %}</div>
+                                <div class="text-sm opacity-50">{{searched_user.email}}</div>
                               </div>
                             </div>
                           </a>
@@ -284,20 +271,33 @@
             {% endif %}
           </div>
 
+          <!-- Relation between logged user and visisted account -->
           {% if user != account %}
-            {% if friendship_exists %}
+            {% if relation_exists %}
             <div class="flex flex-col w-full my-8">
-              <div class="grid h-20 card bg-base-300 rounded-box place-items-center">
-                  <form action="" class="inline-flex">
-                    <p>you are connected with {% if account.first_name %}{{account.first_name}}{% else %}{{account.email}}{% endif %} as</p>
-                    <select class="ml-2 select select-xs" name="relation_type" id="id_relation_type">
-                      <option value="test">test</option>
-                    </select>
-                  </form>
-              </div>
+              <!-- Change relation type -->
+              <form method="POST">
+                {% csrf_token %}
+                <details class="collapse collapse-arrow grid h-auto py-4 card bg-base-300 rounded-box place-items-center">
+
+                  <summary class="collapse-title text-center">
+                    {% if account.first_name %}{{account.first_name}}{% else %}{{account.email}}{% endif %} and you are connected as <span class="ml-1 badge">{{users_relations_dict|get_relation:account}}</span>
+                  </summary>
+                  <div class="collapse-content flex place-content-center gap-2">
+                      <p>something wrong ? :</p>
+                      <select name="change_relation" id="id_change_relation" class="select select-xs">
+                        {% for option in relation_change_form.change_relation %}
+                          {{option}}
+                        {% endfor %}
+                      </select>
+                      <button class="btn btn-xs" type="submit" name="relation_change_form">save</button>
+                  </div>
+                </details>
+              </form>
+
               <div class="divider"></div>
               <!-- DISCONNECT -->
-              <div class="grid h-20 card bg-base-300 rounded-box place-items-center">
+              <div class="grid h-auto py-4 card bg-base-300 rounded-box place-items-center">
                 <form method="POST">
                   {% csrf_token %}
                   <button type="submit" name="delete_form" class="btn btn-outline btn-error">
@@ -315,6 +315,7 @@
         </div>
       </div>
 
+      <p> {{friends_with_account}} </p>
     </div>
           <!-- USER PERSONAL INFO -->
           <!-- {% for name, value in account.get_fields %}
