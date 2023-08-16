@@ -18,28 +18,61 @@
       </div>
       {% if request.user.is_authenticated %}
       <div class="flex-none">
-        <ul class="menu menu-horizontal px-1">
-          <p class="ms-2 hidden text-left text-xs sm:block">
-            <strong class="block font-medium">{{user.first_name}} {{user.last_name}}</strong>
-
-            <span class="text-gray-500">{{user.email}}</span>
-          </p>
-        </ul>
-        <div class="dropdown dropdown-end px-2 py-1">
-          <button tabindex="0" class="inline-block btn btn-ghost btn-circle avatar">
-            <div class="w-10 rounded-full">
-              {% if user.profile_picture %}
-                <!-- <img src="{{user.profile_picture.url}}" alt="user profile pic"> -->
-                {% thumbnail user.profile_picture "50x50" crop="center" as im %}
-                  <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.user }} profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
-                {% endthumbnail %}
-              {% else %}
-                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" />
-              {% endif %}
+        <!-- notifications -->
+        <div class="dropdown dropdown-end">
+          <label tabindex="0" class="btn btn-ghost btn-circle">
+            <div class="indicator">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+              <span class="badge badge-xs badge-primary indicator-item"></span>
             </div>
-
-          </button>
-          <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+          </label>
+          <div tabindex="0" class="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow-xl">
+            <div class="card-body">
+              <span class="font-bold text-lg">1 request</span>
+              <span class="text-info">from jeanjean</span>
+              <div class="card-actions">
+                <button class="btn btn-primary btn-block">View request</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Menu -->
+        <div class="dropdown dropdown-end px-2 py-1">
+          <div tabindex="0" class="inline-flex hover:bg-base-content/20 rounded-lg px-2 py-1">
+            <div class=" btn btn-ghost btn-circle avatar">
+              <div class="w-10 rounded-full">
+                {% if user.profile_picture %}
+                  <!-- <img src="{{user.profile_picture.url}}" alt="user profile pic"> -->
+                  {% thumbnail user.profile_picture "50x50" crop="center" as im %}
+                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.user }} profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
+                  {% endthumbnail %}
+                {% else %}
+                  <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" />
+                {% endif %}
+              </div>
+            </div>
+            <button  class="menu menu-horizontal">
+              <ul class="">
+                <p class="hidden text-left text-xs sm:block">
+                  <strong class="block font-medium">{{user.first_name}} {{user.last_name}}</strong>
+                  <span class="text-gray-500">{{user.email}}</span>
+                </p>
+              </ul>
+              <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="ms-4 hidden h-5 w-5 text-gray-500 transition group-hover:text-gray-700 sm:block"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+            </button>
+          </div>
+          <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-xl bg-base-100 rounded-box w-52">
             <li>
               <a href="{% url 'albums:albums_view' %}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -62,7 +95,7 @@
               </svg>
               Logout
             </a></li>
-            <div class="h-px my-1 -mx-1 bg-base-content opacity-50"></div>
+            <div class="h-px my-1 mx-2 bg-base-content opacity-25"></div>
             <li>
               <details>
                 <summary>
@@ -90,9 +123,9 @@
                 </ul>
               </details>
             </li>
-
+          </ul>
         </div>
-      </ul>
+
       </div>
       {% endif %}
     </div>

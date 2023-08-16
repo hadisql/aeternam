@@ -32,13 +32,14 @@
       </form>
     </div>
     <div class="divider lg:divider-horizontal">OR</div>
-    <div class="grid flex-grow h-32 card bg-base-300 rounded-box place-items-center">
-      <p class="font-semibold text-lg">Replace the current photo with a new one :</p>
+    <div class="grid flex-grow h-40 sm:h-32 card bg-base-300 rounded-box place-items-center">
+      <p class="font-semibold sm:text-lg">Replace the current photo with a new one :</p>
       <form method="POST" enctype="multipart/form-data" class="flex flex-wrap place-content-center gap-4">
         {% csrf_token %}
         {{ photo_update_form }}
-        <input type="submit" value="Save" class="btn btn-outline max-[469px]:w-[351px] px-4">
+        <input type="submit" value="Save" class="btn max-[469px]:btn-ghost btn-outline max-[469px]:w-[351px] px-4">
       </form>
+      <div class="hidden file-input-md file-input max-[469px]:file-input-sm"></div>
     </div>
     <br>
     <div class="mt-10">
