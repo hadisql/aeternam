@@ -38,7 +38,7 @@
         </div>
         <!-- Menu -->
         <div class="dropdown dropdown-end px-2 py-1">
-          <div tabindex="0" class="inline-flex hover:bg-base-content/20 rounded-lg px-2 py-1">
+          <div tabindex="0" class="inline-flex sm:hover:bg-base-content/20 rounded-lg px-2 py-1">
             <div class=" btn btn-ghost btn-circle avatar">
               <div class="w-10 rounded-full">
                 {% if user.profile_picture %}
@@ -51,9 +51,9 @@
                 {% endif %}
               </div>
             </div>
-            <button  class="menu menu-horizontal">
+            <button  class="hidden sm:menu sm:menu-horizontal">
               <ul class="">
-                <p class="hidden text-left text-xs sm:block">
+                <p class=" text-left text-xs block">
                   <strong class="block font-medium">{{user.first_name}} {{user.last_name}}</strong>
                   <span class="text-gray-500">{{user.email}}</span>
                 </p>
