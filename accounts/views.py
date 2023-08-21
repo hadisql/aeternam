@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
@@ -12,12 +13,11 @@ from .forms import CustomUserChangeForm
 
 from django.db.models import Q
 
-from .models import RelationRequest, Relation
+from .models import RelationRequest, Relation, Notification
 from .forms import RelationRequestForm, RelationAcceptForm, RelationRequestUndoForm, RelationDeleteForm, RegisterForm, RelationChangeForm
 
 from photos.models import Photo
 from comments_likes.models import Comment
-
 
 class RegisterPage(FormView):
     template_name = 'accounts/register.html'
@@ -44,8 +44,6 @@ def loginpage(request):
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
-
-        print(email, password)
 
         # Use eamail to authenticate instead of username
         user = authenticate(request, email=email, password=password)
@@ -197,3 +195,11 @@ class UserView(LoginRequiredMixin, ListView):
                 relation_to_change.save()
 
         return redirect('accounts:account_view', pk=account_id)
+
+
+class NotificationsView(LoginRequiredMixin, ListView):
+    model = Notification
+    template_name = 'accounts/notifications.html'
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)

@@ -1,5 +1,7 @@
 {% load static %}
 {% load thumbnail %}
+{% load is_notif %}
+
 <!DOCTYPE html >
 <html lang="en" >
 <head>
@@ -23,16 +25,35 @@
           <label tabindex="0" class="btn btn-ghost btn-circle">
             <div class="indicator">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
-              <span class="badge badge-xs badge-primary indicator-item"></span>
+              {% if categorized_notifications|is_notif %}
+                <span class="badge badge-xs badge-primary indicator-item"></span>
+              {% endif %}
             </div>
           </label>
           <div tabindex="0" class="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow-xl">
             <div class="card-body">
-              <span class="font-bold text-lg">1 request</span>
-              <span class="text-info">from jeanjean</span>
-              <div class="card-actions">
-                <button class="btn btn-primary btn-block">View request</button>
-              </div>
+              {% if categorized_notifications|is_notif %}
+                <span class="font-bold text-lg">{{notifs_count}} request{{notifs_count|pluralize}}:</span>
+                {% for notification_type, notifications in categorized_notifications.items %}
+                  {% for notification in notifications %}
+                    {% if notification_type == 'album_access' %}
+                      <a href="{% url 'albums:album_detail' notification.content_object.album.pk %}" class="bg-info/50 rounded-xl p-2">
+                        <span class="">{{notification.message}}</span>
+                      </a>
+                    {% elif notification_type == 'relation_request' %}
+                      <a href="{% url 'accounts:account_view' notification.content_object.user_sending.pk %}" class="bg-info/50 rounded-xl p-2">
+                        <span >{{notification.message}}</span>
+                      </a>
+                    {% endif %}
+                  {% endfor %}
+                {% endfor %}
+                <a class="btn" href="{% url 'accounts:notifications_view' %}">
+                  See all
+                </a>
+
+              {% else %}
+                <span class="font-bold text-lg">No notifications</span>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -132,6 +153,11 @@
   </header>
 
   <main>
+    <!-- {% for notification_type, notifications in categorized_notifications.items %}
+      {% for notification in notifications %}
+        <p>{{notification_type}}, {{notification}}, {{notification.id}}</p>
+      {% endfor %}
+    {% endfor %} -->
     <div class="min-h-screen place-content-center">
       {% block body %}
       {% endblock body %}
