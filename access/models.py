@@ -21,8 +21,9 @@ class AlbumAccess(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         #create notification to concerned user
-        message=f"{self.user.first_name or self.user} gave you access to the album {self.album.title}."
-        create_notification(self.user, ContentType.objects.get_for_model(self),self.pk, message=message)
+        title='Album Access granted'
+        message=f"{self.album.creator.first_name or self.album.creator} gave you access to the album {self.album.title}."
+        create_notification(self.user, ContentType.objects.get_for_model(self),self.pk, message=message, title=title)
 
 # ------- Access Requests ---------
 # class AlbumAccessRequest(models.Model):

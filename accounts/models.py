@@ -114,8 +114,9 @@ class RelationRequest(models.Model):
         super().save(*args, **kwargs)
 
         # Create a notification when user sends a request
+        title = "Connection request"
         message=f"{self.user_sending.first_name or self.user_sending} sent you a connection request."
-        create_notification(self.user_receiving, ContentType.objects.get_for_model(self), self.pk, message)
+        create_notification(self.user_receiving, ContentType.objects.get_for_model(self), self.pk, message, title)
 
 
     def delete(self, *args, **kwargs):
@@ -134,21 +135,26 @@ class Notification(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     message = models.TextField()
+    title = models.CharField(max_length=255) # used in template automatically
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
 
     def __str__(self):
         return self.message
 
+    class Meta:
+        ordering = ['created_at']
+
 # When creating a notification
-def create_notification(user, content_type, object_id, message):
+def create_notification(user, content_type, object_id, message, title):
     identifier = f"{content_type.model}{object_id}-{user.pk}"
     Notification.objects.create(
         user=user,
         identifier=identifier,
         content_type=content_type,
         object_id=object_id,
-        message=message
+        message=message,
+        title = title
     )
 
 # When marking a notification as read

@@ -19,6 +19,9 @@ from .forms import RelationRequestForm, RelationAcceptForm, RelationRequestUndoF
 from photos.models import Photo
 from comments_likes.models import Comment
 
+from django.contrib import messages #used in NotificationsView
+
+
 class RegisterPage(FormView):
     template_name = 'accounts/register.html'
     form_class = RegisterForm
@@ -202,4 +205,26 @@ class NotificationsView(LoginRequiredMixin, ListView):
     template_name = 'accounts/notifications.html'
 
     def get_context_data(self, **kwargs):
-        return super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+        context['seen_notifications'] = Notification.objects.filter(user=self.request.user, is_read=True)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if "album_access_seen" in request.POST:
+            notif_to_update_id = request.POST['album_access_seen']
+            Notification.objects.filter(id=notif_to_update_id).update(is_read=True)
+            messages.success(self.request, f'Notification marked as seen')
+
+        if "relation_request_seen" in request.POST:
+            notif_to_update_id = request.POST['relation_request_seen']
+            Notification.objects.filter(id=notif_to_update_id).update(is_read=True)
+            messages.success(self.request, f'Notification marked as seen')
+
+        if "delete_notif" in request.POST:
+            notif_to_delete_id = request.POST['delete_notif']
+            notif_to_delete = Notification.objects.get(id=notif_to_delete_id)
+            if notif_to_delete:
+                messages.success(self.request, f"Notification deleted successfully")
+                notif_to_delete.delete()
+
+        return redirect('accounts:notifications_view')

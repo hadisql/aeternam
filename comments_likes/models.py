@@ -1,7 +1,8 @@
 from django.db import models
 
-from accounts.models import CustomUser
+from accounts.models import CustomUser, create_notification
 from photos.models import Photo
+from django.contrib.contenttypes.models import ContentType
 
 
 class Comment(models.Model):
@@ -17,3 +18,16 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comment by {self.author}'
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # create notification to concerned comment (photo uploader and album owner if different)
+        title = 'New comment'
+        message=f"{self.author.first_name or self.author} commented on your photo: {self.body}"
+        photo_uploader = self.commented_photo.uploaded_by
+        album_owner = self.commented_photo.album.creator
+
+        if self.author != photo_uploader or self.author != album_owner:
+            create_notification(photo_uploader, ContentType.objects.get_for_model(self), self.pk, message=message, title=title)
+            if photo_uploader != album_owner:
+                create_notification(album_owner, ContentType.objects.get_for_model(self), self.pk, message=message, title=title)

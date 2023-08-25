@@ -8,7 +8,7 @@ def notifications(request):
 
     if request.user.is_authenticated:
         notifications = Notification.objects.filter(user=request.user,
-                                                    is_read=False)
+                                                    is_read=False).order_by('-created_at')
 
         categorized_notifications = {
             'relation_request': [],
@@ -26,7 +26,14 @@ def notifications(request):
 
         notifs_count = len(notifications)
 
-        context = {'categorized_notifications': categorized_notifications,
+        all_notifications = []
+        for notifications_list in categorized_notifications.values():
+            all_notifications.extend(notifications_list)
+
+        all_notifications.sort(key=lambda x: x.created_at, reverse=True)
+
+        context = { 'all_notifications': all_notifications,
+                    'categorized_notifications': categorized_notifications,
                    'notifs_count': notifs_count}
         return context
 
