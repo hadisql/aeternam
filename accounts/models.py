@@ -5,6 +5,8 @@ from django.utils.translation import gettext_lazy as _
 
 from sorl.thumbnail import ImageField
 
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 class CustomUserManager(UserManager):
 
@@ -107,3 +109,58 @@ class RelationRequest(models.Model):
     class Meta:
         # Unique_together constraint to ensure unique pairs of users
         unique_together = ['user_receiving', 'user_sending']
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        # Create a notification when user sends a request
+        title = "Connection request"
+        message=f"{self.user_sending.first_name or self.user_sending} sent you a connection request."
+        create_notification(self.user_receiving, ContentType.objects.get_for_model(self), self.pk, message, title)
+
+
+    def delete(self, *args, **kwargs):
+        # deleting notification when user cancel request
+        mark_notification_as_read(self.user_receiving, ContentType.objects.get_for_model(self), self.pk)
+
+        super().delete(*args, **kwargs) #the deletion should happen AFTER marking the notification (in order to retrieve the correct object_id)
+
+
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='concerned_user_notif')
+    identifier = models.CharField(max_length=255, unique=True)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    message = models.TextField()
+    title = models.CharField(max_length=255) # used in template automatically
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.message
+
+    class Meta:
+        ordering = ['created_at']
+
+# When creating a notification
+def create_notification(user, content_type, object_id, message, title):
+    identifier = f"{content_type.model}{object_id}-{user.pk}"
+    Notification.objects.create(
+        user=user,
+        identifier=identifier,
+        content_type=content_type,
+        object_id=object_id,
+        message=message,
+        title = title
+    )
+
+# When marking a notification as read
+def mark_notification_as_read(user, content_type, object_id):
+    identifier = f"{content_type.model}{object_id}-{user.pk}"
+    print(f"identifier of notification before marking as read :{identifier}")
+    notifications = Notification.objects.filter(user=user, identifier=identifier)
+    print(f"querying the notification: {notifications}")
+    notifications.update(is_read=True)

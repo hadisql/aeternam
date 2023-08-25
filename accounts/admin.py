@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext, gettext_lazy as _
 
 from .forms import CustomUserChangeForm, RegisterForm #CustomUserCreationForm
-from .models import CustomUser, RelationRequest, Relation
+from .models import CustomUser, RelationRequest, Relation, Notification
 
 from django.contrib.auth.models import User
 
@@ -35,3 +35,4 @@ admin.site.register(CustomUser, CustomUserAdmin)
 
 admin.site.register(RelationRequest)
 admin.site.register(Relation)
+admin.site.register(Notification)

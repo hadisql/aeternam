@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
@@ -12,11 +13,13 @@ from .forms import CustomUserChangeForm
 
 from django.db.models import Q
 
-from .models import RelationRequest, Relation
+from .models import RelationRequest, Relation, Notification
 from .forms import RelationRequestForm, RelationAcceptForm, RelationRequestUndoForm, RelationDeleteForm, RegisterForm, RelationChangeForm
 
 from photos.models import Photo
 from comments_likes.models import Comment
+
+from django.contrib import messages #used in NotificationsView
 
 
 class RegisterPage(FormView):
@@ -44,8 +47,6 @@ def loginpage(request):
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
-
-        print(email, password)
 
         # Use eamail to authenticate instead of username
         user = authenticate(request, email=email, password=password)
@@ -197,3 +198,33 @@ class UserView(LoginRequiredMixin, ListView):
                 relation_to_change.save()
 
         return redirect('accounts:account_view', pk=account_id)
+
+
+class NotificationsView(LoginRequiredMixin, ListView):
+    model = Notification
+    template_name = 'accounts/notifications.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['seen_notifications'] = Notification.objects.filter(user=self.request.user, is_read=True)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if "album_access_seen" in request.POST:
+            notif_to_update_id = request.POST['album_access_seen']
+            Notification.objects.filter(id=notif_to_update_id).update(is_read=True)
+            messages.success(self.request, f'Notification marked as seen')
+
+        if "relation_request_seen" in request.POST:
+            notif_to_update_id = request.POST['relation_request_seen']
+            Notification.objects.filter(id=notif_to_update_id).update(is_read=True)
+            messages.success(self.request, f'Notification marked as seen')
+
+        if "delete_notif" in request.POST:
+            notif_to_delete_id = request.POST['delete_notif']
+            notif_to_delete = Notification.objects.get(id=notif_to_delete_id)
+            if notif_to_delete:
+                messages.success(self.request, f"Notification deleted successfully")
+                notif_to_delete.delete()
+
+        return redirect('accounts:notifications_view')
