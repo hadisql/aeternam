@@ -51,11 +51,14 @@
                     <span class="">{{notification.message}}</span>
                   </a>
                 {% endfor %}
-                <a class="btn" href="{% url 'accounts:notifications_view' %}">
+                <a class="btn btn-sm" href="{% url 'accounts:notifications_view' %}">
                   See all
                 </a>
               {% else %}
                 <span class="font-bold text-lg">No notifications</span>
+                <a class="btn btn-xs" href="{% url 'accounts:notifications_view' %}">
+                  notification panel
+                </a>
               {% endif %}
             </div>
           </div>
