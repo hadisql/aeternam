@@ -88,7 +88,6 @@
             <div class=" btn btn-ghost btn-circle avatar">
               <div class="w-10 rounded-full">
                 {% if user.profile_picture %}
-                  <!-- <img src="{{user.profile_picture.url}}" alt="user profile pic"> -->
                   {% thumbnail user.profile_picture "50x50" crop="center" as im %}
                     <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.user }} profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
                   {% endthumbnail %}
