@@ -117,10 +117,13 @@
               {% for user in users_with_access|slice:avatar_show_number %}
                 <div class="avatar">
                   <div class="w-12">
-                    <!-- <img src="{{user.profile_picture.url}}" alt="{% firstof user.first_name user.email %}'s profile pic"> -->
-                    {% thumbnail user.profile_picture "50x50" crop="center" as im %}
-                      <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{% firstof user.first_name user.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
-                    {% endthumbnail %}
+                    {% if user.profile_picture %}
+                      {% thumbnail user.profile_picture "50x50" crop="center" as im %}
+                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{% firstof user.first_name user.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
+                      {% endthumbnail %}
+                    {% else %}
+                      <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="{% firstof user.first_name user.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
+                    {% endif %}
                   </div>
                 </div>
               {% endfor %}
