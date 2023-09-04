@@ -185,7 +185,7 @@ class AlbumDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMix
         context = super().get_context_data(**kwargs)
         album_id = self.kwargs['pk']
         album = Album.objects.get(id=album_id)
-        default_photo = Photo.objects.get(album=album, is_default=True)
+        default_photo = Photo.objects.filter(album=album, is_default=True).first()
 
         album_photos = Photo.objects.filter(album=album)
         displayed_photos = min(3, len(album_photos))
