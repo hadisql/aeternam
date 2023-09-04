@@ -50,6 +50,7 @@ class CustomUser(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
     country = models.CharField(_('country'), max_length=100, blank=True, null=True)
     bio = models.TextField(_('bio/description'), blank=True, null=True)
+    premium_member = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 

@@ -47,10 +47,12 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
                 photo.save()
 
         if form.is_valid():
-            if len(images):
-                messages.success(self.request, f'Album successfully created, with {len(images)+1} photos')
-            else:
+            if len(images)==1:
+                messages.success(self.request, f'Album successfully created, with 1 photo')
+            elif len(images)==0:
                 messages.success(self.request, f'Empty album successfully created')
+            else:
+                messages.success(self.request, f'Album successfully created, with {len(images)+1} photos')
             return redirect('albums:album_detail', album.id)
 
         return super().form_valid(form)
