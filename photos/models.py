@@ -1,13 +1,14 @@
 from django.db import models
 from sorl.thumbnail import ImageField
 
-from albums.models import Album
 from accounts.models import CustomUser
 
 import os
 from PIL import Image
 from io import BytesIO
 
+import logging
+logger = logging.getLogger(__name__)
 
 # -------------------------
 # ------- Photos ----------
@@ -18,7 +19,7 @@ def album_photo_directory_path(instance, filename):
     return f"albums/{instance.album.id}/{filename}"
 
 class Photo(models.Model):
-    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='photos_album')
+    album = models.ForeignKey(to='albums.Album', on_delete=models.CASCADE, related_name='photos_album')
     image = ImageField(upload_to=album_photo_directory_path, null=True)
     is_default = models.BooleanField(default=False)
     uploaded_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
@@ -37,6 +38,8 @@ class Photo(models.Model):
 
         # Check if the image size exceeds size limit
         if self.image.size > size_limit:
+            logger.info(f"Resizing image {self.image.name}...")
+            print(f"Resizing image {self.image.name}...")
             image = Image.open(self.image.path)
             width, height = image.size
 
@@ -55,11 +58,16 @@ class Photo(models.Model):
                 ImageFile(image_io),
                 save=False
             )
+            logger.info("Image resized successfully.")
+            print("Image resized successfully.")
             super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         # Delete the photo file from storage when the Photo object is deleted
-        os.remove(self.image.path)
+        try:
+            os.remove(self.image.path)
+        except:
+            logger.warning('image file does not exist, associated photo object will be deleted anyway')
 
         # Check if the photo being deleted is the default photo
         if self.is_default:

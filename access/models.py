@@ -1,7 +1,7 @@
 from django.db import models
 
 from accounts.models import CustomUser
-from photos.models import Album
+from albums.models import Album
 
 from accounts.models import Notification, create_notification
 from django.contrib.contenttypes.models import ContentType

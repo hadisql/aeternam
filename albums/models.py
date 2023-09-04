@@ -5,6 +5,9 @@ import os
 import shutil
 from django.conf import settings
 
+import sorl.thumbnail
+from photos.models import Photo
+
 # ----------------------
 # ------ Albums --------
 # ----------------------
@@ -18,6 +21,11 @@ class Album(models.Model):
     creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='created_albums')
 
     def delete(self, *args, **kwargs):
+        # delete all photos in album with sorl delete method, to make sure cache is deleted along
+        photos_to_delete = Photo.objects.filter(album=self)
+        for photo in photos_to_delete:
+            sorl.thumbnail.delete(photo)
+            print(f"deleted photo {photo.id} with sorl-thumbnail delete method")
         # Delete the album folder along with its photos
         album_directory = os.path.join(settings.MEDIA_ROOT, album_directory_path(self, ''))
         if os.path.exists(album_directory):

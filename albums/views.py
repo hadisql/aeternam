@@ -37,16 +37,20 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
         # Save associated photos to the album
         images = self.request.FILES.getlist('images')
 
-        first_image = images.pop(0)
-        photo = Photo(album=album, image=first_image, is_default=True, uploaded_by=self.request.user)
-        photo.save() #calls the customized save method (photo resize)
+        if len(images):
+            first_image = images.pop(0)
+            photo = Photo(album=album, image=first_image, is_default=True, uploaded_by=self.request.user)
+            photo.save() #calls the customized save method (photo resize)
 
-        for image in images:
-            photo = Photo(album=album, image=image, uploaded_by=self.request.user)
-            photo.save()
+            for image in images:
+                photo = Photo(album=album, image=image, uploaded_by=self.request.user)
+                photo.save()
 
         if form.is_valid():
-            messages.success(self.request, f'Album successfully created, with {len(images)+1} photos')
+            if len(images):
+                messages.success(self.request, f'Album successfully created, with {len(images)+1} photos')
+            else:
+                messages.success(self.request, f'Empty album successfully created')
             return redirect('albums:album_detail', album.id)
 
         return super().form_valid(form)
