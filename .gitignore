@@ -7,11 +7,11 @@ db.sqlite3-journal
 **/__pycache__/
 **/migrations/__pycache__/
 
-media/profile_pictures/*
-media/albums
-media/cache
-media/images
-!media/profile_pictures/default.jpg
+mediafiles/profile_pictures/*
+mediafiles/albums
+mediafiles/cache
+mediafiles/images
+!mediafiles/profile_pictures/default.jpg
 
 jstoolchain/node_modules
 jstoolchain/package-lock.json
