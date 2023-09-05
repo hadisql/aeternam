@@ -1,3 +1,3 @@
-web: gunicorn family_book.wsgi:application --timeout 0
+web: gunicorn family_book.wsgi:application
 
 release: django-admin migrate --no-input && django-admin collectstatic --no-input
