@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %}
 {% load static %}
+{% load static_image %}
 {% load thumbnail %}
 
 {% block title %}Edit account{% endblock %}
@@ -16,50 +17,21 @@
             {% csrf_token %}
 
           <div class="grid grid-cols-1 gap-4 sm:max-lg:grid-cols-2">
-            <!-- {% thumbnail user.profile_picture "200x200" crop="center" as im %}
-            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.user }} profile pic" class="h-48 w-48 rounded-full ring-offset-base-100 ring-offset-2 ring-4 ring-gray-100">
-            <span class="absolute bottom-0 right-0 inline-block btn btn-circle btn-outline cursor-default bg-gray-100 ">
 
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="p-2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-              </svg>
-            </span>
-            {% endthumbnail %} -->
             <div class="flex place-content-center">
-              {% if user.profile_picture %}
-              <img src="{{user.profile_picture.url}}" alt="{{user.profile_picture.name}}" class="rounded-lg">
+              {% firstof "/media/profile_pictures/default.jpg" as default_pic %}
+              {% if user.profile_picture.url != default_pic %}
+              <img src="{{user.profile_picture.url}}" alt="{{user.profile_picture.name}}" class="h-40 sm:h-48 rounded-lg">
               {% else %}
-              <img src="../../../media/profile_pictures/default.jpg" alt="default pic" class="w-24 h-24 rounded-lg">
+              {% thumbnail "default_avatar.jpg"|static_image "50x50" crop="center" as im %}
+                <img src="{{ im.url }}" alt="{% firstof user.first_name user.email %}'s profile pic" class="h-40 sm:h-48 rounded-lg object-cover object-center group-hover:opacity-75">
+              {% endthumbnail %}
               {% endif %}
             </div>
             <div>
               {{form.profile_picture}}
             </div>
           </div>
-
-            <!-- STATS -->
-            <!-- <div class="max-[555px]:stats-vertical stats lg:stats-vertical shadow">
-
-              <div class="stat">
-                <div class="stat-figure text-primary">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                </div>
-                <div class="stat-title">Total Likes</div>
-                <div class="stat-value text-primary">25.6K</div>
-                <div class="stat-desc">21% more than last month</div>
-              </div>
-
-              <div class="stat">
-                <div class="stat-figure text-accent">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
-                </div>
-                <div class="stat-title">Albums</div>
-                <div class="stat-value text-accent">2.6M</div>
-                <div class="stat-desc">21% more than last month</div>
-              </div>
-
-
-            </div> -->
 
         </div>
       </div>
@@ -87,17 +59,11 @@
 
             <div>
               <label class="sr-only" for="birthday">Date of Birth</label>
-              <!-- <input
-                class="w-full rounded-lg input input-bordered p-3 text-sm"
-                placeholder="Date of Birth"
-                type="date"
-                id="birthday"
-              /> -->
               {{form.date_of_birth}}
             </div>
           </div>
 
-          <!-- <div class="grid grid-cols-1 gap-4 text-center sm:grid-cols-3">
+          <div class="grid grid-cols-1 gap-4 text-center sm:grid-cols-3">
             <div>
               <input
                 class="peer sr-only"
@@ -151,32 +117,32 @@
                 <span class="text-sm"> Option 3 </span>
               </label>
             </div>
-          </div> -->
+          </div>
 
-          <div>
+          <!-- <div>
             <label class="sr-only" for="bio">Bio</label>
             {{form.bio}}
-          </div>
-
-          <div class="mt-6 flex gap-4">
-            <a href="{% url 'accounts:account_view' account.pk  %}" class="btn btn-neutral">
-              <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-                <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
-                <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
-              </svg>
-              Back
-            </a>
-            <button
-              type="submit"
-              class="inline-block btn btn-accent px-5 py-3 font-medium text-white sm:w-auto"
-            >
-              Save changes
-            </button>
-          </div>
+          </div> -->
         </form>
+
 
         {{form.errors}}
       </div>
+    </div>
+    <div class="grid grid-cols-2 mt-6 ml-2 gap-4">
+        <a href="{% url 'accounts:account_view' account.pk  %}" class="btn btn-neutral">
+          <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+            <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
+            <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
+          </svg>
+          Back
+        </a>
+        <button
+          type="submit"
+          class="inline-block btn btn-accent btn-block px-5 py-3 font-medium text-white sm:w-auto"
+        >
+          Save changes
+        </button>
     </div>
   </div>
 </section>
