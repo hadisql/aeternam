@@ -35,7 +35,7 @@ class CustomProfilePicWidget(forms.widgets.ClearableFileInput):
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = ('first_name','last_name','email','date_of_birth','profile_picture')
+        fields = ('first_name','last_name','email','date_of_birth','profile_picture', 'hide_connections')
         input_class = 'w-full input input-bordered text-sm'
         textarea_class = 'w-full textarea textarea-bordered p-3 text-sm'
         widgets = {
@@ -43,14 +43,18 @@ class CustomUserChangeForm(UserChangeForm):
             'last_name': forms.TextInput(attrs={'class': input_class, 'placeholder':'Last Name', 'id':'last_name'}),
             'email': forms.EmailInput(attrs={'class':input_class,'placeholder':'Email Adress', 'id':'email'}),
             'date_of_birth': forms.DateInput(attrs={'class': input_class, 'id':'date_of_birth','type':'date'}),
-            # 'bio': forms.Textarea(attrs={'class':textarea_class, 'placeholder':'Bio','rows':8, 'id':'bio'}),
             'profile_picture': CustomProfilePicWidget(),
+            'hide_connections': forms.CheckboxInput(attrs={'class':'toggle toggle-error'})
         }
 
-    # profile_picture = forms.ImageField(widget=forms.widgets.FileInput(attrs={'class':'absolute text-3xl left-1 right-1 cursor-pointer opacity-0'}),
-    #                                    required=False)
-    # profile_picture = forms.ImageField(widget=forms.widgets.FileInput(attrs={'class':''}),
-    #                                 required=False)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        instance = getattr(self, 'instance', None)
+        if instance and instance.hide_connections:
+            self.fields['hide_connections'].initial = True
+        else:
+            self.fields['hide_connections'].initial = False
+
 
 class RelationRequestForm(forms.Form):
     pass

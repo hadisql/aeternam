@@ -49,8 +49,8 @@ class CustomUser(AbstractUser):
     profile_picture = ImageField(_('profile picture'), upload_to='profile_pictures/', blank=True, default='profile_pictures/default.jpg')
     date_of_birth = models.DateField(null=True, blank=True)
     country = models.CharField(_('country'), max_length=100, blank=True, null=True)
-    bio = models.TextField(_('bio/description'), blank=True, null=True)
     premium_member = models.BooleanField(default=False)
+    hide_connections = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 
@@ -59,7 +59,7 @@ class CustomUser(AbstractUser):
 
     def get_fields(self):
         # looping through the attributes in order to display them in profile.html
-        show = ('first_name','last_name','email', 'date_of_birth', 'country', 'bio')
+        show = ('first_name','last_name','email', 'date_of_birth', 'country')
         return [(field.verbose_name, field.value_to_string(self)) for field in CustomUser._meta.fields if field.name in show]
 
     def __str__(self):

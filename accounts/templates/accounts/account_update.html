@@ -10,7 +10,7 @@
 <section class="bg-base-100">
   <div class="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 gap-x-16 gap-y-8 lg:grid-cols-5">
-      <div class="lg:col-span-2 lg:py-12">
+      <div class="lg:col-span-2 lg:py-6">
         <div class="flex flex-wrap max-lg:place-content-center px-6 gap-10">
           <!-- PROFILE PIC-->
           <form method="POST" enctype="multipart/form-data">
@@ -21,10 +21,10 @@
             <div class="flex place-content-center">
               {% firstof "/media/profile_pictures/default.jpg" as default_pic %}
               {% if user.profile_picture.url != default_pic %}
-              <img src="{{user.profile_picture.url}}" alt="{{user.profile_picture.name}}" class="h-40 sm:h-48 rounded-lg">
+              <img id="profile_pic" src="{{user.profile_picture.url}}" alt="{{user.profile_picture.name}}" class="h-40 sm:h-48 rounded-lg" style="transition: opacity 0.3s ease;">
               {% else %}
               {% thumbnail "default_avatar.jpg"|static_image "50x50" crop="center" as im %}
-                <img src="{{ im.url }}" alt="{% firstof user.first_name user.email %}'s profile pic" class="h-40 sm:h-48 rounded-lg object-cover object-center group-hover:opacity-75">
+                <img id="profile_pic" src="{{ im.url }}" alt="{% firstof user.first_name user.email %}'s profile pic" class="h-40 sm:h-48 rounded-lg object-cover object-center group-hover:opacity-75" style="transition: opacity 0.3s ease;">
               {% endthumbnail %}
               {% endif %}
             </div>
@@ -37,7 +37,7 @@
       </div>
 
       <!-- FORM UPDATE -->
-      <div class="space-y-4 rounded-lg bg-base-200 p-8 shadow-lg lg:col-span-3 lg:p-12">
+      <div class="space-y-4 rounded-lg bg-base-200 p-8 shadow-lg lg:col-span-3 lg:px-12 lg:pt-12 lg:pb-8">
 
 
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -63,86 +63,43 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-1 gap-4 text-center sm:grid-cols-3">
-            <div>
-              <input
-                class="peer sr-only"
-                id="option1"
-                type="radio"
-                tabindex="-1"
-                name="option"
-              />
-
-              <label
-                for="option1"
-                class="block w-full rounded-lg border border-base-300 p-3 hover:border-accent peer-checked:border-accent peer-checked:bg-accent peer-checked:text-white"
-                tabindex="0"
-              >
-                <span class="text-sm"> Option 1 </span>
-              </label>
-            </div>
-
-            <div>
-              <input
-                class="peer sr-only"
-                id="option2"
-                type="radio"
-                tabindex="-1"
-                name="option"
-              />
-
-              <label
-                for="option2"
-                class="block w-full rounded-lg border border-base-300 p-3 hover:border-accent peer-checked:border-accent peer-checked:bg-accent peer-checked:text-white"
-                tabindex="0"
-              >
-                <span class="text-sm"> Option 2 </span>
-              </label>
-            </div>
-
-            <div>
-              <input
-                class="peer sr-only"
-                id="option3"
-                type="radio"
-                tabindex="-1"
-                name="option"
-              />
-
-              <label
-                for="option3"
-                class="block w-full rounded-lg border border-base-300 p-3 hover:border-accent peer-checked:border-accent peer-checked:bg-accent peer-checked:text-white"
-                tabindex="0"
-              >
-                <span class="text-sm"> Option 3 </span>
+          <div class=" grid grid-cols-1 gap-3 text-center">
+            <div class="ml-2 mt-4 form-control">
+              <label class="flex gap-4 cursor-pointer">
+                <svg class="w-6 h-6 flex-none" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                </svg>
+                <span class="label-text font-semibold">hide connections on your profile</span>
+                {{form.hide_connections}}
               </label>
             </div>
           </div>
 
-          <!-- <div>
+          {% comment %} <div>
             <label class="sr-only" for="bio">Bio</label>
             {{form.bio}}
-          </div> -->
-        </form>
+          </div> {% endcomment %}
+
 
 
         {{form.errors}}
+        <div class="pt-10 lg:pt-28 grid grid-cols-1 sm:grid-cols-2 ml-2 gap-4">
+            <a href="{% url 'accounts:account_view' account.pk  %}" class="btn btn-neutral sm:col-span-1">
+              <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
+                <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
+              </svg>
+              Back
+            </a>
+            <button
+              type="submit"
+              class="inline-block btn btn-accent btn-block px-5 py-3 font-medium text-white sm:w-auto sm:col-span-1"
+            >
+              Save changes
+            </button>
+        </div>
+      </form>
       </div>
-    </div>
-    <div class="grid grid-cols-2 mt-6 ml-2 gap-4">
-        <a href="{% url 'accounts:account_view' account.pk  %}" class="btn btn-neutral">
-          <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-            <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
-            <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
-          </svg>
-          Back
-        </a>
-        <button
-          type="submit"
-          class="inline-block btn btn-accent btn-block px-5 py-3 font-medium text-white sm:w-auto"
-        >
-          Save changes
-        </button>
     </div>
   </div>
 </section>

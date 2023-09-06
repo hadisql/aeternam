@@ -5,4 +5,7 @@ register = Library()
 
 @register.filter(name="get_relation")
 def get_custom(dict, key):
-    return dict[key].relation_type
+    try:
+        return dict[key].relation_type
+    except:
+        return None

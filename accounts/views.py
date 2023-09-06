@@ -76,7 +76,7 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_success_url(self):
         # cannot use reverse_lazy with pk to get back to user's profile
-        return reverse('accounts:edit_account', kwargs={'pk':self.kwargs['pk']})
+        return reverse('accounts:account_view', kwargs={'pk':self.kwargs['pk']})
 
     def form_valid(self, form):
         print(form.changed_data)
@@ -88,10 +88,14 @@ class UserView(LoginRequiredMixin, ListView):
     model = CustomUser
     template_name = 'accounts/account.html'
 
+    def exclude_logged_user(self, user_qlist):
+        '''excludes logged user from queryset'''
+        return user_qlist.exclude(self.request.user)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         account_id = self.kwargs['pk']
-        context['account'] = CustomUser.objects.get(id=account_id) #making sure that the profile we use in the context (to be shown) is only the profile the user making the request
+        context['account'] = CustomUser.objects.get(id=account_id) #making sure that the profile we use in the context (to be shown) is the profile visited
 
         search = self.request.GET.get('search-area') or ''
         if search is not None:
@@ -100,14 +104,14 @@ class UserView(LoginRequiredMixin, ListView):
         context['search_input'] = search
 
         # retrieving the Relation objects if logged user in the Relation object (either as sender or receiver)
-        relations = Relation.objects.filter(Q(user_sending__exact=self.request.user.id)
-                                            |Q(user_receiving__exact=self.request.user.id))
+        relations = Relation.objects.filter(Q(user_sending__exact=account_id)
+                                            |Q(user_receiving__exact=account_id))
         context['relations'] = relations # all relations with logged user
 
-        relations_users = CustomUser.objects.filter(Q(relation_receiver__in = relations)|Q(relation_sender__in = relations)).exclude(id=self.request.user.id)
+        relations_users = CustomUser.objects.filter(Q(relation_receiver__in = relations)|Q(relation_sender__in = relations)).exclude(id=account_id)
         context['relations_users'] = relations_users # all users in relation with logged user
 
-        other_user_in_relations = [(relation.user_sending if relation.user_sending != self.request.user else relation.user_receiving) for relation in relations] # for each relation object, list the user not logged ('other user')
+        other_user_in_relations = [(relation.user_sending if relation.user_sending.id != account_id else relation.user_receiving) for relation in relations] # for each relation object, list the user not logged ('other user')
         context['users_relations_dict'] = {key:value for key,value in zip(other_user_in_relations, relations) }
 
         context['relation_request_form'] = RelationRequestForm()
@@ -116,7 +120,7 @@ class UserView(LoginRequiredMixin, ListView):
         context['relation_change_form'] = RelationChangeForm()
 
 
-        context['relation_exists'] = context['account'] in relations_users # True if visisted account is connected to logged user
+        context['relation_exists'] = self.request.user in relations_users # True if visisted account is connected to logged user
         context['request_from_exists'] = RelationRequest.objects.filter(user_sending_id=account_id, user_receiving=self.request.user.id).exists()
         context['request_to_exists'] = RelationRequest.objects.filter(user_sending_id=self.request.user.id, user_receiving=account_id).exists()
 
