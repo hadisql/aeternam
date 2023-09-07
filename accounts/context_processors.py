@@ -1,6 +1,6 @@
 from .models import Notification
 
-from access.models import AlbumAccess
+from albums.models import AlbumAccess
 from .models import RelationRequest
 from comments_likes.models import Comment
 

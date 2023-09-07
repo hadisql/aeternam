@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     "core",
     "photos",
     "albums",
-    "access",
     "comments_likes",
     "sorl.thumbnail",
     "mathfilters",

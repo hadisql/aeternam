@@ -12,8 +12,7 @@ from django.http import HttpResponseForbidden, HttpResponseRedirect
 from .models import Photo
 from .forms import PhotoForm, CommentForm, PhotoUpdateForm, PhotoRotationForm
 
-from albums.models import Album
-from access.models import AlbumAccess
+from albums.models import Album, AlbumAccess
 
 from comments_likes.models import Comment
 

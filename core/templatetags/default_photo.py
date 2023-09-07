@@ -1,7 +1,7 @@
 from django.template import Library
 
 from photos.models import Photo
-from access.models import AlbumAccess
+from albums.models import AlbumAccess
 
 from django.contrib.contenttypes.models import ContentType
 

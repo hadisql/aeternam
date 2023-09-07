@@ -3,7 +3,6 @@ from django.dispatch import receiver
 
 from accounts.models import Relation
 from .models import AlbumAccess
-from albums.models import Album
 
 @receiver(post_delete, sender=Relation)
 def delete_album_access(sender, instance, **kwargs):
