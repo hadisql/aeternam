@@ -81,7 +81,7 @@ MIDDLEWARE = [
 if not DEBUG:
     MIDDLEWARE.insert(2,"whitenoise.middleware.WhiteNoiseMiddleware")
 
-ROOT_URLCONF = "family_book.urls"
+ROOT_URLCONF = "aeternam.urls"
 
 TEMPLATES = [
     {
@@ -100,7 +100,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "family_book.wsgi.application"
+WSGI_APPLICATION = "aeternam.wsgi.application"
 
 
 # Database
