@@ -1,3 +1,3 @@
-web: gunicorn family_book.wsgi:application
+web: gunicorn aeternam.wsgi:application
 
 release: django-admin migrate --no-input && django-admin collectstatic --no-input
