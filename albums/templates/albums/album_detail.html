@@ -101,9 +101,9 @@
     </div>
 
       <!-- Who has access -->
-    {% if user == album.creator %}
+
     <div class="flex place-content-end px-6">
-      <a href="{% url 'albums:album-access' album.pk %}#access_control" class="">
+      <a {% if user == 'album_creator' %} href="{% url 'albums:album-access' album.pk %}#access_control" {% endif %} class="">
         <div class="mt-6">
           <div class="flex items-center space-x-2 text-base">
             <h4 class="font-semibold mb-2">Shared with: </h4>
@@ -122,7 +122,7 @@
                         <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{% firstof user.first_name user.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
                       {% endthumbnail %}
                     {% else %}
-                      <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="{% firstof user.first_name user.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
+                      <img src="https://api.dicebear.com/6.x/initials/svg?seed={% firstof user.get_full_name user.email %}" alt="{% firstof user.first_name user.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
                     {% endif %}
                   </div>
                 </div>
@@ -139,7 +139,7 @@
         </div>
       </a>
     </div>
-    {% endif %}
+
     <br><br>
     <hr>
     <div class="mt-10">
