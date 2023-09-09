@@ -33,7 +33,6 @@
         <a href="{% url 'albums:album_detail' album.pk %}" class="group">
           <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
             {% if default_photo %}
-              <!-- <img src="{{ default_photo.image.url }}" alt="{{ album.title }}" class="h-full w-full object-cover object-center group-hover:opacity-75"> -->
               {% thumbnail default_photo.image "600x600" crop="center" as im %}
                 <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}" class="h-full w-full object-cover object-center group-hover:opacity-75">
               {% endthumbnail %}
@@ -85,7 +84,6 @@
       <a href="{% url 'albums:album_detail' album.pk %}" class="group">
         <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
           {% if default_photo %}
-            <!-- <img src="{{ default_photo.image.url }}" alt="{{ album.title }}" class="h-full w-full object-cover object-center group-hover:opacity-75"> -->
             {% thumbnail default_photo.image "600x600" crop="center" as im %}
               <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}" class="h-full w-full object-cover object-center group-hover:opacity-75">
             {% endthumbnail %}
@@ -102,12 +100,6 @@
     </div>
   </div>
   {% endif %}
-
-  <!-- <div class="mx-auto max-w-2xl px-4  sm:px-6 lg:max-w-7xl lg:px-8">
-    <div class="flex items-end">
-      <a href="{% url 'albums:album_create' %}" class="btn btn-primary">Create new album</a>
-    </div>
-  </div> -->
 
 </div>
 
