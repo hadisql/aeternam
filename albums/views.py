@@ -279,4 +279,4 @@ def album_access(request, pk):
         'revoke_access_form': revoke_access_form,
     }
 
-    return render(request, 'access/album_access.html', context)
+    return render(request, 'albums/album_access.html', context)

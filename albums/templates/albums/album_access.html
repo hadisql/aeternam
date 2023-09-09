@@ -73,10 +73,13 @@
                     <div class="flex items-center space-x-3">
                       <div class="avatar">
                         <div class="mask mask-squircle w-12 h-12">
-                          <!-- <img src="{{relation.profile_picture.url}}" alt="user profile pic" /> -->
-                          {% thumbnail relation.profile_picture "50x50" crop="center" as im %}
-                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{% firstof relation.first_name user.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
-                          {% endthumbnail %}
+                          {% if relation.profile_picture %}
+                            {% thumbnail relation.profile_picture "50x50" crop="center" as im %}
+                              <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{% firstof relation.first_name user.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
+                            {% endthumbnail %}
+                          {% else %}
+                            <img src="https://api.dicebear.com/6.x/initials/svg?seed={% firstof user.get_full_name user.email %}" alt="">
+                          {% endif %}
                         </div>
                       </div>
                       <div>
