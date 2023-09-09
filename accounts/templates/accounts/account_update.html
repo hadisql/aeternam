@@ -19,13 +19,10 @@
           <div class="grid grid-cols-1 gap-4 sm:max-lg:grid-cols-2">
 
             <div class="flex place-content-center">
-              {% firstof "/media/profile_pictures/default.jpg" as default_pic %}
-              {% if user.profile_picture.url != default_pic %}
-              <img id="profile_pic" src="{{user.profile_picture.url}}" alt="{{user.profile_picture.name}}" class="h-40 sm:h-48 rounded-lg" style="transition: opacity 0.3s ease;">
+              {% if user.profile_picture %}
+                <img id="profile_pic" src="{{user.profile_picture.url}}" alt="{{user.profile_picture.name}}" class="h-40 sm:h-48 rounded-lg" style="transition: opacity 0.3s ease;">
               {% else %}
-              {% thumbnail "default_avatar.jpg"|static_image "50x50" crop="center" as im %}
-                <img id="profile_pic" src="{{ im.url }}" alt="{% firstof user.first_name user.email %}'s profile pic" class="h-40 sm:h-48 rounded-lg object-cover object-center group-hover:opacity-75" style="transition: opacity 0.3s ease;">
-              {% endthumbnail %}
+                <img id="profile_pic" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="{% firstof user.first_name user.email %}'s profile pic" class="h-40 sm:h-48 rounded-lg object-cover object-center group-hover:opacity-75" style="transition: opacity 0.3s ease;">
               {% endif %}
             </div>
             <div>

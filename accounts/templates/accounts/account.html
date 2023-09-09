@@ -32,19 +32,17 @@
             <!-- profile pic-->
             <div class="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
               <div class="relative">
-                {% firstof "/media/profile_pictures/default.jpg" as default_pic %}
-                {% if account.profile_picture.url != default_pic %}
+                {% firstof "profile_pictures/default.jpg" as default_pic %}
+                {% if account.profile_picture != default_pic %}
                   {% thumbnail account.profile_picture "150x150" crop="center" as im %}
                     <img alt="..." src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
                     class="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-fit"
                     >
                   {% endthumbnail %}
+                {% elif account.profile_picture == default_pic %}
+                  <img alt="..." src="{{ account.profile_picture.url }}" width="150" height="150" class="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-fit">
                 {% else %}
-                  {% thumbnail "default_avatar.jpg"|static_image "150x150" crop="center" as im %}
-                    <img alt="..." src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
-                    class="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-fit"
-                    >
-                  {% endthumbnail %}
+                  <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="{% firstof account.first_name account.email %}'s profile pic">
                 {% endif %}
               </div>
             </div>
