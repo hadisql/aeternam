@@ -103,7 +103,7 @@
       <!-- Who has access -->
 
     <div class="flex place-content-end px-6">
-      <a {% if user == 'album_creator' %} href="{% url 'albums:album-access' album.pk %}#access_control" {% endif %} class="">
+      <a {% if user == album.creator %} href="{% url 'albums:album-access' album.pk %}#access_control" {% endif %} class="">
         <div class="mt-6">
           <div class="flex items-center space-x-2 text-base">
             <h4 class="font-semibold mb-2">Shared with: </h4>
