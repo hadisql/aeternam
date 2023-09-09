@@ -70,14 +70,12 @@
       <div tabindex="0" class="inline-flex sm:hover:bg-base-content/20 rounded-lg px-2 py-1">
         <div class=" btn btn-ghost btn-circle avatar">
           <div class="w-10 rounded-full">
-            {% if user.profile_picture != 'profile_pictures/default.jpg' %}
+            {% if user.profile_picture %}
               {% thumbnail user.profile_picture "50x50" crop="center" as im %}
                 <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.user }} profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
               {% endthumbnail %}
-            {% elif user.profile_picture %}
-              <img src={{user.profile_picture.url}} />
             {% else %}
-              <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="default avatar">
+              <img src="https://api.dicebear.com/6.x/initials/svg?seed={% firstof user.get_full_name user.email %}" alt="default avatar">
             {% endif %}
           </div>
         </div>

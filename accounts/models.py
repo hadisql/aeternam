@@ -46,7 +46,7 @@ class CustomUser(AbstractUser):
     username = None
 
     email = models.EmailField(_('email address'), blank=True, unique=True)
-    profile_picture = ImageField(_('profile picture'), upload_to='profile_pictures/', blank=True, default='profile_pictures/default.jpg')
+    profile_picture = ImageField(_('profile picture'), upload_to='profile_pictures/', blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     country = models.CharField(_('country'), max_length=100, blank=True, null=True)
     premium_member = models.BooleanField(default=False)

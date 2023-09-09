@@ -22,7 +22,7 @@
               {% if user.profile_picture %}
                 <img id="profile_pic" src="{{user.profile_picture.url}}" alt="{{user.profile_picture.name}}" class="h-40 sm:h-48 rounded-lg" style="transition: opacity 0.3s ease;">
               {% else %}
-                <img id="profile_pic" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="{% firstof user.first_name user.email %}'s profile pic" class="h-40 sm:h-48 rounded-lg object-cover object-center group-hover:opacity-75" style="transition: opacity 0.3s ease;">
+                <img id="profile_pic" src="https://api.dicebear.com/6.x/initials/svg?seed={% firstof user.get_full_name user.email %}" alt="profile pic" class="rounded-full h-40 sm:h-48 object-cover object-center group-hover:opacity-75" style="transition: opacity 0.3s ease;">
               {% endif %}
             </div>
             <div>
