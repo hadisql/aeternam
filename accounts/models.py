@@ -82,7 +82,7 @@ class CustomUser(AbstractUser):
 
             # Get the resized image data
             resized_image_data = resize_image(self.profile_picture.path, size_limit)
-            print(f"Resizing image {self.image.name}...")
+            print(f"Resizing image {self.profile_picture.name}...")
 
             # Create a new ImageFile object and save it to the image field
             self.profile_picture.save(
