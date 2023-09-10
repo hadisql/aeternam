@@ -234,11 +234,12 @@ class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 # --------- DELETE  -----------
 # -----------------------------
 
+import sorl.thumbnail
+
 class PhotosDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Photo
     fields = '__all__'
     context_object_name = 'photo'
-
 
     def test_func(self):
         photo_id = self.kwargs['pk']
@@ -257,5 +258,5 @@ class PhotosDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         # Override the delete method to handle success URL redirection
         self.object = self.get_object()
         success_url = self.get_success_url()
-        self.object.delete()
+        sorl.thumbnail.delete(self.object)
         return HttpResponseRedirect(success_url)

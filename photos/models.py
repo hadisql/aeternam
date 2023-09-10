@@ -63,12 +63,6 @@ class Photo(models.Model):
             super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        # Delete the photo file from storage when the Photo object is deleted
-        try:
-            os.remove(self.image.path)
-        except:
-            logger.warning('image file does not exist, associated photo object will be deleted anyway')
-
         # Check if the photo being deleted is the default photo
         if self.is_default:
             album = self.album
@@ -79,6 +73,13 @@ class Photo(models.Model):
             if next_photo:
                 next_photo.is_default = True
                 next_photo.save()
+
+        # Delete the photo file from storage when the Photo object is deleted
+        try:
+            os.remove(self.image.path)
+        except:
+            logger.warning('image file does not exist, associated photo object will be deleted anyway')
+
 
         super().delete(*args, **kwargs)
 
