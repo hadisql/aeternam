@@ -73,30 +73,36 @@
           {% include 'partials/account_infos.html' %}
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:px-4 max-w-7xl mx-auto gap-x-4 mt-10 py-8 border-t border-gray-200 text-center">
-            {% if user == account %}
-              {% if account.hide_connections %}
-                <div class="flex gap-4 place-content-center md:col-span-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 animate-pulse">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
-                  </svg>
-                  <div>
-                    your connections are <span class="font-bold">hidden</span> from other users
+            {% with 'partials/account_connections_list.html' as connections_list %}
+              {% if user == account %}
+                {% if account.hide_connections %}
+                  <div class="flex gap-4 place-content-center md:col-span-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 animate-pulse">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                    </svg>
+                    <div>
+                      your connections are <span class="font-bold">hidden</span> from other users
+                    </div>
                   </div>
-                </div>
-              {% endif %}
-              <!-- SHOW LIST OF RELATIONS -->
-              {% include 'partials/account_connections_list.html' %}
-              <!-- SEARCH BAR FOR OTHER USERS-->
-              {% include 'partials/account_connections_searchbar.html' %}
+                {% endif %}
+                <!-- SHOW LIST OF RELATIONS -->
 
-            {% else %}
-              {% if not account.hide_connections %}
-                {% include 'partials/account_connections_list.html' %}
+                  {% if relations %}
+                    {% include connections_list %}
+                  {% endif %}
+
+                <!-- SEARCH BAR FOR OTHER USERS-->
+                {% include 'partials/account_connections_searchbar.html' %}
+
+              {% else %}
+                {% if not account.hide_connections and relations %}
+                  {% include connections_list %}
+                {% endif %}
               {% endif %}
-            {% endif %}
+            {% endwith %}
           </div>
 
-          <!-- Relation between logged user and visisted account -->
+          <!-- Relation between logged user and visited account -->
           {% if user != account %}
             {% if relation_exists %}
             <div class="flex flex-col w-full my-8">
@@ -108,17 +114,18 @@
                   <summary class="collapse-title text-center">
                     {% if account.first_name %}{{account.first_name}}{% else %}{{account.email}}{% endif %} and you are connected as <span class="ml-1 badge">{{ users_relations_dict|get_relation:user }}</span>
                   </summary>
-                  <div class="collapse-content flex place-content-center gap-2">
-                      <p>something wrong ? :</p>
-                      <select name="change_relation" id="id_change_relation" class="select select-xs">
-                        {% for option in relation_change_form.change_relation %}
-                          {{option}}
+                  <div class="collapse-content flex flex-wrap place-content-center gap-3">
+                    <p class="px-2">...not the right relation type ? you can change it</p>
+                    <select name="change_relation" id="id_change_relation" class="select select-xs">
+                        {% for choice in relation_change_form.change_relation.field.choices %}
+                            <option value="{{ choice.0 }}" {% if choice.0 == relation_to_change.relation_type %}selected{% endif %}>{{ choice.1 }}</option>
                         {% endfor %}
-                      </select>
-                      <button class="btn btn-xs" type="submit" name="relation_change_form">save</button>
+                    </select>
+                    <button class="btn btn-xs" type="submit" name="relation_change_form">save</button>
                   </div>
                 </details>
               </form>
+
 
               <div class="divider"></div>
               <!-- DISCONNECT -->

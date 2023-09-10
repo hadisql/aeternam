@@ -106,10 +106,10 @@ class UserView(LoginRequiredMixin, ListView):
         # retrieving the Relation objects if logged user in the Relation object (either as sender or receiver)
         relations = Relation.objects.filter(Q(user_sending__exact=account_id)
                                             |Q(user_receiving__exact=account_id))
-        context['relations'] = relations # all relations with logged user
+        context['relations'] = relations # all relations with user
 
         relations_users = CustomUser.objects.filter(Q(relation_receiver__in = relations)|Q(relation_sender__in = relations)).exclude(id=account_id)
-        context['relations_users'] = relations_users # all users in relation with logged user
+        context['relations_users'] = relations_users # all users in relation with user
 
         other_user_in_relations = [(relation.user_sending if relation.user_sending.id != account_id else relation.user_receiving) for relation in relations] # for each relation object, list the user not logged ('other user')
         context['users_relations_dict'] = {key:value for key,value in zip(other_user_in_relations, relations) }
@@ -128,6 +128,10 @@ class UserView(LoginRequiredMixin, ListView):
         context['number_of_photos'] = Photo.objects.filter(uploaded_by=account_id).count
         context['number_of_comments'] = Comment.objects.filter(author=account_id).count
         context['number_of_relations'] = Relation.objects.filter(Q(user_sending=account_id)|Q(user_receiving=account_id)).count
+
+        context['relation_to_change'] = Relation.objects.filter(
+                    Q(user_receiving=account_id, user_sending=self.request.user)|
+                    Q(user_receiving=self.request.user, user_sending=account_id)).first() #only 1 relation is filtered here
 
         return context
 
@@ -196,7 +200,6 @@ class UserView(LoginRequiredMixin, ListView):
                     Q(user_receiving=account_id, user_sending=self.request.user)|
                     Q(user_receiving=self.request.user, user_sending=account_id)
                 ).first() #only 1 relation is filtered here
-
 
                 relation_to_change.relation_type=new_relation_type
                 relation_to_change.save()
