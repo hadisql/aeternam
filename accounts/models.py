@@ -51,6 +51,7 @@ class CustomUser(AbstractUser):
     country = models.CharField(_('country'), max_length=100, blank=True, null=True)
     premium_member = models.BooleanField(default=False)
     hide_connections = models.BooleanField(default=False)
+    photo_limit = models.PositiveSmallIntegerField(default=100)
 
     objects = CustomUserManager()
 

@@ -47,8 +47,13 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
             photo.save() #calls the customized save method (photo resize)
 
             for image in images:
-                photo = Photo(album=album, image=image, uploaded_by=self.request.user)
-                photo.save()
+                total_photos = Photo.objects.filter(uploaded_by=self.request.user)
+                if len(total_photos) < self.request.user.photo_limit:
+                    print(f'len(total_photos): {len(total_photos)}, user photo limit: {self.request.user.photo_limit}')
+                    photo = Photo(album=album, image=image, uploaded_by=self.request.user)
+                    photo.save()
+                else:
+                    messages.error(self.request, f"You have reached your maximum amount of photos to upload: {self.request.user.photo_limit} photos")
 
         if form.is_valid():
             if len(images)==1:
@@ -100,7 +105,6 @@ class AlbumListView(LoginRequiredMixin, ListView):
                 shared_albums_with_default_photos[album] = default_photo
             else:
                 shared_albums_with_default_photos[album] = False
-
 
         context['number_of_access'] = number_of_access
         context['albums_with_default_photos'] = albums_with_default_photos
