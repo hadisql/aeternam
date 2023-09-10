@@ -65,21 +65,31 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
         album_id = self.kwargs['album_id']
         album = get_object_or_404(Album, pk=album_id)
         existing_photos = Photo.objects.filter(album=album)
+        total_photos = Photo.objects.filter(uploaded_by=self.request.user)
 
         images = self.request.FILES.getlist('images')
 
-        if not existing_photos.exists():
-            first_image = images.pop(0)
-            photo = Photo(album=album, image=first_image, is_default=True, uploaded_by=self.request.user)
-            photo.save() #save the instance, applying resize from model save method
-        for image in images:
-            photo = Photo(album=album, image=image, uploaded_by=self.request.user)
-            photo.save() #save the instance, applying resize from model save method
+        if len(total_photos) < self.request.user.photo_limit:
+            if not existing_photos.exists():
+                first_image = images.pop(0)
+                photo = Photo(album=album, image=first_image, is_default=True, uploaded_by=self.request.user)
+                photo.save() #save the instance, applying resize from model save method
 
-        if len(images)==1:
-            messages.success(self.request, '1 photo was uploaded successfully')
+            for image in images:
+                total_photos = Photo.objects.filter(uploaded_by=self.request.user) # refresh the number for each iteration
+                photo = Photo(album=album, image=image, uploaded_by=self.request.user)
+                photo.save() #save the instance, applying resize from model save method
+                total_photos = Photo.objects.filter(uploaded_by=self.request.user) # refresh the number for each iteration
+                if len(total_photos) == int(.8 * self.request.user.photo_limit):
+                    messages.warning(self.request, f"You've reached 80% of your maximum photo upload limit")
+
+            if len(images)==1:
+                messages.success(self.request, '1 photo was uploaded successfully')
+            else:
+                messages.success(self.request, f'{len(images)} photos were uploaded successfully')
         else:
-            messages.success(self.request, f'{len(images)} photos were uploaded successfully')
+            messages.error(self.request, f"You have reached your maximum amount of photos to upload: {self.request.user.photo_limit} photos")
+
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -224,11 +234,12 @@ class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 # --------- DELETE  -----------
 # -----------------------------
 
+import sorl.thumbnail
+
 class PhotosDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Photo
     fields = '__all__'
     context_object_name = 'photo'
-
 
     def test_func(self):
         photo_id = self.kwargs['pk']
@@ -247,5 +258,5 @@ class PhotosDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         # Override the delete method to handle success URL redirection
         self.object = self.get_object()
         success_url = self.get_success_url()
-        self.object.delete()
+        sorl.thumbnail.delete(self.object)
         return HttpResponseRedirect(success_url)

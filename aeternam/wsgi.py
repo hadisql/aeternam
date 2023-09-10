@@ -1,5 +1,5 @@
 """
-WSGI config for family_book project.
+WSGI config for aeternam project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

@@ -8,6 +8,11 @@ from sorl.thumbnail import ImageField
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
+from utils.resize_image import resize_image
+from django.core.files.images import ImageFile
+import os
+from io import BytesIO
+
 class CustomUserManager(UserManager):
 
     def _create_user(self, email, password, **extra_fields):
@@ -51,6 +56,7 @@ class CustomUser(AbstractUser):
     country = models.CharField(_('country'), max_length=100, blank=True, null=True)
     premium_member = models.BooleanField(default=False)
     hide_connections = models.BooleanField(default=False)
+    photo_limit = models.PositiveSmallIntegerField(default=100)
 
     objects = CustomUserManager()
 
@@ -64,6 +70,28 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        size_limit = 512*512 # 0.5MB
+
+        # Check if the image size exceeds size limit
+        if self.profile_picture and self.profile_picture.size > size_limit:
+            print(f"Resizing profile_picture {self.profile_picture.name}...")
+
+            # Get the resized image data
+            resized_image_data = resize_image(self.profile_picture.path, size_limit)
+            print(f"Resizing image {self.image.name}...")
+
+            # Create a new ImageFile object and save it to the image field
+            self.profile_picture.save(
+                os.path.basename(self.profile_picture.name),
+                ImageFile(BytesIO(resized_image_data)),
+                save=False
+            )
+            print("Profile Picture resized successfully.")
+            super().save(*args, **kwargs)
 
 
 
