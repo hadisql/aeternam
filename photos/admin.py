@@ -17,7 +17,7 @@ class PhotoAdmin(AdminImageMixin, admin.ModelAdmin):
 
     image_thumbnail.short_description = 'photo thumbnail'
 
-    list_display = ('album', 'image_thumbnail')
+    list_display = ('id','album', 'image_thumbnail')
 
 
 
