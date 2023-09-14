@@ -10,14 +10,14 @@ from django.contrib import messages #used in add_photos_to_album
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 
 from .models import Photo
-from .forms import PhotoForm, CommentForm, PhotoUpdateForm, PhotoRotationForm
+from .forms import PhotoForm, CommentForm, PhotoUpdateForm, PhotoDescriptionForm
 
 from albums.models import Album, AlbumAccess
 
 from comments_likes.models import Comment
 
 import os
-from PIL import Image
+from PIL import Image, ImageOps
 from io import BytesIO
 from django.core.files.images import ImageFile
 
@@ -99,7 +99,7 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
 class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
     template_name = "photos/photo_edit.html"
     form_class = PhotoUpdateForm
-    rotation_form_class = PhotoRotationForm
+    form_description_form = PhotoDescriptionForm
 
     def test_func(self):
         photo_id = self.kwargs['pk']
@@ -114,43 +114,66 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         photo_id = self.kwargs['pk']
         photo = Photo.objects.get(id=photo_id)
 
+        photo_description = photo.description
+        form_description = PhotoDescriptionForm(initial={'description': photo_description})
+
         context['photo'] = photo
         context['photo_update_form'] = PhotoUpdateForm()
-        context['rotation_form'] = self.rotation_form_class()
+        context['form_description_form'] = form_description
 
         return context
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()
-        rotation_form = self.rotation_form_class(self.request.POST)
+        description_form = self.form_description_form(data=self.request.POST)
 
-        if 'rotate' in request.POST:
-            if rotation_form.is_valid():
-                angle = rotation_form.cleaned_data['rotation_angle']
-                print('rotaation angle : ', angle)
-                photo = Photo.objects.get(pk=self.kwargs['pk'])
+        photo_id = self.kwargs['pk']
+        photo = Photo.objects.get(pk=photo_id)
 
-                image = Image.open(photo.image.path)
-                rotated_image = image.rotate(-angle, expand=True)
-                rotated_image_io = BytesIO()
-                rotated_image.save(rotated_image_io, format='JPEG')
-                photo.image.save(
-                    os.path.basename(photo.image.name),
-                    ImageFile(rotated_image_io),
-                    save=False
-                )
+        if description_form.is_valid():
+            if description_form.has_changed():
+                new_description = description_form.cleaned_data['description']
+                photo.description = new_description
                 photo.save()
-                return HttpResponseRedirect(request.path_info)
 
-        elif form.is_valid():
-            photo_id = self.kwargs['pk']
+        if form.is_valid():
+            rotation_angle = form.cleaned_data['rotation_angle']
             new_photo = form.cleaned_data['upload_photo']
-            if new_photo:
-                old_photo = Photo.objects.get(pk=photo_id)
-                old_photo.image.delete(save=False)
+            mirror_flip = form.cleaned_data['mirror_flip']
 
-                old_photo.image = new_photo
-                old_photo.save()
+            if new_photo:
+                if photo.uploaded_by == self.request.user:
+                    old_photo = Photo.objects.get(pk=photo_id)
+                    old_photo.image.delete(save=False)
+
+                    old_photo.image = new_photo
+                    old_photo.save()
+
+            elif rotation_angle or mirror_flip:
+                if photo.uploaded_by == self.request.user:
+                    if rotation_angle:
+                        image = Image.open(photo.image.path)
+                        rotated_image = image.rotate(-rotation_angle, expand=True)
+                        rotated_image_io = BytesIO()
+                        rotated_image.save(rotated_image_io, format='JPEG')
+                        photo.image.save(
+                            os.path.basename(photo.image.name),
+                            ImageFile(rotated_image_io),
+                            save=False
+                        )
+                        photo.save()
+                        #return HttpResponseRedirect(request.path_info)
+                    if mirror_flip:
+                        image = Image.open(photo.image.path)
+                        flipped_image = ImageOps.mirror(image)
+                        flipped_image_io = BytesIO()
+                        flipped_image.save(flipped_image_io, format='JPEG')
+                        photo.image.save(
+                            os.path.basename(photo.image.name),
+                            ImageFile(flipped_image_io),
+                            save=False
+                        )
+                        photo.save()
 
         return self.form_valid(form)
 

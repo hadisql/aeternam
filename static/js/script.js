@@ -60,54 +60,21 @@ function rotateImage(angle) {
     imgElement.style.transform = `rotate(${currentAngle}deg)`;
 
     // Set the rotation angle in the hidden input field
-    document.getElementById("rotation-angle").value = currentAngle;
+    const rotationAngleField = document.getElementById("rotation-angle");
+    rotationAngleField.value = currentAngle;
 }
 
-// Photo detail page -> delete comment
+// Photo Edit Page -> flip photo horizontally
 
-// Function to handle button click and toggle visibility
-function del_comment(deleteButton, confirmButton) {
-  deleteButton.classList.add("hidden");
-  confirmButton.classList.remove("hidden");
+function flipHorizontally() {
+  const imgElement = document.getElementById("current_photo");
+  imgElement.classList.toggle("transform");
+  imgElement.classList.toggle("-scale-x-100");
+
+  const imageFlipField = document.getElementById("mirror-flip"); //hidden django field
+  imageFlipField.value = imageFlipField.value === 'True' ? 'False' : 'True'; // Toggle the value between 'True' and 'False'
 }
-
-// // Attach event listeners to all button pairs
-// const buttonPairs = document.querySelectorAll(".button-pair");
-// buttonPairs.forEach((pair) => {
-//   const deleteButton = pair.querySelector(".delete-button");
-//   const confirmButton = pair.querySelector(".confirm-button");
-
-//   deleteButton.addEventListener("click", () => del_comment(deleteButton, confirmButton));
-// });
-
-// Function to show delete button and hide confirm button
-function showDeleteButton(deleteButton, confirmButton) {
-  deleteButton.classList.remove("hidden");
-  confirmButton.classList.add("hidden");
-}
-
-// Attach event listeners to all button pairs
-const buttonPairs = document.querySelectorAll(".button-pair");
-buttonPairs.forEach((pair) => {
-  const deleteButton = pair.querySelector(".delete-button");
-  const confirmButton = pair.querySelector(".confirm-button");
-
-  // Event listener for delete button
-  deleteButton.addEventListener("click", (event) => {
-    event.stopPropagation(); // Prevent bubbling up to document
-    del_comment(deleteButton, confirmButton);
-  });
-
-  // Event listener for clicking anywhere else on the page
-  document.addEventListener("click", () => {
-    showDeleteButton(deleteButton, confirmButton);
-  });
-
-  // Prevent clicking on the confirm button from hiding it immediately
-  confirmButton.addEventListener("click", (event) => {
-    event.stopPropagation();
-  });
-});
+document.getElementById("mirror_flip_btn").addEventListener("click", flipHorizontally);
 
 // profile page update
 

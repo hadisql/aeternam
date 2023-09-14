@@ -25,6 +25,7 @@ class Photo(models.Model):
     image = ImageField(upload_to=album_photo_directory_path, null=True)
     is_default = models.BooleanField(default=False)
     uploaded_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
+    description = models.CharField(max_length=500 ,null=True)
 
     class Meta:
         # Add a unique constraint to ensure only one default photo per album
