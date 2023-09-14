@@ -15,8 +15,17 @@ class CommentForm(forms.ModelForm):
             }
 
 class PhotoUpdateForm(forms.Form):
-    upload_photo = forms.ImageField(label="", widget=forms.FileInput(attrs={'class':'file-input-md file-input max-[469px]:file-input-sm'}))
+    upload_photo = forms.ImageField(
+        label="",
+        widget=forms.FileInput(attrs={'class':'file-input-md file-input max-[469px]:file-input-sm'}),
+        required=False)
 
-
-class PhotoRotationForm(forms.Form):
     rotation_angle = forms.IntegerField(widget=forms.HiddenInput(attrs={'id':'rotation-angle'}), initial=0)
+
+    mirror_flip = forms.BooleanField(
+        widget=forms.HiddenInput(attrs={'id':'mirror-flip'}),
+        initial=False,
+        required=False)
+
+# class PhotoRotationForm(forms.Form):
+#     rotation_angle = forms.IntegerField(widget=forms.HiddenInput(attrs={'id':'rotation-angle'}), initial=0)

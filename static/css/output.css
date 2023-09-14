@@ -3829,6 +3829,10 @@ details.collapse summary::-webkit-details-marker {
   font-size: 0.875rem;
 }
 
+.btn-wide {
+  width: 16rem;
+}
+
 .btn-block {
   width: 100%;
 }
@@ -4378,6 +4382,11 @@ details.collapse summary::-webkit-details-marker {
   margin-bottom: 1rem;
 }
 
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .-ml-1 {
   margin-left: -0.25rem;
 }
@@ -4527,6 +4536,14 @@ details.collapse summary::-webkit-details-marker {
   margin-top: 2rem;
 }
 
+.-mb-1 {
+  margin-bottom: -0.25rem;
+}
+
+.-mb-2 {
+  margin-bottom: -0.5rem;
+}
+
 .block {
   display: block;
 }
@@ -4627,6 +4644,14 @@ details.collapse summary::-webkit-details-marker {
   height: 1px;
 }
 
+.h-44 {
+  height: 11rem;
+}
+
+.h-24 {
+  height: 6rem;
+}
+
 .min-h-screen {
   min-height: 100vh;
 }
@@ -4669,6 +4694,43 @@ details.collapse summary::-webkit-details-marker {
 
 .w-full {
   width: 100%;
+}
+
+.w-fit {
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.w-40 {
+  width: 10rem;
+}
+
+.w-80 {
+  width: 20rem;
+}
+
+.w-auto {
+  width: auto;
+}
+
+.w-96 {
+  width: 24rem;
+}
+
+.w-\[351px\] {
+  width: 351px;
+}
+
+.w-\[300px\] {
+  width: 300px;
+}
+
+.w-\[320px\] {
+  width: 320px;
+}
+
+.w-\[330px\] {
+  width: 330px;
 }
 
 .min-w-0 {
@@ -4726,6 +4788,11 @@ details.collapse summary::-webkit-details-marker {
 
 .border-collapse {
   border-collapse: collapse;
+}
+
+.-scale-x-100 {
+  --tw-scale-x: -1;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .transform {
@@ -4901,6 +4968,10 @@ details.collapse summary::-webkit-details-marker {
   margin-bottom: calc(1rem * var(--tw-space-y-reverse));
 }
 
+.self-center {
+  align-self: center;
+}
+
 .justify-self-end {
   justify-self: end;
 }
@@ -4984,6 +5055,11 @@ details.collapse summary::-webkit-details-marker {
 .border-white {
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
+}
+
+.border-base-100 {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--b1) / var(--tw-border-opacity));
 }
 
 .border-opacity-50 {
@@ -5519,6 +5595,10 @@ details.collapse summary::-webkit-details-marker {
 }
 
 @media not all and (min-width: 640px) {
+  .max-sm\:btn-wide {
+    width: 16rem;
+  }
+
   .max-sm\:btn-block {
     width: 100%;
   }
@@ -5745,6 +5825,48 @@ details.collapse summary::-webkit-details-marker {
     line-height: 1.25rem;
     padding-left: 0.563rem;
     padding-right: 0.563rem;
+  }
+
+  .sm\:btn-sm {
+    height: 2rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    min-height: 2rem;
+    font-size: 0.875rem;
+  }
+
+  .sm\:btn-md {
+    height: 3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    min-height: 3rem;
+    font-size: 0.875rem;
+  }
+
+  .btn-square:where(.sm\:btn-sm) {
+    height: 2rem;
+    width: 2rem;
+    padding: 0px;
+  }
+
+  .btn-square:where(.sm\:btn-md) {
+    height: 3rem;
+    width: 3rem;
+    padding: 0px;
+  }
+
+  .btn-circle:where(.sm\:btn-sm) {
+    height: 2rem;
+    width: 2rem;
+    border-radius: 9999px;
+    padding: 0px;
+  }
+
+  .btn-circle:where(.sm\:btn-md) {
+    height: 3rem;
+    width: 3rem;
+    border-radius: 9999px;
+    padding: 0px;
   }
 
   .sm\:menu-horizontal {
@@ -6097,9 +6219,23 @@ details.collapse summary::-webkit-details-marker {
   background-color: rgb(249 250 251 / 0.25);
 }
 
+.hover\:bg-current:hover {
+  background-color: currentColor;
+}
+
+.hover\:bg-base-content:hover {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--bc) / var(--tw-bg-opacity));
+}
+
 .hover\:text-accent-content:hover {
   --tw-text-opacity: 1;
   color: hsl(var(--ac) / var(--tw-text-opacity));
+}
+
+.hover\:text-base-100:hover {
+  --tw-text-opacity: 1;
+  color: hsl(var(--b1) / var(--tw-text-opacity));
 }
 
 .hover\:opacity-75:hover {
@@ -6283,6 +6419,10 @@ details.collapse summary::-webkit-details-marker {
     height: 24rem;
   }
 
+  .sm\:h-36 {
+    height: 9rem;
+  }
+
   .sm\:w-12 {
     width: 3rem;
   }
@@ -6305,6 +6445,18 @@ details.collapse summary::-webkit-details-marker {
 
   .sm\:w-auto {
     width: auto;
+  }
+
+  .sm\:w-\[351px\] {
+    width: 351px;
+  }
+
+  .sm\:w-full {
+    width: 100%;
+  }
+
+  .sm\:w-40 {
+    width: 10rem;
   }
 
   .sm\:grid-cols-2 {
@@ -6469,6 +6621,10 @@ details.collapse summary::-webkit-details-marker {
 
   .lg\:h-screen {
     height: 100vh;
+  }
+
+  .lg\:h-32 {
+    height: 8rem;
   }
 
   .lg\:min-h-screen {
