@@ -10,7 +10,7 @@ from django.contrib import messages #used in add_photos_to_album
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 
 from .models import Photo
-from .forms import PhotoForm, CommentForm, PhotoUpdateForm
+from .forms import PhotoForm, CommentForm, PhotoUpdateForm, PhotoDescriptionForm
 
 from albums.models import Album, AlbumAccess
 
@@ -99,6 +99,7 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
 class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
     template_name = "photos/photo_edit.html"
     form_class = PhotoUpdateForm
+    form_description_form = PhotoDescriptionForm
 
     def test_func(self):
         photo_id = self.kwargs['pk']
@@ -113,22 +114,32 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         photo_id = self.kwargs['pk']
         photo = Photo.objects.get(id=photo_id)
 
+        photo_description = photo.description
+        form_description = PhotoDescriptionForm(initial={'description': photo_description})
+
         context['photo'] = photo
         context['photo_update_form'] = PhotoUpdateForm()
+        context['form_description_form'] = form_description
 
         return context
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()
-        #rotation_form = self.rotation_form_class(self.request.POST)
+        description_form = self.form_description_form(data=self.request.POST)
+
+        photo_id = self.kwargs['pk']
+        photo = Photo.objects.get(pk=photo_id)
+
+        if description_form.is_valid():
+            if description_form.has_changed():
+                new_description = description_form.cleaned_data['description']
+                photo.description = new_description
+                photo.save()
 
         if form.is_valid():
-            photo_id = self.kwargs['pk']
             rotation_angle = form.cleaned_data['rotation_angle']
             new_photo = form.cleaned_data['upload_photo']
             mirror_flip = form.cleaned_data['mirror_flip']
-
-            photo = Photo.objects.get(pk=photo_id)
 
             if new_photo:
                 if photo.uploaded_by == self.request.user:

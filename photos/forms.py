@@ -27,5 +27,12 @@ class PhotoUpdateForm(forms.Form):
         initial=False,
         required=False)
 
+class PhotoDescriptionForm(forms.Form):
+    description = forms.CharField(
+        label="",
+        widget=forms.Textarea(attrs={'class':'textarea textarea-bordered', 'rows':2}),
+        required=False
+    )
+
 # class PhotoRotationForm(forms.Form):
 #     rotation_angle = forms.IntegerField(widget=forms.HiddenInput(attrs={'id':'rotation-angle'}), initial=0)
