@@ -214,6 +214,7 @@ class NotificationsView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['seen_notifications'] = Notification.objects.filter(user=self.request.user, is_read=True)
+        context['unseen_notifications'] = Notification.objects.filter(user=self.request.user, is_read=False)
         return context
 
     def post(self, request, *args, **kwargs):

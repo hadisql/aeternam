@@ -17,7 +17,7 @@
           </div>
         {% endfor %}
         {% endif %}
-        <p class="font-bold text-lg px-6 py-4">{{notifs_count}} notification{{notifs_count|pluralize}}:</p>
+        <p class="font-bold text-lg px-6 py-4">{{all_notifications.count}} notification{{all_notifications.count|pluralize}}:</p>
 
         {% for notification in all_notifications %}
           <div class="grid grid-cols-1 place-content-center">
@@ -36,8 +36,8 @@
           </div>
         {% endfor %}
 
-                        <!-- <br>
-                        {{notification.content_object.album.photos_album.first.image}} -->
+                        {% comment %}<!-- <br>
+                        {{notification.content_object.album.photos_album.first.image}} -->{% endcomment %}
 
 
         <!-- Seen notifications -->
