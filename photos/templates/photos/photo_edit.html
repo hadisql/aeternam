@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load static %}
 {% load thumbnail %}
 
 {% block title %}Photo Settings{% endblock title %}
@@ -67,5 +68,9 @@
     </div>
   </form>
 </div>
+
+{% block javascript %}
+<script src="{% static 'photos/js/photo_edit.js' %}"></script>
+{% endblock javascript %}
 
 {% endblock body %}

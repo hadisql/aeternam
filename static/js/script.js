@@ -1,43 +1,3 @@
-document.addEventListener('DOMContentLoaded', function () {
-  const viewButton = document.getElementById('view-button');
-  const swipeButton = document.getElementById('swipe-button');
-  const galleryLayout = document.getElementById('photo-gallery-layout');
-  const swipeLayout = document.getElementById('photo-swipe-layout');
-
-  // Function to show the gallery layout and hide the swipe layout
-  function showGalleryLayout() {
-    console.log('show gallery');
-    galleryLayout.classList.remove('hidden');
-    swipeLayout.classList.add('hidden');
-
-    // Swap the button classes
-    viewButton.classList.remove('hover:text-accent-content');
-    viewButton.classList.add('bg-base-300', 'shadow-sm');
-
-    swipeButton.classList.remove('bg-base-300', 'shadow-sm');
-    swipeButton.classList.add('hover:text-accent-content');
-  }
-
-  // Function to show the swipe layout and hide the gallery layout
-  function showSwipeLayout() {
-    console.log('show swipe');
-    swipeLayout.classList.remove('hidden');
-    galleryLayout.classList.add('hidden');
-
-    // Swap the button classes
-    swipeButton.classList.remove('hover:text-accent-content');
-    swipeButton.classList.add('bg-base-300', 'shadow-sm');
-
-    viewButton.classList.remove('bg-base-300', 'shadow-sm');
-    viewButton.classList.add('hover:text-accent-content');
-  }
-
-  // Add click event listeners to the buttons
-  viewButton.addEventListener('click', showGalleryLayout);
-  swipeButton.addEventListener('click', showSwipeLayout);
-});
-
-
 // Login Page -> hide/show password button
 function reveal() {
   if((document.getElementById('box').classList.contains('show-pw')) && document.getElementById('box').click){
@@ -51,27 +11,80 @@ function reveal() {
 }
 
 
-// Photo Edit Page -> rotate photo
-let currentAngle = 0;
+// notif delete from navbar
+  // JavaScript to handle the click event
+  document.querySelectorAll('.mark-as-read-icon').forEach(function (icon) {
+    icon.addEventListener('click', function () {
+        var notificationId = this.closest('#notif').getAttribute('data-notification-id');
+        markNotificationAsRead(notificationId);
+    });
+});
 
-function rotateImage(angle) {
-    currentAngle += angle;
-    const imgElement = document.getElementById("current_photo");
-    imgElement.style.transform = `rotate(${currentAngle}deg)`;
+function markNotificationAsRead(notificationId) {
+    // Send an AJAX request to mark the notification as read
+    fetch(`/clear_notif_from_navbar/${notificationId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'), // Include CSRF token
+            'X-Requested-With': 'XMLHttpRequest', // To identify AJAX requests in Django
+        },
+    })
+    .then(function (response) {
+        if (response.status === 200) {
+            // Update the UI to indicate that the notification is read (e.g., change the icon color)
+            const notifCard = document.querySelector(`[data-notification-id="${notificationId}"]`);
+            notifCard.classList.add('text-emerald-500', 'font-semibold');
+            notifCard.querySelector('a').classList.add('hidden'); // Hide the anchor
+            notifCard.querySelector('button').classList.add('hidden'); // Hide the button
+            // Add new elements to the notification card
+            const flexDiv = document.createElement('div');
+            flexDiv.classList.add('flex-1');
 
-    // Set the rotation angle in the hidden input field
-    const rotationAngleField = document.getElementById("rotation-angle");
-    rotationAngleField.value = currentAngle;
+            const markedAsSeen = document.createElement('p');
+            markedAsSeen.textContent = 'Marked as seen';
+
+            flexDiv.appendChild(markedAsSeen);
+            notifCard.appendChild(flexDiv);
+            // SVG CHECK ICON -------------
+            const greenIconDiv = document.createElement('div');
+            greenIconDiv.classList.add('text-emerald-500', 'font-semibold');
+
+            const svgIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svgIcon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+            svgIcon.setAttribute('viewBox', '0 0 24 24');
+            svgIcon.setAttribute('stroke-width', '1.5');
+            svgIcon.classList.add('w-5', 'h-5', 'fill-none', 'stroke-current');
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('stroke-linecap', 'round');
+            path.setAttribute('stroke-linejoin', 'round');
+            path.setAttribute('d', 'M4.5 12.75l6 6 9-13.5');
+            // -----------------------------
+            svgIcon.appendChild(path);
+            greenIconDiv.appendChild(svgIcon);
+            notifCard.appendChild(greenIconDiv);
+
+            var notifIndicator = document.getElementById('notif-indicator');
+               if (notifIndicator) {
+                   var notificationCount = parseInt(notifIndicator.innerHTML);
+                   notifIndicator.innerHTML = (notificationCount - 1).toString();
+               }
+        }
+    });
 }
 
-// Photo Edit Page -> flip photo horizontally
-
-function flipHorizontally() {
-  const imgElement = document.getElementById("current_photo");
-  imgElement.classList.toggle("transform");
-  imgElement.classList.toggle("-scale-x-100");
-
-  const imageFlipField = document.getElementById("mirror-flip"); //hidden django field
-  imageFlipField.value = imageFlipField.value === 'True' ? 'False' : 'True'; // Toggle the value between 'True' and 'False'
+// Function to get the CSRF token from cookies
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
-document.getElementById("mirror_flip_btn").addEventListener("click", flipHorizontally);

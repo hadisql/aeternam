@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .notif-card {
+    @apply flex bg-neutral-content/30 hover:bg-neutral-content/50 rounded-xl p-2 border;
+  }
+}
+
+/* transition-all duration-500 */

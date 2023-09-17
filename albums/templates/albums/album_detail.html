@@ -1,5 +1,5 @@
 {% extends 'core/base.html' %}
-
+{% load static %}
 {% block title %}Albums{% endblock title %}
 
 {% load thumbnail %}
@@ -163,5 +163,8 @@
 
 
 </div>
+{% block javascript %}
+  <script src="{% static 'albums/js/photo_display_method.js' %}"></script>
+{% endblock javascript %}
 
 {% endblock body %}
