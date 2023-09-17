@@ -83,7 +83,8 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
                 if len(total_photos) == int(.8 * self.request.user.photo_limit):
                     messages.warning(self.request, f"You've reached 80% of your maximum photo upload limit")
 
-            if len(images)==1:
+            if len(images)<=1:
+                # if you add 1 photo to an empty album -> the list length is 0 because of the default_photo pop(0) treatment
                 messages.success(self.request, '1 photo was uploaded successfully')
             else:
                 messages.success(self.request, f'{len(images)} photos were uploaded successfully')

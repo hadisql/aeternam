@@ -58,7 +58,7 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
         if form.is_valid():
             if len(images)==1:
                 messages.success(self.request, f'Album successfully created, with 1 photo')
-            elif len(images)==0:
+            elif len(images)==0 and not first_image:
                 messages.success(self.request, f'Empty album successfully created')
             else:
                 messages.success(self.request, f'Album successfully created, with {len(images)+1} photos')
