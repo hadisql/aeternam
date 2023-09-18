@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "comments_likes",
     "sorl.thumbnail",
     "mathfilters",
+    "storages",
 
     "django_browser_reload",
     "django.contrib.admin",
