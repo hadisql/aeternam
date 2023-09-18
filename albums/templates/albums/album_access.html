@@ -75,10 +75,10 @@
                         <div class="mask mask-squircle w-12 h-12">
                           {% if relation.profile_picture %}
                             {% thumbnail relation.profile_picture "50x50" crop="center" as im %}
-                              <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{% firstof relation.first_name user.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
+                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{% firstof relation.get_full_name relation.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
                             {% endthumbnail %}
                           {% else %}
-                            <img src="https://api.dicebear.com/6.x/initials/svg?seed={% firstof user.get_full_name user.email %}" width="50" height="50" alt="" class="h-full w-full object-cover object-center group-hover:opacity-75">
+                            <img src="https://api.dicebear.com/6.x/initials/svg?seed={% firstof relation.get_full_name relation.email %}" width="50" height="50" alt="" class="h-full w-full object-cover object-center group-hover:opacity-75">
                           {% endif %}
                         </div>
                       </div>
@@ -141,11 +141,11 @@
                       <div class="avatar">
                         <div class="mask mask-squircle w-12 h-12">
                           {% if relation.profile_picture %}
-                            {% thumbnail relation.profile_picture.url "50x50" crop="center" as im %}
-                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{% firstof relation.first_name user.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
+                            {% thumbnail relation.profile_picture "50x50" crop="center" as im %}
+                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{% firstof relation.get_full_name relation.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
                             {% endthumbnail %}
                           {% else %}
-                            <img src="https://api.dicebear.com/6.x/initials/svg?seed={% firstof user.get_full_name user.email %}" width="50" height="50" alt="" class="h-full w-full object-cover object-center group-hover:opacity-75">
+                            <img src="https://api.dicebear.com/6.x/initials/svg?seed={% firstof relation.get_full_name relation.email %}" width="50" height="50" alt="" class="h-full w-full object-cover object-center group-hover:opacity-75">
                           {% endif %}
                         </div>
                       </div>

@@ -32,7 +32,6 @@
             <!-- profile pic-->
             <div class="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
               <div class="relative">
-                {% firstof "profile_pictures/default.jpg" as default_pic %}
                 {% if account.profile_picture %}
                   {% thumbnail account.profile_picture "150x150" crop="center" as im %}
                     <img alt="..." src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
