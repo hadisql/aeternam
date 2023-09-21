@@ -113,6 +113,16 @@ if DEBUG:
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
+    # DATABASES = {
+    #     "default": {
+    #         "ENGINE": "django.db.backends.postgresql_psycopg2",
+    #         "NAME": "aeternam_dev_db",
+    #         "USER": "hadi",
+    #         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+    #         "HOST": "localhost",
+    #         "PORT": "5432",
+    #     }
+    # }
 else:
     DATABASES = {
         'default': dj_database_url.parse(os.environ.get('DATABASE_URL'), conn_max_age=600),
