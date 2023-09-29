@@ -1,7 +1,8 @@
 from typing import Any, Dict
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
-from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, JsonResponse
+from django.template.loader import render_to_string
 
 from django.views.generic import FormView, UpdateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -83,6 +84,36 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         print("self.request.post", self.request.POST)
         return super().form_valid(form)
 
+def user_search(request):
+    context = {}
+    url_parameter = request.GET.get("q")
+
+    relations = Relation.objects.filter(Q(user_sending__exact=request.user.id)
+                                        |Q(user_receiving__exact=request.user.id))
+    context['relations'] = relations # all relations with user
+
+    relations_users = CustomUser.objects.filter(Q(relation_receiver__in = relations)|Q(relation_sender__in = relations)).exclude(id=request.user.id)
+    context['relations_users'] = relations_users # all users in relation with user
+
+    if url_parameter:
+        searched_users = CustomUser.objects.exclude(id=request.user.id).filter(Q(email__icontains = url_parameter) | Q(first_name__icontains = url_parameter) | Q(last_name__icontains = url_parameter) )
+    else:
+        searched_users = url_parameter #None
+
+    context['searched_users'] = searched_users
+
+    does_req_accept_json = request.accepts("application/json")
+    is_ajax_request = request.headers.get("x-requested-with") == "XMLHttpRequest" and does_req_accept_json
+    if is_ajax_request:
+        html = render_to_string(
+            template_name="partials/searchbar_results.html",
+            context=context
+        )
+        data_dict = {"html_from_view": html}
+
+        return JsonResponse(data=data_dict, safe=False)
+
+    return render(request, "accounts/account.html", context=context)
 
 class UserView(LoginRequiredMixin, ListView):
     model = CustomUser
@@ -97,11 +128,11 @@ class UserView(LoginRequiredMixin, ListView):
         account_id = self.kwargs['pk']
         context['account'] = CustomUser.objects.get(id=account_id) #making sure that the profile we use in the context (to be shown) is the profile visited
 
-        search = self.request.GET.get('search-area') or ''
-        if search is not None:
-            context['searched_users'] = CustomUser.objects.exclude(id=account_id).filter(Q(email__icontains = search) | Q(first_name__icontains = search) | Q(last_name__icontains = search) )
+        # search = self.request.GET.get('search-area') or ''
+        # if search is not None:
+        #     context['searched_users'] = CustomUser.objects.exclude(id=account_id).filter(Q(email__icontains = search) | Q(first_name__icontains = search) | Q(last_name__icontains = search) )
 
-        context['search_input'] = search
+        # context['search_input'] = search
 
         # retrieving the Relation objects if logged user in the Relation object (either as sender or receiver)
         relations = Relation.objects.filter(Q(user_sending__exact=account_id)
@@ -125,9 +156,8 @@ class UserView(LoginRequiredMixin, ListView):
         context['request_to_exists'] = RelationRequest.objects.filter(user_sending_id=self.request.user.id, user_receiving=account_id).exists()
 
         # retrieving user data for profile dashboard
-        context['number_of_photos'] = Photo.objects.filter(uploaded_by=account_id).count
-        context['number_of_comments'] = Comment.objects.filter(author=account_id).count
-        context['number_of_relations'] = Relation.objects.filter(Q(user_sending=account_id)|Q(user_receiving=account_id)).count
+        context['account_photos'] = Photo.objects.filter(uploaded_by=account_id)
+        context['account_comments'] = Comment.objects.filter(author=account_id)
 
         context['relation_to_change'] = Relation.objects.filter(
                     Q(user_receiving=account_id, user_sending=self.request.user)|

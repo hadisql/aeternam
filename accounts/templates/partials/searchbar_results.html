@@ -1,0 +1,36 @@
+{% if searched_users %}
+<div class="overflow-x-auto" >
+  <table class="table">
+    <thead>
+      <tr>
+        <th>User</th>
+      </tr>
+    </thead>
+    {% for searched_user in searched_users %}
+      {% if searched_user not in relations_users %}
+      <tbody>
+        <tr class="hover">
+          <th>
+            <a href="{% url 'accounts:account_view' searched_user.id %}" class="cursor-pointer">
+              <div class="flex items-center space-x-3">
+                <div class="avatar">
+                  <div class="mask mask-squircle w-12 h-12">
+                    <img src="{% if searched_user.profile_picture %}{{searched_user.profile_picture.url}}{% else %}https://api.dicebear.com/6.x/initials/svg?seed={% firstof searched_user.get_full_name searched_user.email %}{% endif %}" alt="Avatar Tailwind CSS Component" />
+                  </div>
+                </div>
+                <div>
+                  <div class="font-bold">{% firstof searched_user.get_full_name "-" %}</div>
+                  <div class="text-sm opacity-50">{{searched_user.email}}</div>
+                </div>
+              </div>
+            </a>
+          </th>
+        </tr>
+      </tbody>
+      {% endif %}
+    {% endfor %}
+  </table>
+{% else %}
+  <p>No results</p>
+{% endif %}
+</div>
