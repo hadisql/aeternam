@@ -5,6 +5,8 @@ db.sqlite3
 db.sqlite3-journal
 sqlite_dump.sql
 
+jquery-3.7.1.js
+
 **/__pycache__/
 **/migrations/__pycache__/
 

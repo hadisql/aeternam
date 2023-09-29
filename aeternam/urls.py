@@ -32,6 +32,7 @@ urlpatterns = [
     path("albums/", include(albums.urls)),
     path("admin/", admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
+    path('user-search/', accounts.views.user_search, name='user-search'),
 ]
 
 if settings.DEBUG:

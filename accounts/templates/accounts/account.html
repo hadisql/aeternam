@@ -71,7 +71,7 @@
           <!-- USER INFOS -->
           {% include 'partials/account_infos.html' %}
 
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:px-4 max-w-7xl mx-auto gap-x-4 mt-10 py-8 border-t border-gray-200 text-center">
+          <div class="grid grid-cols-1 {% if relations %}md:grid-cols-2 max-w-7xl{% else %}max-w-md{% endif %} lg:px-4  mx-auto gap-x-4 mt-10 py-8 border-t border-gray-200 text-center">
             {% with 'partials/account_connections_list.html' as connections_list %}
               {% if user == account %}
                 {% if account.hide_connections %}
@@ -153,4 +153,11 @@
   </section>
 
 </div>
+
+{% block javascript %}
+  <!-- JQuery -->
+  <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+  <script src="{% static 'accounts/js/user_searchbar.js' %}"></script>
+{% endblock javascript %}
+
 {% endblock %}
