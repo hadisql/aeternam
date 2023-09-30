@@ -1,11 +1,11 @@
 {% if searched_users %}
 <div class="overflow-x-auto" >
   <table class="table">
-    <thead>
+    {% comment %}<thead>
       <tr>
         <th>User</th>
       </tr>
-    </thead>
+    </thead>{% endcomment %}
     {% for searched_user in searched_users %}
       {% if searched_user not in relations_users %}
       <tbody>
