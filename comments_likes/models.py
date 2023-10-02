@@ -28,6 +28,6 @@ class Comment(models.Model):
         album_owner = self.commented_photo.album.creator
 
         if self.author != photo_uploader or self.author != album_owner:
-            create_notification(photo_uploader, ContentType.objects.get_for_model(self), self.pk, message=message, title=title)
+            create_notification(photo_uploader, self.author, ContentType.objects.get_for_model(self), self.pk, message=message, title=title)
             if photo_uploader != album_owner:
-                create_notification(album_owner, ContentType.objects.get_for_model(self), self.pk, message=message, title=title)
+                create_notification(album_owner, self.author, ContentType.objects.get_for_model(self), self.pk, message=message, title=title)

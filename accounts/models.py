@@ -145,7 +145,7 @@ class RelationRequest(models.Model):
         # Create a notification when user sends a request
         title = "Connection request"
         message=f"{self.user_sending.first_name or self.user_sending} sent you a connection request."
-        create_notification(self.user_receiving, ContentType.objects.get_for_model(self), self.pk, message, title)
+        create_notification(self.user_receiving, self.user_sending, ContentType.objects.get_for_model(self), self.pk, message, title)
 
 
     def delete(self, *args, **kwargs):
@@ -158,7 +158,7 @@ class RelationRequest(models.Model):
 
 
 class Notification(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='concerned_user_notif')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='target_user_notif')
     identifier = models.CharField(max_length=255, unique=True)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
@@ -167,6 +167,7 @@ class Notification(models.Model):
     title = models.CharField(max_length=255) # used in template automatically
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
+    user_from = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='from_user_notif')
 
     def __str__(self):
         return self.message
@@ -175,7 +176,7 @@ class Notification(models.Model):
         ordering = ['created_at']
 
 # When creating a notification
-def create_notification(user, content_type, object_id, message, title):
+def create_notification(user, user_from, content_type, object_id, message, title):
     identifier = f"{content_type.model}{object_id}-{user.pk}"
     Notification.objects.create(
         user=user,
@@ -183,7 +184,8 @@ def create_notification(user, content_type, object_id, message, title):
         content_type=content_type,
         object_id=object_id,
         message=message,
-        title = title
+        title = title,
+        user_from=user_from
     )
 
 # When marking a notification as read

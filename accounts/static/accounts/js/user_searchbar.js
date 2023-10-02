@@ -8,7 +8,6 @@ let scheduled_function = false
 let ajax_call = function (endpoint, request_parameters) {
   $.getJSON(endpoint, request_parameters)
       .done(response => {
-          console.log(response);
           // fade out the resultsDiv, then:
           resultsDiv.fadeTo('fast', 0).promise().then(() => {
               // replace the HTML contents
