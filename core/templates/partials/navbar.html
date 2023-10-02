@@ -68,7 +68,7 @@
                                 <div id="notif" data-notification-id="{{ notification.id }}" class="relative bg-base-100 w-full border-b pl-4 pr-8 py-4 md:py-6 hover:bg-base-300 {% if forloop.last %}shadow-xl rounded-b-lg{% else %}border-b{% endif %}">
                                   <a href="{% url url_mapping notification|get_notif_param %}" class="flex gap-4">
                                     <div class="flex-none self-center">
-                                      <img class="rounded-full w-12 h-12" src="{% if notification.user_from.profile_picture %}{{notification.user_from.profile_picture}}{% else %}https://api.dicebear.com/6.x/initials/svg?seed={% firstof notification.user_from.get_full_name notification.user_from.email %}{% endif %}" alt="">
+                                      <img class="rounded-full w-12 h-12" src="{% if notification.user_from.profile_picture %}{{notification.user_from.profile_picture.url}}{% else %}https://api.dicebear.com/6.x/initials/svg?seed={% firstof notification.user_from.get_full_name notification.user_from.email %}{% endif %}" alt="">
                                     </div>
                                     <div>
                                       <h2 class="text-xl font-semibold">{{notification.content_type|get_notif_name|title}}</h2>
