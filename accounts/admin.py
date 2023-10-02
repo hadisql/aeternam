@@ -35,4 +35,13 @@ admin.site.register(CustomUser, CustomUserAdmin)
 
 admin.site.register(RelationRequest)
 admin.site.register(Relation)
-admin.site.register(Notification)
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('user','identifier','message','user_from','is_read')
+    list_filter = ('user', 'user_from', 'is_read')
+    search_fields = ('user','identifier','message','user_from','is_read','title')
+    actions = ['mark_as_unread']
+
+    def mark_as_unread(self, request, queryset):
+        queryset.update(is_read=False)
