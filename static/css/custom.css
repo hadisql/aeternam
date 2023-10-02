@@ -20,3 +20,8 @@
   animation-timing-function:ease-in-out;
   animation-direction: alternate;
 }
+
+.notification-fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
