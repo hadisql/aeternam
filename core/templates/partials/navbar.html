@@ -1,6 +1,7 @@
 {% load thumbnail %}
 {% load mathfilters %}
 {% load get_notif_name %}
+{% load get_url_mapping %}
 
 <div class="hidden text-emerald-500"></div>
 
@@ -62,29 +63,33 @@
                             <h2 class="font-semibold text-lg my-3 px-4 py-1 rounded-2xl bg-gray-100 dark:text-slate-700 w-fit mx-auto shadow-md"><span id="notif-indicator" class="font-bold">{{all_notifications.count}}</span>&nbsp;notification{{all_notifications.count|pluralize}} :</h2>
                           {% endif %}
                           {% for notification in all_notifications %}
-                          <div id="notif" data-notification-id="{{ notification.id }}" class="relative bg-base-100 w-full border-b pl-4 pr-8 py-4 md:py-6 hover:bg-base-300 {% if forloop.last %}shadow-xl rounded-b-lg{% else %}border-b{% endif %}">
-                            <a href="#" class=" flex gap-4">
-                              <div class="flex-none self-center">
-                                <img class="rounded-full w-12 h-12" src="{% if notification.user_from.profile_picture %}{{notification.user_from.profile_picture}}{% else %}https://api.dicebear.com/6.x/initials/svg?seed={% firstof notification.user_from.get_full_name notification.user_from.email %}{% endif %}" alt="">
-                              </div>
-                              <div>
-                                <h2 class="text-xl font-semibold">{{notification.content_type|get_notif_name|title}}</h2>
-                                <p class="pr-2">{{notification.message}}</p>
-                              </div>
-                            </a>
-                            <div class="absolute right-0 mr-3 top-12 delete-notif-pair group">
-                              <button class="delete-notif" >
-                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-8 h-8 p-1 rounded-full stroke-current group-hover:stroke-white group-hover:stroke-2 group-hover:bg-gray-400">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                  </svg>
-                              </button>
-                              <button class="hidden confirm-delete-notif">
-                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 p-1 rounded-full stroke-current group-hover:stroke-white group-hover:stroke-2 group-hover:bg-gray-400">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                  </svg>
-                              </button>
-                            </div>
-                          </div>
+                            {% with notification_content_type=notification.content_type.model %}
+                              {% with url_mapping=notification_content_type|get_url_mapping %}
+                                <div id="notif" data-notification-id="{{ notification.id }}" class="relative bg-base-100 w-full border-b pl-4 pr-8 py-4 md:py-6 hover:bg-base-300 {% if forloop.last %}shadow-xl rounded-b-lg{% else %}border-b{% endif %}">
+                                  <a href="{% url url_mapping notification|get_notif_param %}" class="flex gap-4">
+                                    <div class="flex-none self-center">
+                                      <img class="rounded-full w-12 h-12" src="{% if notification.user_from.profile_picture %}{{notification.user_from.profile_picture}}{% else %}https://api.dicebear.com/6.x/initials/svg?seed={% firstof notification.user_from.get_full_name notification.user_from.email %}{% endif %}" alt="">
+                                    </div>
+                                    <div>
+                                      <h2 class="text-xl font-semibold">{{notification.content_type|get_notif_name|title}}</h2>
+                                      <p class="pr-2">{{notification.message}}</p>
+                                    </div>
+                                  </a>
+                                  <div class="absolute right-0 mr-3 top-12 delete-notif-pair group">
+                                    <button class="delete-notif" >
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-8 h-8 p-1 rounded-full stroke-current group-hover:stroke-white group-hover:stroke-2 group-hover:bg-gray-400">
+                                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                    <button class="hidden confirm-delete-notif">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 p-1 rounded-full stroke-current group-hover:stroke-white group-hover:stroke-2 group-hover:bg-gray-400">
+                                          <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                        </svg>
+                                    </button>
+                                  </div>
+                                </div>
+                              {% endwith %}
+                            {% endwith %}
                           {% endfor %}
                         </div>
                       </div>
