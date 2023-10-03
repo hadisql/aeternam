@@ -35,7 +35,14 @@ $(document).ready(function() {
         var notificationId = this.closest('#notif').getAttribute('data-notification-id');
         markNotificationAsRead(notificationId);
     });
-});
+  });
+  // mark notification as read when link is clicked
+  document.querySelectorAll('.mark-as-read-link').forEach(function (link) {
+    link.addEventListener('click', function () {
+        var notificationId = this.closest('#notif').getAttribute('data-notification-id');
+        markNotificationAsRead(notificationId);
+    });
+  });
 
   function markNotificationAsRead(notificationId) {
     // Send an AJAX request to mark the notification as read
