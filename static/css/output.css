@@ -4094,6 +4094,42 @@ details.collapse summary::-webkit-details-marker {
   padding-bottom: 0.5rem;
 }
 
+.menu-md :where(li:not(.menu-title) > *:not(ul):not(details):not(.menu-title)),
+  .menu-md :where(li:not(.menu-title) > details > summary:not(.menu-title)) {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  border-radius: var(--rounded-btn, 0.5rem);
+}
+
+.menu-md .menu-title {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.menu-lg :where(li:not(.menu-title) > *:not(ul):not(details):not(.menu-title)),
+  .menu-lg :where(li:not(.menu-title) > details > summary:not(.menu-title)) {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  border-radius: var(--rounded-btn, 0.5rem);
+}
+
+.menu-lg .menu-title {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
 .tooltip {
   position: relative;
   display: inline-block;
@@ -4681,6 +4717,10 @@ details.collapse summary::-webkit-details-marker {
   width: 100vw;
 }
 
+.w-60 {
+  width: 15rem;
+}
+
 .min-w-0 {
   min-width: 0px;
 }
@@ -4789,6 +4829,14 @@ details.collapse summary::-webkit-details-marker {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+
+.cursor-wait {
+  cursor: wait;
 }
 
 .grid-flow-col {
@@ -5159,6 +5207,10 @@ details.collapse summary::-webkit-details-marker {
 
 .stroke-2 {
   stroke-width: 2;
+}
+
+.stroke-1 {
+  stroke-width: 1;
 }
 
 .object-cover {
