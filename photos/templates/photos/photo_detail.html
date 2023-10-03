@@ -104,11 +104,13 @@
     </section>
   </div>
 
-  {% load static %}
-  {% block javascript %}
-    <script src="{% static 'photos/js/photo_swipe.js' %}"></script>
-    <script src="{% static 'photos/js/comment_delete.js' %}"></script>
-  {% endblock %}
+
 
 </div>
+{% endblock %}
+
+{% load static %}
+{% block javascript %}
+  <script src="{% static 'photos/js/photo_swipe.js' %}"></script>
+  <script src="{% static 'photos/js/comment_delete.js' %}"></script>
 {% endblock %}
