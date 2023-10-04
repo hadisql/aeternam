@@ -195,3 +195,9 @@ def mark_notification_as_read(user, content_type, object_id):
     notifications = Notification.objects.filter(user=user, identifier=identifier)
     print(f"querying the notification: {notifications}")
     notifications.update(is_read=True)
+
+# def delete_notification(user, content_type, object_id):
+#     notification = Notification.objects.filter(user=user, content_type=content_type, object_id=object_id)
+#     print(f"querying the notification: {notification}")
+#     if notification:
+#         notification.delete()

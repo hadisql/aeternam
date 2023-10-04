@@ -1,3 +1,4 @@
+from typing import Any
 from django.db import models
 
 from accounts.models import CustomUser
@@ -44,8 +45,8 @@ class Album(models.Model):
 # -------------------------------
 
 class AlbumAccess(models.Model):
-    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='accesses')
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='album_accesses')
+    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='album_accesses')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='album_accessing_user')
 
     class Meta:
         unique_together = ['album', 'user']

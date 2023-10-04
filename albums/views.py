@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy, reverse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 
 from django.views.generic import CreateView, ListView, DeleteView, DetailView
 
@@ -18,8 +18,9 @@ from django.contrib import messages #used in AlbumCreateView
 from django.contrib.messages.views import SuccessMessageMixin # used in AlbumDeleteView
 
 from .forms import AlbumAccessGrantForm, AlbumAccessRevokeForm
-from accounts.models import CustomUser, Relation
+from accounts.models import CustomUser, Relation, Notification
 
+from django.contrib.contenttypes.models import ContentType
 
 # ----------------------------
 # ------ CREATE ALBUM --------
@@ -78,7 +79,7 @@ class AlbumListView(LoginRequiredMixin, ListView):
 
         # retrieving albums specific to the creator of the albums
         my_albums = Album.objects.filter(creator=self.request.user)
-        shared_albums = Album.objects.filter(accesses__user__exact=self.request.user) #'accesses' is the related name in the AlbumAccess model for the album FK
+        shared_albums = Album.objects.filter(album_accesses__user__exact=self.request.user) #'accesses' is the related name in the AlbumAccess model for the album FK
 
         # Annotate each album with the count of photos associated with it
         my_albums = my_albums.annotate(photo_count=Count('photos_album'))
@@ -216,15 +217,13 @@ class AlbumDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMix
 
 
 @login_required
-def album_access(request, pk):
-    album = Album.objects.get(pk=pk)
+def album_access(request, album_id):
+    album = get_object_or_404(Album, id=album_id)
     if request.user != album.creator:
         return HttpResponseForbidden("You don't have permission to access this page.")
 
-    existing_access = AlbumAccess.objects.filter(album=pk)
+    existing_access = AlbumAccess.objects.filter(album=album)
     users_with_access = [access.user for access in existing_access]
-    users_id_with_access = [access.user.id for access in existing_access]
-
 
     relations_to_album_creator = Relation.objects.filter(Q(user_sending__exact=album.creator) | Q(user_receiving__exact=album.creator))
     # relations list contains all other users sharing a relation object with the creator of the album
@@ -237,50 +236,43 @@ def album_access(request, pk):
         elif relation.user_sending == album.creator:
             relations_dict[relation.user_receiving] = relation.relation_type
 
-    # GET
-    album_form = AlbumForm(instance=album) #title and description update
-    add_access_form = AlbumAccessGrantForm(queryset=CustomUser.objects.exclude(pk__in=users_id_with_access))
-    revoke_access_form = AlbumAccessRevokeForm(queryset=CustomUser.objects.filter(pk__in=users_id_with_access))
+    if request.method == 'POST':
+        form = AlbumForm(request.POST, instance=album)
+        if form.is_valid():
+            form.save()
 
-    if 'album_form' in request.POST:
-        album_form = AlbumForm(request.POST, instance=album)
-        if album_form.is_valid():
-            album_form.save()
-            return HttpResponseRedirect(request.path_info)
+            # Process album access updates
+            for relation in relations:
+                checkbox_name = f'user_{relation.id}'
+                if checkbox_name in request.POST:
+                    if not AlbumAccess.objects.filter(album=album, user=relation).exists():
+                        AlbumAccess.objects.create(album=album, user=relation)
+                else:
+                    access_to_delete = AlbumAccess.objects.filter(album=album, user=relation)
+                    if access_to_delete:
+                        related_notifications = Notification.objects.filter(user_from=request.user, content_type=ContentType.objects.get_for_model(AlbumAccess), object_id=access_to_delete.first().id)
+                        print(f'related notification to delete : {related_notifications}')
+                        if related_notifications:
+                            for notification in related_notifications:
+                                notification.delete()
+                        access_to_delete.delete()
+                        print(f'album access for user {relation.get_full_name} was deleted')
 
-    if 'add_access_form' in request.POST:
-        add_access_form = AlbumAccessGrantForm(request.POST, queryset=CustomUser.objects.exclude(pk__in=users_id_with_access))
-        if add_access_form.is_valid():
-            selected_users = add_access_form.cleaned_data['users_to_grant_access']
-            for user in selected_users:
-                AlbumAccess.objects.create(
-                    album=album,
-                    user=user,
-                )
-        return HttpResponseRedirect(request.path_info)
 
-    elif 'revoke_access_form' in request.POST:
-        revoke_access_form = AlbumAccessRevokeForm(request.POST, queryset=CustomUser.objects.filter(pk__in=users_id_with_access))
-        if revoke_access_form.is_valid():
-            selected_users = revoke_access_form.cleaned_data['users_to_revoke_access']
-            for user in selected_users:
-                access_to_delete = AlbumAccess.objects.get(
-                    album=album,
-                    user=user,
-                )
-                access_to_delete.delete()
-        return HttpResponseRedirect(request.path_info)
+    else:
+        form = AlbumForm(instance=album)
 
     context = {
         'album': album,
-        'album_form':album_form,
         'existing_access': existing_access,
         'relations': relations,
         'relations_to_album_creator': relations_to_album_creator,
         'relations_dict': relations_dict,
         'users_with_access': users_with_access,
-        'add_access_form': add_access_form,
-        'revoke_access_form': revoke_access_form,
+        'form': form,
     }
 
-    return render(request, 'albums/album_access.html', context)
+    if request.POST:
+        return HttpResponseRedirect(request.path_info)
+    else:
+        return render(request, 'albums/album_access.html', context)
