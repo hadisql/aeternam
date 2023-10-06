@@ -264,7 +264,7 @@ def album_access(request, album_id):
     else:
         form = AlbumForm(instance=album)
 
-    default_photo = Photo.objects.get(album=album, is_default=True)
+    default_photo = Photo.objects.filter(album=album, is_default=True).first()
     context = {
         'album': album,
         'existing_access': existing_access,

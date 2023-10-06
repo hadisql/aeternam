@@ -9,31 +9,33 @@
 
         <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
-          <label for="images" class="text-2xl font-bold tracking-tight">Upload new photos:</label>
+          <div class="grid grid-cols-1 w-full max-w-xl mx-auto place-items-center">
+            <h1 class="py-6 text-3xl font-bold tracking-tight">Upload new photos:</h1>
+            <div class="my-6 flex -space-x-8 overflow-hidden">
+              {% for photo in album_photos %}
+              {% thumbnail photo.image "600x600" crop="center" as im %}
+                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}" class="inline-block h-36 w-36 ring-2 ring-white rounded-full">
+              {% endthumbnail %}
+              {% endfor %}
+            </div>
+            <div class="my-6 font-medium">
+              <a>{% if rest > 0 %}+ {{rest}} other{{rest|pluralize}}{% endif %}</a>
+            </div>
 
-          <div class="mt-3 flex -space-x-8 overflow-hidden">
-            {% for photo in album_photos %}
-            {% thumbnail photo.image "600x600" crop="center" as im %}
-              <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}" class="inline-block h-36 w-36 ring-2 ring-white rounded-full">
-            {% endthumbnail %}
-            {% endfor %}
-          </div>
-          <div class="mt-3 font-medium">
-            <a>{% if rest > 0 %}+ {{rest}} other{{rest|pluralize}}{% endif %}</a>
-          </div>
+            <input type="file" name="images" required multiple class="mt-6 block file-input file-input-bordered w-full max-w-xs">
+            <br>
+            <hr>
+            <div class=" my-6 flex gap-4">
+              <a href="{% url 'albums:album_detail' album.pk %}" class="btn btn-neutral">
+                <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
+                  <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
+                </svg>
+                Back
+              </a>
+              <button class="btn btn-outline btn-wide" type="submit">Save</button>
 
-          <input type="file" name="images" required multiple class="mt-6 block file-input file-input-bordered file-input-primary w-full max-w-xs">
-
-          <div class="mt-6 flex gap-4">
-            <a href="{% url 'albums:album_detail' album.pk %}" class="btn btn-neutral">
-              <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-                <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
-                <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
-              </svg>
-              Back
-            </a>
-            <button class="btn btn-primary btn-wide" type="submit">Save</button>
-
+            </div>
           </div>
         </form>
       </div>
