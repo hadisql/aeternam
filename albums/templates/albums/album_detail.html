@@ -99,9 +99,9 @@
                 </a>
               </swiper-slide>
             {% endfor %}
-            <swiper-slide class="flex self-center place-content-center">
+            <swiper-slide class="flex self-center place-content-center tooltip" data-tip="add more photos">
               <a class="hover:opacity-75" href="{% url 'photos:add_photos_to_album' album.pk %}">
-                <div class="block w-full h-full rounded-xl tooltip" data-tip="add more photos">
+                <div class="block w-full h-full rounded-xl " >
                   <p class="text-8xl font-base text-slate-600">+</p>
                 </div>
               </a>

@@ -44,7 +44,11 @@
               {% endthumbnail %}
             {% else %}
               <div class="grid place-content-center h-full w-full object-cover object-center group-hover:opacity-75">
-                <p class="text-lg font-semibold tracking-wide">Empty album</p>
+                {% if album|is_empty %}
+                  <p class="text-lg font-semibold tracking-wide">Empty album</p>
+                {% else %}
+                  <p class="text-lg font-semibold tracking-wide">No cover photo</p>
+                {% endif %}
               </div>
             {% endif %}
           </div>
