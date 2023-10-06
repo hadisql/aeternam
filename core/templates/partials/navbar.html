@@ -71,7 +71,10 @@
                                       <img class="rounded-full w-12 h-12" src="{% if notification.user_from.profile_picture %}{{notification.user_from.profile_picture.url}}{% else %}https://api.dicebear.com/6.x/initials/svg?seed={% firstof notification.user_from.get_full_name notification.user_from.email %}{% endif %}" alt="">
                                     </div>
                                     <div>
-                                      <h2 class="text-xl font-semibold">{{notification.content_type|get_notif_name|title}}</h2>
+                                      <div class="flex justify-between">
+                                        <h2 class="text-xl font-semibold">{{notification.content_type|get_notif_name|title}}</h2>
+                                        <p class="text-sm text-gray-400 self-center">{{notification.created_at|timesince|up_to:','}} ago</p>
+                                      </div>
                                       <p class="pr-2">{{notification.message}}</p>
                                     </div>
                                   </a>

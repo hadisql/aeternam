@@ -44,13 +44,13 @@
     {% if photos %}
     <div class="flex place-content-center">
       <div class="inline-flex rounded-lg border border-base-content bg-base-100 p-1">
-        <button id="view-button" class="inline-flex items-center gap-2 rounded-md bg-base-300 shadow-sm px-4 py-2 text-sm hover:text-accent-content focus:relative">
+        <button id="view-button" class="inline-flex items-center gap-2 rounded-md bg-base-300 shadow-sm px-3 py-1 text-sm hover:text-accent-content focus:relative">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 sm:w-8 sm:h-8">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
           </svg>
         </button>
 
-        <button id="swipe-button" class="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm focus:relative">
+        <button id="swipe-button" class="inline-flex items-center gap-2 rounded-md px-3 py-1 text-sm focus:relative">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 sm:w-8 sm:h-8">
             <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
           </svg>
@@ -75,7 +75,7 @@
             </a>
           {% endfor %}
         {% endif %}
-          <a href="{% url 'photos:add_photos_to_album' album.pk %}" class="tooltip tooltip-bottom tooltip-neutral group" data-tip="add photos">
+          <a href="{% url 'photos:add_photos_to_album' album.pk %}" class="tooltip tooltip-bottom tooltip-neutral group" data-tip="add more photos">
             <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-300 xl:aspect-h-8 xl:aspect-w-7">
               <div class="grid place-content-center h-full w-full object-cover object-center group-hover:opacity-75">
                 <p class="text-8xl font-base text-slate-600">+</p>
@@ -99,12 +99,16 @@
                 </a>
               </swiper-slide>
             {% endfor %}
+            <swiper-slide class="flex self-center place-content-center">
+              <a class="hover:opacity-75" href="{% url 'photos:add_photos_to_album' album.pk %}">
+                <div class="block w-full h-full rounded-xl tooltip" data-tip="add more photos">
+                  <p class="text-8xl font-base text-slate-600">+</p>
+                </div>
+              </a>
+            </swiper-slide>
           </swiper-container>
         </div>
       </div>
-
-      <!-- SWIPER SCRIPT -->
-      <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-element-bundle.min.js"></script>
       {% endif %}
     </div>
 
@@ -159,7 +163,7 @@
         Back
       </a>
       {% if user == album.creator %}
-      <a href="{% url 'albums:album-access' album.pk %}" class="btn">
+      <a href="{% url 'albums:album-access' album.pk %}" class="btn btn-outline">
         Album Settings
       </a>
       {% endif %}
@@ -173,4 +177,6 @@
 
 {% block javascript %}
   <script src="{% static 'albums/js/photo_display_method.js' %}"></script>
+  <!-- SWIPER SCRIPT -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-element-bundle.min.js"></script>
 {% endblock javascript %}
