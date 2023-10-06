@@ -119,13 +119,13 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         form_description = PhotoDescriptionForm(initial={'description': photo_description})
 
         context['photo'] = photo
-        context['photo_update_form'] = PhotoUpdateForm()
+        context['photo_update_form'] = PhotoUpdateForm(initial={'set_as_default_photo': photo.is_default})
         context['form_description_form'] = form_description
 
         return context
 
     def post(self, request, *args, **kwargs):
-        form = self.get_form()
+        photo_update_form = self.get_form()
         description_form = self.form_description_form(data=self.request.POST)
 
         photo_id = self.kwargs['pk']
@@ -135,12 +135,27 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
             if description_form.has_changed():
                 new_description = description_form.cleaned_data['description']
                 photo.description = new_description
+                print(f'change !!!!!! ----- {description_form.changed_data}')
                 photo.save()
 
-        if form.is_valid():
-            rotation_angle = form.cleaned_data['rotation_angle']
-            new_photo = form.cleaned_data['upload_photo']
-            mirror_flip = form.cleaned_data['mirror_flip']
+        if photo_update_form.is_valid():
+            rotation_angle = photo_update_form.cleaned_data['rotation_angle']
+            new_photo = photo_update_form.cleaned_data['upload_photo']
+            mirror_flip = photo_update_form.cleaned_data['mirror_flip']
+            set_to_default = photo_update_form.cleaned_data['set_as_default_photo']
+            print(f'set to default - {set_to_default}')
+            print(f'rotation_angle - {rotation_angle}')
+
+            if set_to_default != photo.is_default: #makes sure we are changing the state of is_default field
+                default = (Photo.objects.filter(album=photo.album, is_default=True).first())
+                if default:
+                    default.is_default=False
+                    default.save()
+                if set_to_default:
+                    #we first set the existing default photo for the same album to False
+                    photo.is_default=True
+                    photo.save()
+
 
             if new_photo:
                 if photo.uploaded_by == self.request.user:
@@ -163,7 +178,7 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                             save=False
                         )
                         photo.save()
-                        #return HttpResponseRedirect(request.path_info)
+
                     if mirror_flip:
                         image = Image.open(photo.image.path)
                         flipped_image = ImageOps.mirror(image)
@@ -176,7 +191,7 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                         )
                         photo.save()
 
-        return self.form_valid(form)
+        return self.form_valid(photo_update_form)
 
     def get_success_url(self):
         return reverse_lazy('photos:photo_edit', kwargs={'pk': self.kwargs['pk']})

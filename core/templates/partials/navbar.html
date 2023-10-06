@@ -58,7 +58,7 @@
                     </div>
                     <div class="relative flex-1 px-4 mt-5 sm:px-5">
                       <div class="absolute inset-0 px-4 sm:px-5">
-                        <div class="relative h-full overflow-hidden border border-dashed rounded-md border-neutral-300">
+                        <div class="relative h-full overflow-hidden border rounded-md border-neutral-300">
                           {% if all_notifications %}
                             <h2 class="font-semibold text-lg my-3 px-4 py-1 rounded-2xl bg-gray-100 dark:text-slate-700 w-fit mx-auto shadow-md"><span id="notif-indicator" class="font-bold">{{all_notifications.count}}</span>&nbsp;notification{{all_notifications.count|pluralize}} :</h2>
                           {% endif %}
@@ -71,7 +71,10 @@
                                       <img class="rounded-full w-12 h-12" src="{% if notification.user_from.profile_picture %}{{notification.user_from.profile_picture.url}}{% else %}https://api.dicebear.com/6.x/initials/svg?seed={% firstof notification.user_from.get_full_name notification.user_from.email %}{% endif %}" alt="">
                                     </div>
                                     <div>
-                                      <h2 class="text-xl font-semibold">{{notification.content_type|get_notif_name|title}}</h2>
+                                      <div class="flex justify-between">
+                                        <h2 class="text-xl font-semibold">{{notification.content_type|get_notif_name|title}}</h2>
+                                        <p class="text-sm text-gray-400 self-center">{{notification.created_at|timesince|up_to:','}} ago</p>
+                                      </div>
                                       <p class="pr-2">{{notification.message}}</p>
                                     </div>
                                   </a>

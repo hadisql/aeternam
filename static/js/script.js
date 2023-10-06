@@ -94,3 +94,10 @@ $(document).ready(function() {
       return cookieValue;
   }
 });
+
+
+// hide alerts about album access
+
+setTimeout(function() {
+  $('.toast').fadeOut('slow');
+}, 3000); // <-- time in milliseconds

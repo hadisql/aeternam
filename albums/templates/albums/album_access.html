@@ -3,195 +3,173 @@
 {% block title %}Album access{% endblock title %}
 
 {% load thumbnail %}
+{% load static %}
 
 {% block body %}
-
-<div class="bg-base-100">
-  <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-    <div class="prose">
-      <h1 class="sr-only">Album settings</h1>
-      <h1>Album settings</h1>
+<div class="bg-base-200">
+  <section class="relative block h-[400px]">
+    <div class="absolute top-0 w-full h-full bg-center bg-cover" style="
+          background-image: url({{default_photo.image.url}});
+        ">
+      <span id="blackOverlay" class="w-full h-full absolute dark:opacity-50 opacity-0 bg-black"></span>
     </div>
+    <div class="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden h-[70px]"
+      style="transform: translateZ(0px)">
+      <svg class="absolute bottom-0 overflow-hidden" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"
+        version="1.1" viewBox="0 0 2560 100" x="0" y="0">
+        <polygon class="text-base-200 fill-current" points="2560 0 2560 100 0 100"></polygon>
+      </svg>
+    </div>
+  </section>
+  <section class="relative py-16 bg-base-200">
+    <div class="container mx-auto px-4">
+      <div class="relative flex flex-col min-w-0 break-words bg-base-100 w-full mb-6 shadow-xl rounded-lg -mt-64">
+        <div>
+          <h1 class="sr-only">Album settings</h1>
+          <h1 class="mt-10 py-8 text-3xl font-bold tracking-tight text-center">Album settings</h1>
+        </div>
 
-    <section>
-      <form  method="POST">
-        {% csrf_token %}
-        <div class="mt-4 block space-y-4 w-full max-w-lg rounded-lg bg-base-200 p-6 shadow-lg lg:p-12">
-          <div class="flex gap-4 prose">
-            <h2 class="mb-4">Edit your album infos</h2>
-            <svg viewBox="0 0 24 24" class="fill-transparent stroke-current stroke-2 h-8 w-8"  xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 7C3 4.79086 4.79086 3 7 3H17C19.2091 3 21 4.79086 21 7V17C21 19.2091 19.2091 21 17 21H7C4.79086 21 3 19.2091 3 17V7Z"></path>
-              <path d="M16.2739 11.1377C16.6644 10.7472 16.6644 10.114 16.2739 9.7235L14.4823 7.9319C14.0918 7.54137 13.4586 7.54138 13.0681 7.9319L8.96106 12.0389L8.34768 15.7477C8.3365 15.8154 8.39516 15.874 8.4628 15.8627L12.1669 15.2448L16.2739 11.1377Z"></path></svg>
-          </div>
-          {% for field in album_form %}
-            <div class="block ">
-              <label class="block text-sm font-medium mb-1" for="id_{{field.label}}">{{field.label|capfirst}}</label>
-              {{field}}
+        <form method="POST">
+          {% csrf_token %}
+          <div class="grid grid-cols-1 p-6 lg:p-12 mx-auto gap-x-4 max-w-7xl ">
+            <div class=" mt-4 block space-y-4 w-full mx-auto max-w-xl bg-base-100 p-6">
+              <div class="flex gap-4 prose">
+                <h2 class="mb-4">Edit your album infos</h2>
+                <svg viewBox="0 0 24 24" class="fill-transparent stroke-current stroke-2 h-8 w-8" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 7C3 4.79086 4.79086 3 7 3H17C19.2091 3 21 4.79086 21 7V17C21 19.2091 19.2091 21 17 21H7C4.79086 21 3 19.2091 3 17V7Z"></path>
+                  <path d="M16.2739 11.1377C16.6644 10.7472 16.6644 10.114 16.2739 9.7235L14.4823 7.9319C14.0918 7.54137 13.4586 7.54138 13.0681 7.9319L8.96106 12.0389L8.34768 15.7477C8.3365 15.8154 8.39516 15.874 8.4628 15.8627L12.1669 15.2448L16.2739 11.1377Z"></path>
+                </svg>
+              </div>
+              {% for field in form %}
+              <div class="block ">
+                <label class="block text-sm font-medium mb-1" for="id_{{field.label}}">{{field.label|capfirst}}</label>
+                {{field}}
+              </div>
+              {% endfor %}
             </div>
-          {% endfor %}
-            <input type="submit" name="album_form" class="block btn btn-primary text-white" value="Save changes">
-        </div>
-      </form>
 
-    </section>
+            <div class=" my-8 mx-auto max-w-xl w-full bg-base-100 p-6">
+              <a name="access_control"></a>
+              <div class="flex gap-4 prose">
+                <h2>Control your privacy</h2>
+                <svg class="w-8 h-8 stroke-current stroke-2 fill-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+              </div>
+              <div class="prose">
+                <h3 class="mb-4">Decide who can access your album :</h3>
+              </div>
 
-    <section class="my-8 max-w-lg" >
-      <a name="access_control"></a>
-      <div class="flex gap-4 prose">
-        <h2>Control your album privacy</h2>
-        <svg class="w-8 h-8 stroke-current stroke-2 fill-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-        </svg>
-      </div>
-      <div class="prose">
-        <h3 class="mb-4">Has access to your album :</h3>
-      </div>
-      {% if users_with_access %}
-      <form method="POST">
-        {% csrf_token %}
-        <div class="overflow-x-auto rounded-lg">
-          <table class="table">
+              <div class="overflow-x-auto rounded-lg">
+                <table class="table">
 
-            <thead>
-              <tr class="bg-green-300/30 text-green-700 dark:bg-green-50/75">
-                <th></th>
-                <th>Name</th>
-                <th>Relation</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for relation, relation_type in relations_dict.items %}
-              {% if relation in users_with_access %}
-              <tr class="bg-green-50/75 dark:bg-green-400/30">
-                <th>
-                  <label>
-                    <input type="checkbox" class="toggle toggle-error" name="users_to_revoke_access" value="{{ relation.pk }}" id="id_users_to_revoke_access_{{ forloop.counter }}" />
-                  </label>
-                </th>
-                <td>
-                  <a href="{% url 'accounts:account_view' relation.pk %}" class="cursor-pointer">
-                    <div class="flex items-center space-x-3">
-                      <div class="avatar">
-                        <div class="mask mask-squircle w-12 h-12">
-                          {% if relation.profile_picture %}
-                            {% thumbnail relation.profile_picture "50x50" crop="center" as im %}
-                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{% firstof relation.get_full_name relation.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
-                            {% endthumbnail %}
-                          {% else %}
-                            <img src="https://api.dicebear.com/6.x/initials/svg?seed={% firstof relation.get_full_name relation.email %}" width="50" height="50" alt="" class="h-full w-full object-cover object-center group-hover:opacity-75">
-                          {% endif %}
-                        </div>
-                      </div>
-                      <div>
-                        <div class="font-bold">{% firstof relation.get_full_name relation.email %}</div>
-                        <div class="text-sm opacity-50">{{relation.email|truncatechars:12}}</div>
-                      </div>
-                    </div>
-                  </a>
-                </td>
-                <td>
-                  <span class="badge badge-ghost badge-sm">{{relation_type}}</span>
-                </td>
-              </tr>
-              {% endif %}
+                  <thead>
+                    <tr class="bg-base-300">
+                      <th></th>
+                      <th>Name</th>
+                      <th>Relation</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for relation, relation_type in relations_dict.items %}
+                    <tr class="bg-base-200">
+                      <th>
+                        <label>
+                          <input type="checkbox" class="toggle toggle-success" name="user_{{ relation.id }}" {% if relation in users_with_access %}checked{% endif %} />
+                        </label>
+                      </th>
+                      <td>
+                        <a href="{% url 'accounts:account_view' relation.pk %}" class="cursor-pointer">
+                          <div class="flex items-center space-x-3">
+                            <div class="avatar">
+                              <div class="mask mask-squircle w-12 h-12">
+                                {% if relation.profile_picture %}
+                                {% thumbnail relation.profile_picture "50x50" crop="center" as im %}
+                                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+                                  alt="{% firstof relation.get_full_name relation.email %}'s profile pic"
+                                  class="h-full w-full object-cover object-center group-hover:opacity-75">
+                                {% endthumbnail %}
+                                {% else %}
+                                <img
+                                  src="https://api.dicebear.com/6.x/initials/svg?seed={% firstof relation.get_full_name relation.email %}"
+                                  width="50" height="50" alt=""
+                                  class="h-full w-full object-cover object-center group-hover:opacity-75">
+                                {% endif %}
+                              </div>
+                            </div>
+                            <div>
+                              <div class="font-bold">{% firstof relation.get_full_name relation.email %}</div>
+                              <div class="text-sm opacity-50">{{relation.email|truncatechars:12}}</div>
+                            </div>
+                          </div>
+                        </a>
+                      </td>
+                      <td>
+                        <span class="badge badge-ghost badge-sm">{{relation_type}}</span>
+                      </td>
+                    </tr>
+
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+
+            <br>
+
+
+            {% if messages %}
+            <div class="toast">
+              {% for message in messages %}
+              <div class="alert alert-{{message.tags}}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
+                  viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>{{message}}</span>
+              </div>
               {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        <button class="btn btn-outline btn-error mt-6" type="submit" name="revoke_access_form">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-          </svg>
-          Revoke access
-        </button>
-      </form>
-      {% else %}
-      <p>Nobody has access to your album</p>
-      {% endif %}
-    </section>
+            </div>
+            {% endif %}
 
-    {% if relations|length != users_with_access|length %}
-    <section class="my-8 max-w-lg">
-      <div class="prose">
-        <h3 class="mb-4">Grant Access to :</h3>
+            <p class="hidden alert-info alert-success"></p>
+
+
+
+
+            <hr class="">
+            <div class="mt-10 flex flex-wrap gap-4 ">
+              <a href="{% url 'albums:album_detail' album.pk %}" class="btn btn-neutral">
+                <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
+                  <path
+                    d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z">
+                  </path>
+                </svg>
+                Back
+              </a>
+              <button type="submit" name="album_form" class="flex gap-4 btn btn-primary text-white">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M18.1716 1C18.702 1 19.2107 1.21071 19.5858 1.58579L22.4142 4.41421C22.7893 4.78929 23 5.29799 23 5.82843V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H18.1716ZM4 3C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21L5 21L5 15C5 13.3431 6.34315 12 8 12L16 12C17.6569 12 19 13.3431 19 15V21H20C20.5523 21 21 20.5523 21 20V6.82843C21 6.29799 20.7893 5.78929 20.4142 5.41421L18.5858 3.58579C18.2107 3.21071 17.702 3 17.1716 3H17V5C17 6.65685 15.6569 8 14 8H10C8.34315 8 7 6.65685 7 5V3H4ZM17 21V15C17 14.4477 16.5523 14 16 14L8 14C7.44772 14 7 14.4477 7 15L7 21L17 21ZM9 3H15V5C15 5.55228 14.5523 6 14 6H10C9.44772 6 9 5.55228 9 5V3Z" fill="currentColor"></path></svg>
+                Save changes
+              </button>
+
+              <a href="{% url 'albums:album_delete' album.pk %}" class="btn btn-outline btn-error">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                  class="h-5 w-5">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                </svg>
+                Delete album
+              </a>
+            </div>
+          </div>
+        </form>
       </div>
-      <form method="POST">
-        {% csrf_token %}
-        <div class="overflow-x-auto rounded-lg">
-          <table class="table">
-            <thead>
-              <tr class="bg-red-300/30 text-red-700 dark:bg-red-50/75">
-                <th></th>
-                <th>Name</th>
-                <th>Relation</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for relation, relation_type in relations_dict.items %}
-              {% if relation not in users_with_access %}
-              <tr class="bg-red-50/75 dark:bg-red-400/30">
-                <th>
-                  <label>
-                    <input type="checkbox" class="toggle toggle-success" name="users_to_grant_access" value="{{ relation.pk }}" id="id_users_to_grant_access_{{ forloop.counter }}" />
-                  </label>
-                </th>
-                <td>
-                  <a href="{% url 'accounts:account_view' relation.pk %}" class="cursor-pointer">
-                    <div class="flex items-center space-x-3">
-                      <div class="avatar">
-                        <div class="mask mask-squircle w-12 h-12">
-                          {% if relation.profile_picture %}
-                            {% thumbnail relation.profile_picture "50x50" crop="center" as im %}
-                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{% firstof relation.get_full_name relation.email %}'s profile pic" class="h-full w-full object-cover object-center group-hover:opacity-75">
-                            {% endthumbnail %}
-                          {% else %}
-                            <img src="https://api.dicebear.com/6.x/initials/svg?seed={% firstof relation.get_full_name relation.email %}" width="50" height="50" alt="" class="h-full w-full object-cover object-center group-hover:opacity-75">
-                          {% endif %}
-                        </div>
-                      </div>
-                      <div>
-                        <div class="font-bold">{% firstof relation.get_full_name relation.email %}</div>
-                        <div class="text-sm opacity-50">{{relation.email|truncatechars:12}}</div>
-                      </div>
-                    </div>
-                  </a>
-                </td>
-                <td>
-                  <span class="badge badge-ghost badge-sm">{{relation_type}}</span>
-                </td>
-              </tr>
-              {% endif %}
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        <button class="mt-6 btn btn-outline btn-success" type="submit" name="add_access_form" value="Apply changes">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
-          </svg>
-          Apply changes
-        </button>
-      </form>
-    </section>
-    {% endif %}
-
-    <hr>
-    <div class="mt-10 flex gap-4">
-      <a href="{% url 'albums:album_detail' album.pk %}" class="btn btn-neutral">
-        <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-          <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
-          <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
-        </svg>
-        Back
-      </a>
-      <a href="{% url 'albums:album_delete' album.pk %}" class="btn btn-outline btn-error">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
-        </svg>
-        Delete album
-      </a>
     </div>
-  </div>
+  </section>
 </div>
 
 {% endblock body %}
