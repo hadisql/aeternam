@@ -158,9 +158,11 @@
         </svg>
         Back
       </a>
+      {% if user == album.creator %}
       <a href="{% url 'albums:album-access' album.pk %}" class="btn">
         Album Settings
       </a>
+      {% endif %}
     </div>
   </div>
 

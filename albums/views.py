@@ -247,21 +247,24 @@ def album_access(request, album_id):
                 if checkbox_name in request.POST:
                     if not AlbumAccess.objects.filter(album=album, user=relation).exists():
                         AlbumAccess.objects.create(album=album, user=relation)
+                        messages.success(request, f'{relation.get_full_name() or relation.email} has now access to your album')
                 else:
                     access_to_delete = AlbumAccess.objects.filter(album=album, user=relation)
                     if access_to_delete:
                         related_notifications = Notification.objects.filter(user_from=request.user, content_type=ContentType.objects.get_for_model(AlbumAccess), object_id=access_to_delete.first().id)
-                        print(f'related notification to delete : {related_notifications}')
+                        print(f'related notifications to delete : {related_notifications}')
                         if related_notifications:
                             for notification in related_notifications:
                                 notification.delete()
                         access_to_delete.delete()
-                        print(f'album access for user {relation.get_full_name} was deleted')
+                        messages.info(request, f'{relation.get_full_name() or relation.email} access has been revoked')
+                        print(f'album access for user {relation.get_full_name()} was deleted')
 
 
     else:
         form = AlbumForm(instance=album)
 
+    default_photo = Photo.objects.get(album=album, is_default=True)
     context = {
         'album': album,
         'existing_access': existing_access,
@@ -270,6 +273,7 @@ def album_access(request, album_id):
         'relations_dict': relations_dict,
         'users_with_access': users_with_access,
         'form': form,
+        'default_photo': default_photo,
     }
 
     if request.POST:
