@@ -22,19 +22,18 @@
               <a>{% if rest > 0 %}+ {{rest}} other{{rest|pluralize}}{% endif %}</a>
             </div>
 
-            <input type="file" name="images" required multiple class="mt-6 block file-input file-input-bordered w-full max-w-xs">
-            <br>
-            <hr>
-            <div class=" my-6 flex gap-4">
-              <a href="{% url 'albums:album_detail' album.pk %}" class="btn btn-neutral">
+            <input type="file" name="images" required multiple class="mt-6 block file-input file-inp file-input-bordered w-full max-w-xs">
+
+            <div class="h-px my-12 mx-2 bg-base-content opacity-50 w-full"></div>
+            <div class="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+              <a href="{% url 'albums:album_detail' album.pk %}" class="btn btn-block btn-neutral">
                 <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
                   <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
                   <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
                 </svg>
                 Back
               </a>
-              <button class="btn btn-outline btn-wide" type="submit">Save</button>
-
+              <button class="btn btn-block btn-outline" type="submit">Save</button>
             </div>
           </div>
         </form>
