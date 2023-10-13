@@ -7,7 +7,7 @@ import shutil
 from django.conf import settings
 
 import sorl.thumbnail
-from photos.models import Photo
+from photos.models import Photo, PhotoAccess
 from accounts.models import Notification, create_notification
 from django.contrib.contenttypes.models import ContentType
 
@@ -60,3 +60,15 @@ class AlbumAccess(models.Model):
         title='Album Access granted'
         message=f"{self.album.creator.first_name or self.album.creator} gave you access to the album {self.album.title}."
         create_notification(self.user, self.album.creator, ContentType.objects.get_for_model(self),self.pk, message=message, title=title)
+        # when album access is granted, then a PhotoAccess is created for each photo as well:
+        all_album_photos = Photo.objects.filter(album=self.album)
+        for photo in all_album_photos:
+            if not PhotoAccess.objects.filter(photo=photo, user=self.user): # makes sure no access already existed
+                PhotoAccess.objects.create(photo=photo, user=self.user)
+
+    def delete(self, *args, **kwargs):
+        photo_accesses = PhotoAccess.objects.filter(photo__album=self.album, user=self.user)
+        for access in photo_accesses:
+            access.delete()
+            print(f'{access} deleted')
+        return super().delete(*args, **kwargs)

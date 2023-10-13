@@ -11,7 +11,7 @@ from django.http import HttpResponseForbidden, HttpResponseRedirect
 
 from .models import Album
 from .forms import AlbumForm
-from photos.models import Photo
+from photos.models import Photo, PhotoAccess
 from .models import AlbumAccess
 
 from django.contrib import messages #used in AlbumCreateView
@@ -250,6 +250,7 @@ def album_access(request, album_id):
                         messages.success(request, f'{relation.get_full_name() or relation.email} has now access to your album')
                 else:
                     access_to_delete = AlbumAccess.objects.filter(album=album, user=relation)
+                    photo_accesses = PhotoAccess.objects.filter(photo__album=album, user=relation)
                     if access_to_delete:
                         related_notifications = Notification.objects.filter(user_from=request.user, content_type=ContentType.objects.get_for_model(AlbumAccess), object_id=access_to_delete.first().id)
                         print(f'related notifications to delete : {related_notifications}')
@@ -257,6 +258,9 @@ def album_access(request, album_id):
                             for notification in related_notifications:
                                 notification.delete()
                         access_to_delete.delete()
+                        for photo_access in photo_accesses:
+                            photo_access.delete()
+                            print(f'access {photo_access} revoked for user {relation}')
                         messages.info(request, f'{relation.get_full_name() or relation.email} access has been revoked')
                         print(f'album access for user {relation.get_full_name()} was deleted')
 

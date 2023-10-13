@@ -9,10 +9,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages #used in add_photos_to_album
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 
-from .models import Photo
+from .models import Photo, PhotoAccess
 from .forms import PhotoForm, CommentForm, PhotoUpdateForm, PhotoDescriptionForm
 
 from albums.models import Album, AlbumAccess
+from accounts.models import CustomUser
 
 from comments_likes.models import Comment
 
@@ -74,11 +75,15 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
                 first_image = images.pop(0)
                 photo = Photo(album=album, image=first_image, is_default=True, uploaded_by=self.request.user)
                 photo.save() #save the instance, applying resize from model save method
+                # when uploading a photo, the uploading user gets access to this photo :
+                photo_access = PhotoAccess.objects.create(photo=photo, user=self.request.user)
 
             for image in images:
                 total_photos = Photo.objects.filter(uploaded_by=self.request.user) # refresh the number for each iteration
                 photo = Photo(album=album, image=image, uploaded_by=self.request.user)
                 photo.save() #save the instance, applying resize from model save method
+                # when uploading a photo, the uploading user gets access to this photo :
+                photo_access = PhotoAccess.objects.create(photo=photo, user=self.request.user)
                 total_photos = Photo.objects.filter(uploaded_by=self.request.user) # refresh the number for each iteration
                 if len(total_photos) == int(.8 * self.request.user.photo_limit):
                     messages.warning(self.request, f"You've reached 80% of your maximum photo upload limit")
@@ -105,7 +110,7 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
     def test_func(self):
         photo_id = self.kwargs['pk']
         photo = Photo.objects.get(id=photo_id)
-        return self.request.user == (photo.album.creator or photo.uploaded_by) #only creator of album or photo uploader can edit it
+        return self.request.user == photo.album.creator or self.request.user == photo.uploaded_by #only creator of album or photo uploader can edit it
 
     def handle_no_permission(self):
         return HttpResponseForbidden("<h2>You don't have permission to edit this photo</h2>")
@@ -118,9 +123,13 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         photo_description = photo.description
         form_description = PhotoDescriptionForm(initial={'description': photo_description})
 
+        users_with_photo_access = CustomUser.objects.filter(photo_accessing_user__photo=photo)
+
         context['photo'] = photo
         context['photo_update_form'] = PhotoUpdateForm(initial={'set_as_default_photo': photo.is_default})
         context['form_description_form'] = form_description
+        context['users_with_photo_access'] = users_with_photo_access # for testing in template
+
 
         return context
 
@@ -204,8 +213,9 @@ class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def test_func(self):
         photo_id = self.kwargs['pk']
         photo = Photo.objects.get(id=photo_id)
-        has_access = AlbumAccess.objects.filter(album__photos_album = photo, user=self.request.user)
-        return self.request.user == photo.album.creator or has_access  # Check if the logged-in user owns the photo
+        #has_access = AlbumAccess.objects.filter(album__photos_album = photo, user=self.request.user)
+        has_access = PhotoAccess.objects.filter(photo=photo, user=self.request.user)
+        return self.request.user == photo.album.creator or has_access  # Check if the logged-in user can access the photo or is the owner
 
     def handle_no_permission(self):
         return HttpResponseForbidden("<h2>You don't have permission to view this page.</h2>")
@@ -219,8 +229,12 @@ class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         comment_form = CommentForm()
 
         # we list the Album photo pk in order to know "where" the displayed photo is in the list
-        album_id = Album.objects.get(photos_album=photo)
-        album_photo_pk_list = [photo.pk for photo in Photo.objects.filter(album=album_id)]
+        album = Album.objects.get(photos_album=photo)
+
+        # Get the photos in the visited Album for which the user has PhotoAccess
+        photos_with_access = Photo.objects.filter(album=album, accessed_photo__user=self.request.user)
+
+        album_photo_pk_list = [photo.pk for photo in photos_with_access]
 
         previous = next = None
         if len(album_photo_pk_list)==1: #if album contains 1 photo only
@@ -238,6 +252,7 @@ class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         context['comments'] = comments
         context['comments_from_user'] = comments_from_user
         context['comment_form'] = comment_form
+        context['album_photo_pk_list'] = album_photo_pk_list # for testing in template
 
         return context
 

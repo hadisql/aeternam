@@ -81,3 +81,13 @@ class Photo(models.Model):
 
     def __str__(self) -> str:
       return f"Photo {self.pk} (in Album {self.album.pk}) uploaded by {self.uploaded_by}"
+
+class PhotoAccess(models.Model):
+    photo = models.ForeignKey(Photo, on_delete=models.CASCADE, related_name='accessed_photo')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='photo_accessing_user')
+
+    class Meta:
+        unique_together = ['photo', 'user']
+
+    def __str__(self) -> str:
+        return f"Photo {self.photo.pk} accessible to {self.user.get_full_name() or self.user.email} (uploaded by {self.photo.uploaded_by.get_full_name() or self.uploaded_by.email})"
