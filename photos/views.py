@@ -13,9 +13,11 @@ from .models import Photo, PhotoAccess
 from .forms import PhotoForm, CommentForm, PhotoUpdateForm, PhotoDescriptionForm
 
 from albums.models import Album, AlbumAccess
-from accounts.models import CustomUser
+from accounts.models import CustomUser, Relation
 
 from comments_likes.models import Comment
+
+from django.db.models import Q
 
 import os
 from PIL import Image, ImageOps
@@ -119,17 +121,22 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         context = super().get_context_data(**kwargs)
         photo_id = self.kwargs['pk']
         photo = Photo.objects.get(id=photo_id)
+        relations = Relation.objects.filter(user_sending=self.request.user) | Relation.objects.filter(user_receiving=self.request.user)
+        related_users = CustomUser.objects.filter(relation_sender__in=relations) | CustomUser.objects.filter(relation_receiver__in=relations)
+        related_users = related_users.exclude(id=self.request.user.id)
 
         photo_description = photo.description
         form_description = PhotoDescriptionForm(initial={'description': photo_description})
 
         users_with_photo_access = CustomUser.objects.filter(photo_accessing_user__photo=photo)
+        #relations_without_access = related_users.filter(~Q(photo_accessing_user__photo=photo))
 
         context['photo'] = photo
         context['photo_update_form'] = PhotoUpdateForm(initial={'set_as_default_photo': photo.is_default})
         context['form_description_form'] = form_description
         context['users_with_photo_access'] = users_with_photo_access # for testing in template
-
+        context['related_users'] = related_users
+        # context['relations_without_access'] = relations_without_access
 
         return context
 
@@ -139,12 +146,18 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
         photo_id = self.kwargs['pk']
         photo = Photo.objects.get(pk=photo_id)
+        description_before_change = photo.description
+
+        relations = Relation.objects.filter(user_sending=self.request.user) | Relation.objects.filter(user_receiving=self.request.user)
+        related_users = CustomUser.objects.filter(relation_sender__in=relations) | CustomUser.objects.filter(relation_receiver__in=relations)
+        related_users = related_users.exclude(id=self.request.user.id)
 
         if description_form.is_valid():
-            if description_form.has_changed():
+            # check if the description has actually changed :
+            if description_form.cleaned_data["description"]!=description_before_change:
                 new_description = description_form.cleaned_data['description']
                 photo.description = new_description
-                print(f'change !!!!!! ----- {description_form.changed_data}')
+                print(f'Description has changed ----- from {description_before_change} to {new_description} ')
                 photo.save()
 
         if photo_update_form.is_valid():
@@ -152,8 +165,8 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
             new_photo = photo_update_form.cleaned_data['upload_photo']
             mirror_flip = photo_update_form.cleaned_data['mirror_flip']
             set_to_default = photo_update_form.cleaned_data['set_as_default_photo']
-            print(f'set to default - {set_to_default}')
-            print(f'rotation_angle - {rotation_angle}')
+            print(f'set to default ? -> {set_to_default}')
+            print(f'rotation_angle -> {rotation_angle}°')
 
             if set_to_default != photo.is_default: #makes sure we are changing the state of is_default field
                 default = (Photo.objects.filter(album=photo.album, is_default=True).first())
@@ -199,6 +212,19 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                             save=False
                         )
                         photo.save()
+
+            for user in related_users:
+                checkbox_name = f'photoaccess_user_{user.id}'
+                if checkbox_name in self.request.POST:
+                    if not PhotoAccess.objects.filter(photo=photo, user=user).exists():
+                        PhotoAccess.objects.create(photo=photo, user=user)
+                        messages.success(request, f'{user.get_full_name() or user.email} has now access to your photo')
+                else: # delete PhotoAccess if it exist for that user with unchecked checkbox
+                    photo_access_to_delete = PhotoAccess.objects.filter(photo=photo, user=user)
+                    if photo_access_to_delete:
+                        photo_access_to_delete.delete()
+                        messages.info(request, f'{user.get_full_name() or user.email} photo access has been revoked')
+
 
         return self.form_valid(photo_update_form)
 

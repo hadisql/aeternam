@@ -164,7 +164,7 @@ class AlbumDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         album_id = self.kwargs['pk']
-        context['photos'] = Photo.objects.filter(album=album_id)
+        context['photos'] = Photo.objects.filter(album=album_id).filter(accessed_photo__user=self.request.user) # the second filter makes sure the user can only see album details with photos he has access to
 
         album_accesses = AlbumAccess.objects.filter(album=album_id) #all users concerned
         users_with_access = [album_access.user for album_access in album_accesses]
@@ -226,15 +226,17 @@ def album_access(request, album_id):
     users_with_access = [access.user for access in existing_access]
 
     relations_to_album_creator = Relation.objects.filter(Q(user_sending__exact=album.creator) | Q(user_receiving__exact=album.creator))
-    # relations list contains all other users sharing a relation object with the creator of the album
+    # Relations list contains all other users sharing a relation object with the creator of the album
     relations = [relation.user_sending if relation.user_receiving == album.creator else relation.user_receiving for relation in relations_to_album_creator]
 
+    default_photo = Photo.objects.filter(album=album, is_default=True).first()
+    photos_in_album = Photo.objects.filter(album=album)
+    photo_count = photos_in_album.count()
+
+    # (keys,values) : (related users , number of allowed photos in album)
     relations_dict = {}
-    for relation in relations_to_album_creator:
-        if relation.user_receiving == album.creator:
-            relations_dict[relation.user_sending] = relation.relation_type
-        elif relation.user_sending == album.creator:
-            relations_dict[relation.user_receiving] = relation.relation_type
+    for relation in relations:
+        relations_dict[relation] = Photo.objects.filter(album=album).filter(accessed_photo__user__in=[relation]).count()
 
     if request.method == 'POST':
         form = AlbumForm(request.POST, instance=album)
@@ -268,16 +270,16 @@ def album_access(request, album_id):
     else:
         form = AlbumForm(instance=album)
 
-    default_photo = Photo.objects.filter(album=album, is_default=True).first()
     context = {
         'album': album,
         'existing_access': existing_access,
         'relations': relations,
         'relations_to_album_creator': relations_to_album_creator,
-        'relations_dict': relations_dict,
         'users_with_access': users_with_access,
         'form': form,
         'default_photo': default_photo,
+        'photo_count': photo_count,
+        'relations_dict': relations_dict,
     }
 
     if request.POST:

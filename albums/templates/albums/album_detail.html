@@ -67,7 +67,6 @@
           {% for photo in photos %}
             <a class="group" href="{% url 'photos:photo_detail' photo.pk %}">
               <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-xl bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                <!-- <img src="{{photo.image.url}}" alt="{{ photo.pk }}" class="h-full w-full object-cover object-center group-hover:opacity-75"> -->
                 {% thumbnail photo.image "600x600" crop="center" as im %}
                   <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}" class="h-full w-full object-cover object-center group-hover:opacity-75">
                 {% endthumbnail %}
