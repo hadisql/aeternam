@@ -17,9 +17,11 @@ def get_url_mapping(content_type):
 def get_notif_param(notification):
     content_type = notification.content_type.model
     content_object = notification.content_object
-    if content_type == 'comment':
+    if content_object and content_type == 'comment':
         return content_object.commented_photo.pk
-    elif content_type == 'albumaccess':
+    elif content_object and content_type == 'albumaccess':
         return content_object.album.pk
-    elif content_type == 'relationrequest':
+    elif content_object and content_type == 'relationrequest':
         return content_object.user_sending.pk
+    else :
+        return None

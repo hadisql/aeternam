@@ -46,6 +46,7 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
             first_image = images.pop(0)
             photo = Photo(album=album, image=first_image, is_default=True, uploaded_by=self.request.user)
             photo.save() #calls the customized save method (photo resize)
+            PhotoAccess.objects.create(photo=photo, user=self.request.user)
 
             for image in images:
                 total_photos = Photo.objects.filter(uploaded_by=self.request.user)
@@ -53,6 +54,7 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
                     print(f'len(total_photos): {len(total_photos)}, user photo limit: {self.request.user.photo_limit}')
                     photo = Photo(album=album, image=image, uploaded_by=self.request.user)
                     photo.save()
+                    PhotoAccess.objects.create(photo=photo, user=self.request.user)
                 else:
                     messages.error(self.request, f"You have reached your maximum amount of photos to upload: {self.request.user.photo_limit} photos")
 
@@ -236,35 +238,35 @@ def album_access(request, album_id):
     # (keys,values) : (related users , number of allowed photos in album)
     relations_dict = {}
     for relation in relations:
-        relations_dict[relation] = Photo.objects.filter(album=album).filter(accessed_photo__user__in=[relation]).count()
+        relations_dict[relation] = Photo.objects.filter(album=album).filter(accessed_photo__user__in=[relation])
 
     if request.method == 'POST':
         form = AlbumForm(request.POST, instance=album)
         if form.is_valid():
             form.save()
 
-            # Process album access updates
-            for relation in relations:
-                checkbox_name = f'user_{relation.id}'
-                if checkbox_name in request.POST:
-                    if not AlbumAccess.objects.filter(album=album, user=relation).exists():
-                        AlbumAccess.objects.create(album=album, user=relation)
-                        messages.success(request, f'{relation.get_full_name() or relation.email} has now access to your album')
-                else:
-                    access_to_delete = AlbumAccess.objects.filter(album=album, user=relation)
-                    photo_accesses = PhotoAccess.objects.filter(photo__album=album, user=relation)
-                    if access_to_delete:
-                        related_notifications = Notification.objects.filter(user_from=request.user, content_type=ContentType.objects.get_for_model(AlbumAccess), object_id=access_to_delete.first().id)
-                        print(f'related notifications to delete : {related_notifications}')
-                        if related_notifications:
-                            for notification in related_notifications:
-                                notification.delete()
-                        access_to_delete.delete()
-                        for photo_access in photo_accesses:
-                            photo_access.delete()
-                            print(f'access {photo_access} revoked for user {relation}')
-                        messages.info(request, f'{relation.get_full_name() or relation.email} access has been revoked')
-                        print(f'album access for user {relation.get_full_name()} was deleted')
+            # # Process album access updates
+            # for relation in relations:
+            #     checkbox_name = f'user_{relation.id}'
+            #     if checkbox_name in request.POST:
+            #         if not AlbumAccess.objects.filter(album=album, user=relation).exists():
+            #             AlbumAccess.objects.create(album=album, user=relation)
+            #             messages.success(request, f'{relation.get_full_name() or relation.email} has now access to your album')
+            #     else:
+            #         access_to_delete = AlbumAccess.objects.filter(album=album, user=relation)
+            #         photo_accesses = PhotoAccess.objects.filter(photo__album=album, user=relation)
+            #         if access_to_delete:
+            #             related_notifications = Notification.objects.filter(user_from=request.user, content_type=ContentType.objects.get_for_model(AlbumAccess), object_id=access_to_delete.first().id)
+            #             print(f'related notifications to delete : {related_notifications}')
+            #             if related_notifications:
+            #                 for notification in related_notifications:
+            #                     notification.delete()
+            #             access_to_delete.delete()
+            #             for photo_access in photo_accesses:
+            #                 photo_access.delete()
+            #                 print(f'access {photo_access} revoked for user {relation}')
+            #             messages.info(request, f'{relation.get_full_name() or relation.email} access has been revoked')
+            #             print(f'album access for user {relation.get_full_name()} was deleted')
 
 
     else:
@@ -280,6 +282,8 @@ def album_access(request, album_id):
         'default_photo': default_photo,
         'photo_count': photo_count,
         'relations_dict': relations_dict,
+        'photos_in_album': photos_in_album,
+        'modal_num_photos_to_show': 6,
     }
 
     if request.POST:

@@ -56,17 +56,18 @@ class AlbumAccess(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        #create notification to concerned user
-        title='Album Access granted'
-        message=f"{self.album.creator.first_name or self.album.creator} gave you access to the album {self.album.title}."
-        create_notification(self.user, self.album.creator, ContentType.objects.get_for_model(self),self.pk, message=message, title=title)
+        ##create notification to concerned user
+        #title='Album Access granted'
+        #message=f"{self.album.creator.first_name or self.album.creator} gave you access to the album {self.album.title}."
+        #create_notification(self.user, self.album.creator, ContentType.objects.get_for_model(self),self.pk, message=message, title=title)
         # when album access is granted, then a PhotoAccess is created for each photo as well:
-        all_album_photos = Photo.objects.filter(album=self.album)
-        for photo in all_album_photos:
-            if not PhotoAccess.objects.filter(photo=photo, user=self.user): # makes sure no access already existed
-                PhotoAccess.objects.create(photo=photo, user=self.user)
+        # all_album_photos = Photo.objects.filter(album=self.album)
+        # for photo in all_album_photos:
+        #     if not PhotoAccess.objects.filter(photo=photo, user=self.user): # makes sure no access already existed
+        #         PhotoAccess.objects.create(photo=photo, user=self.user)
 
     def delete(self, *args, **kwargs):
+        '''Triggers the deletion of all PhotoAccess objects when deleted from admin'''
         photo_accesses = PhotoAccess.objects.filter(photo__album=self.album, user=self.user)
         for access in photo_accesses:
             access.delete()
