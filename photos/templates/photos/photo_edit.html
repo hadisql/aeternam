@@ -29,7 +29,7 @@
             <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M6.23706 2.0007C6.78897 2.02117 7.21978 2.48517 7.19931 3.03708L7.10148 5.67483C8.45455 4.62548 10.154 4.00001 12 4.00001C16.4183 4.00001 20 7.58174 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 11.4477 4.44772 11 5 11C5.55228 11 6 11.4477 6 12C6 15.3137 8.68629 18 12 18C15.3137 18 18 15.3137 18 12C18 8.68631 15.3137 6.00001 12 6.00001C10.4206 6.00001 8.98317 6.60994 7.91098 7.60891L11.3161 8.00677C11.8646 8.07087 12.2573 8.56751 12.1932 9.11607C12.1291 9.66462 11.6325 10.0574 11.0839 9.99326L5.88395 9.38567C5.36588 9.32514 4.98136 8.87659 5.00069 8.35536L5.20069 2.96295C5.22116 2.41104 5.68516 1.98023 6.23706 2.0007Z"></path></svg>
           </button>
           <!-- <input type="hidden" name="rotate" value="rotate"> -->
-          <span class="hidden transform -scale-x-100 file-input file-input-sm"></span>
+          <span class="hidden transform -scale-x-100 file-input file-input-sm toggle-info"></span>
           <button type="button" class="btn btn-outline" id="mirror_flip_btn">
             <svg class="w-6 h-6 stroke-current" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M3 12C3 16.2426 3 18.364 4.31802 19.682C5.63604 21 7.75736 21 12 21M12 3C7.75736 3 5.63604 3 4.31802 4.31802C3.50241 5.13363 3.19151 6.25685 3.073 8" stroke-width="1.5" stroke-linecap="round"></path> <path d="M11 21H15C17.8284 21 19.2426 21 20.1213 20.1213C21 19.2426 21 17.8284 21 15V9C21 6.17157 21 4.75736 20.1213 3.87868C19.2426 3 17.8284 3 15 3H11" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2.5 3"></path> <path d="M12 22L12 2" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
           </button>
@@ -54,8 +54,8 @@
             </div>
           </div>
         </div>
-      <br>
     </div>
+    <br>
     <!-- default photo toggle button-->
     <div class="my-6 lg:mt-10 flex gap-3 sm:gap-4 place-content-center">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 sm:w-6 sm:h-6">
@@ -69,8 +69,46 @@
       {{ photo_update_form.set_as_default_photo}}
     </div>
 
-    <br>
+    <!-- Photo access -->
+
+    <div class="divider"></div>
+
+    <div class="table w-full">
+      <div class="table-header-group">
+        <div class="table-row">
+          <div class="table-cell text-left">Photo access</div>
+          <div class="table-cell text-left">Full Name</div>
+        </div>
+      </div>
+      <div class="table-row-group">
+        {% for user in related_users %}
+          <div class="table-row">
+            <div class="table-cell">
+              <input type="checkbox" {% if user in users_with_photo_access %}checked{% endif %} name="photoaccess_user_{{user.id}}">
+            </div>
+            <div class="table-cell">{% firstof user.get_full_name user.email %}</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if messages %}
+      <div class="toast">
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>{{message}}</span>
+        </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
     <hr>
+    <!-- Back + Save changes -->
     <div class="grid grid-cols-1 sm:grid-cols-2 mt-6 gap-4">
       <div class="flex">
         <a href="{% url 'photos:photo_detail' photo.pk %}" class="btn btn-block btn-neutral">
@@ -81,7 +119,10 @@
           Back
         </a>
       </div>
-      <input type="submit" value="Save changes" class="btn btn-block btn-outline">
+      <button type="submit" value="" class="btn btn-block btn-outline gap-4">
+        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M18.1716 1C18.702 1 19.2107 1.21071 19.5858 1.58579L22.4142 4.41421C22.7893 4.78929 23 5.29799 23 5.82843V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H18.1716ZM4 3C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21L5 21L5 15C5 13.3431 6.34315 12 8 12L16 12C17.6569 12 19 13.3431 19 15V21H20C20.5523 21 21 20.5523 21 20V6.82843C21 6.29799 20.7893 5.78929 20.4142 5.41421L18.5858 3.58579C18.2107 3.21071 17.702 3 17.1716 3H17V5C17 6.65685 15.6569 8 14 8H10C8.34315 8 7 6.65685 7 5V3H4ZM17 21V15C17 14.4477 16.5523 14 16 14L8 14C7.44772 14 7 14.4477 7 15L7 21L17 21ZM9 3H15V5C15 5.55228 14.5523 6 14 6H10C9.44772 6 9 5.55228 9 5V3Z" fill="currentColor"></path></svg>
+        Save changes
+      </button>
     </div>
   </form>
 </div>

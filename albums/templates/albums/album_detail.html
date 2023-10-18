@@ -67,7 +67,6 @@
           {% for photo in photos %}
             <a class="group" href="{% url 'photos:photo_detail' photo.pk %}">
               <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-xl bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                <!-- <img src="{{photo.image.url}}" alt="{{ photo.pk }}" class="h-full w-full object-cover object-center group-hover:opacity-75"> -->
                 {% thumbnail photo.image "600x600" crop="center" as im %}
                   <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}" class="h-full w-full object-cover object-center group-hover:opacity-75">
                 {% endthumbnail %}
@@ -163,9 +162,12 @@
         Back
       </a>
       {% if user == album.creator %}
-      <a href="{% url 'albums:album-access' album.pk %}" class="btn btn-outline">
-        Album Settings
-      </a>
+        <a href="{% url 'albums:album-access' album.pk %}" class="btn btn-outline">
+          <svg class="w-6 h-6 stroke-current"  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+          </svg>
+          Album Settings
+        </a>
       {% endif %}
     </div>
   </div>

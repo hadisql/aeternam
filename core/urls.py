@@ -7,4 +7,5 @@ app_name = "core"
 urlpatterns = [
     path('', views.index, name='index'),
     path('clear_notif_from_navbar/<int:notification_id>/', views.clear_notif_from_navbar, name='clear_notif_from_navbar'),
+    path('photo_access_manager/', views.photo_access_manager, name='photo_access_manager'),
 ]
