@@ -26,6 +26,10 @@ accounts/templates/accounts/account_copy.html
 
 venv/
 
+# dev branch
+build.sh
+requirements_develop.txt
+
 # Byte-compiled / optimized / DLL files
 *.py[cod]
 *$py.class
