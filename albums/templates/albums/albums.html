@@ -20,17 +20,18 @@
     {% endif %}
     <div class="flex justify-between lg:justify-normal lg:gap-4">
       <div class="py-2 flex gap-6 items-center">
-        <h2 class="sr-only">My albums</h2>
+        <h2 class="sr-only">Albums you created</h2>
         <h2 class="text-3xl font-bold tracking-tight">Albums you created</h2>
         <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path d="M11 7C11 9.20914 9.20914 11 7 11C4.79086 11 3 9.20914 3 7C3 4.79086 4.79086 3 7 3C9.20914 3 11 4.79086 11 7ZM4.97715 7C4.97715 8.11719 5.88281 9.02284 7 9.02284C8.11719 9.02284 9.02284 8.11719 9.02284 7C9.02284 5.88281 8.11719 4.97716 7 4.97716C5.88281 4.97716 4.97715 5.88281 4.97715 7Z"></path>
           <path fill-rule="evenodd" clip-rule="evenodd" d="M2.37162 14.2378C3.54371 13.3886 5.09751 13 7 13C8.90249 13 10.4563 13.3886 11.6284 14.2378C12.8188 15.1004 13.4914 16.3477 13.795 17.8079C14.1811 19.6647 12.5708 21 11 21H3C1.42922 21 -0.181121 19.6647 0.204962 17.8079C0.508602 16.3477 1.18119 15.1004 2.37162 14.2378ZM3.54511 15.8574C2.84896 16.3618 2.39073 17.1203 2.16308 18.2151C2.12425 18.4018 2.17618 18.5729 2.31828 18.7223C2.47041 18.8824 2.71717 19 3 19H11C11.2828 19 11.5296 18.8824 11.6817 18.7223C11.8238 18.5729 11.8757 18.4018 11.8369 18.2151C11.6093 17.1203 11.151 16.3618 10.4549 15.8574C9.74039 15.3397 8.65185 15 7 15C5.34815 15 4.25961 15.3397 3.54511 15.8574Z"></path>
         </svg>
+        <a href="{% url 'albums:album_create' %}" class="btn btn-sm sm:btn-md btn-outline">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+        </a>
       </div>
-      <a href="{% url 'albums:album_create' %}" class="bg-base-200 hover:bg-base-300 hover:ring ring-current ring-offset-2 rounded-xl px-3 py-1 self-center place-content-center">
-          <p class="text-2xl font-light">+</p>
-      </a>
-
     </div>
 
     <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
@@ -101,7 +102,11 @@
             {% endthumbnail %}
           {% else %}
             <div class="grid place-content-center h-full w-full object-cover object-center group-hover:opacity-75">
-              <p class="text-lg font-semibold tracking-wide">Empty album</p>
+              {% if album|is_empty %}
+                <p class="text-lg font-semibold tracking-wide">Empty album</p>
+              {% else %}
+                <p class="text-lg font-semibold tracking-wide">No cover photo</p>
+              {% endif %}
             </div>
           {% endif %}
         </div>

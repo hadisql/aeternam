@@ -3,7 +3,7 @@ from sorl.thumbnail.admin import AdminImageMixin
 from sorl.thumbnail import get_thumbnail
 from django.utils.html import format_html
 
-from .models import Photo
+from .models import Photo, PhotoAccess
 
 
 class PhotoAdmin(AdminImageMixin, admin.ModelAdmin):
@@ -23,3 +23,4 @@ class PhotoAdmin(AdminImageMixin, admin.ModelAdmin):
 
 
 admin.site.register(Photo, PhotoAdmin)
+admin.site.register(PhotoAccess)

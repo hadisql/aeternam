@@ -29,10 +29,10 @@
           <h1 class="mt-10 py-8 text-3xl font-bold tracking-tight text-center">Album settings</h1>
         </div>
 
-        <form method="POST">
+        <form method="POST" id="access_form">
           {% csrf_token %}
           <div class="grid grid-cols-1 p-6 lg:p-12 mx-auto gap-x-4 max-w-7xl ">
-            <div class=" mt-4 block space-y-4 w-full mx-auto max-w-xl bg-base-100 p-6">
+            <div class=" mt-4 block space-y-4 w-full mx-auto max-w-lg bg-base-100 ">
               <div class="flex gap-4 prose">
                 <h2 class="mb-4">Edit your album infos</h2>
                 <svg viewBox="0 0 24 24" class="fill-transparent stroke-current stroke-2 h-8 w-8" xmlns="http://www.w3.org/2000/svg">
@@ -46,9 +46,17 @@
                 {{field}}
               </div>
               {% endfor %}
+
+              <button form="access_form" type="submit" name="album_form" class="flex gap-4 btn btn-outline sm:col-span-2 md:col-span-1 order-2 sm:order-3 md:order-2">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M18.1716 1C18.702 1 19.2107 1.21071 19.5858 1.58579L22.4142 4.41421C22.7893 4.78929 23 5.29799 23 5.82843V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H18.1716ZM4 3C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21L5 21L5 15C5 13.3431 6.34315 12 8 12L16 12C17.6569 12 19 13.3431 19 15V21H20C20.5523 21 21 20.5523 21 20V6.82843C21 6.29799 20.7893 5.78929 20.4142 5.41421L18.5858 3.58579C18.2107 3.21071 17.702 3 17.1716 3H17V5C17 6.65685 15.6569 8 14 8H10C8.34315 8 7 6.65685 7 5V3H4ZM17 21V15C17 14.4477 16.5523 14 16 14L8 14C7.44772 14 7 14.4477 7 15L7 21L17 21ZM9 3H15V5C15 5.55228 14.5523 6 14 6H10C9.44772 6 9 5.55228 9 5V3Z" fill="currentColor"></path></svg>
+                Save changes
+              </button>
             </div>
 
-            <div class=" my-8 mx-auto max-w-xl w-full bg-base-100 p-6">
+
+
+            {% if relations %}
+            <div class=" my-8 mx-auto max-w-lg w-full bg-base-100 ">
               <a name="access_control"></a>
               <div class="flex gap-4 prose">
                 <h2>Control your privacy</h2>
@@ -61,64 +69,101 @@
                 <h3 class="mb-4">Decide who can access your album :</h3>
               </div>
 
+              <input class="hidden" id="album_id" value="{{album.id}}"/> {# used in the 'modal_photo_access.js' to fetch photo_access_manager with album.id info #}
+
               <div class="overflow-x-auto rounded-lg">
                 <table class="table">
-
                   <thead>
-                    <tr class="bg-base-300">
-                      <th></th>
-                      <th>Name</th>
-                      <th>Relation</th>
+                    <tr class="bg-base-300 text-center">
+                      <th class="px-2"><div class="flex flex-wrap place-content-center gap-1"><p>Album</p><p>access</p></div></th>
+                      <th class="px-2"><div class="flex flex-wrap place-content-center gap-1"><p>Photo</p><p>access</p></div></th>
+                      <th class="px-2">User</th>
+                      {#<th>Relation</th>#}
                     </tr>
                   </thead>
                   <tbody>
-                    {% for relation, relation_type in relations_dict.items %}
-                    <tr class="bg-base-200">
-                      <th>
-                        <label>
-                          <input type="checkbox" class="toggle toggle-success" name="user_{{ relation.id }}" {% if relation in users_with_access %}checked{% endif %} />
-                        </label>
-                      </th>
-                      <td>
-                        <a href="{% url 'accounts:account_view' relation.pk %}" class="cursor-pointer">
-                          <div class="flex items-center space-x-3">
-                            <div class="avatar">
-                              <div class="mask mask-squircle w-12 h-12">
-                                {% if relation.profile_picture %}
-                                {% thumbnail relation.profile_picture "50x50" crop="center" as im %}
-                                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
-                                  alt="{% firstof relation.get_full_name relation.email %}'s profile pic"
-                                  class="h-full w-full object-cover object-center group-hover:opacity-75">
-                                {% endthumbnail %}
-                                {% else %}
-                                <img
-                                  src="https://api.dicebear.com/6.x/initials/svg?seed={% firstof relation.get_full_name relation.email %}"
-                                  width="50" height="50" alt=""
-                                  class="h-full w-full object-cover object-center group-hover:opacity-75">
-                                {% endif %}
+                    {% for relation, allowed_photos in relations_dict.items %}
+                      {% firstof 'success' as toggle_color %}
+                      {% if allowed_photos.count == photo_count %}
+                        {% firstof 'green' as color_class %}
+                        {% firstof 'full' as innertext %}
+                        {% firstof 'has <span class="italic underline decoration-4 decoration-green-600">full</span> access  to your album :' as modaltext %}
+                      {% elif allowed_photos.count == 0 %}
+                        {% firstof 'gray' as color_class %}
+                        {% firstof 'none' as innertext %}
+                        {% firstof 'has <span class="italic underline decoration-4">no access</span> to your album and its photos.' as modaltext %}
+                      {% else %}
+                        {% firstof 'amber' as color_class %}
+                        {% firstof 'partial' as innertext %}
+                        {% firstof 'warning' as toggle_color %}
+                        {% firstof 'has <span class="italic underline decoration-4 decoration-amber-600 underline-offset-4">partially</span> access to your album :' as modaltext %}
+                      {% endif %}
+                      <tr class="bg-base-200">
+                        <th class="px-2 text-center">
+                          <label>
+                            <!-- <input id="albumaccess-checkbox" type="checkbox" class="toggle toggle-{{toggle_color}}" name="user_{{ relation.id }}" {% if relation in users_with_access %}checked{% endif %} /> -->
+                            {% include 'partials/modal_albumaccess.html' %}
+                          </label>
+                        </th>
+                        <td>
+                          {% include 'partials/modal_photoaccess.html' %}
+                        </td>
+                        <td>
+                          <a href="{% url 'accounts:account_view' relation.pk %}" class="cursor-pointer">
+                            <div class="flex items-center space-x-3">
+                              <div class="avatar">
+                                <div class="mask mask-squircle w-12 h-12">
+                                  {% if relation.profile_picture %}
+                                  {% thumbnail relation.profile_picture "50x50" crop="center" as im %}
+                                  <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+                                    alt="{% firstof relation.get_full_name relation.email %}'s profile pic"
+                                    class="h-full w-full object-cover object-center group-hover:opacity-75">
+                                  {% endthumbnail %}
+                                  {% else %}
+                                  <img
+                                    src="https://api.dicebear.com/6.x/initials/svg?seed={% firstof relation.get_full_name relation.email %}"
+                                    width="50" height="50" alt=""
+                                    class="h-full w-full object-cover object-center group-hover:opacity-75">
+                                  {% endif %}
+                                </div>
+                              </div>
+                              <div>
+                                <div class="font-bold">{% firstof relation.get_full_name relation.email %}</div>
+                                <p class="text-sm opacity-50 text-ellipsis">{{relation.email|truncatechars:10}}</p>
                               </div>
                             </div>
-                            <div>
-                              <div class="font-bold">{% firstof relation.get_full_name relation.email %}</div>
-                              <div class="text-sm opacity-50">{{relation.email|truncatechars:12}}</div>
+                          </a>
+                        </td>
+                      </tr>
+                      {# ACCESS DETAIL (UNFINISHED) #}
+                      {% comment %}
+                      <!-- ACCESS DETAIL -->
+                      <tr class="hidden bg-base-200">
+                        <td class="py-0 {% if forloop.last %}pb-4{% endif %}" colspan="2">
+                          <div class="grid grid-rows-2 gap-2">
+                            <div class="flex gap-2 tooltip tooltip-top" data-tip="give access to all photos">
+                              <input type="checkbox" class="toggle toggle-xs" checked />
+                              <p class="text-xs">all photos access</p>
+                            </div>
+                            <div class="flex gap-2 tooltip tooltip-right" data-tip="select manually from photo settings">
+                              <input type="checkbox" class="toggle toggle-xs" />
+                              <p class="text-xs">partial access</p>
                             </div>
                           </div>
-                        </a>
-                      </td>
-                      <td>
-                        <span class="badge badge-ghost badge-sm">{{relation_type}}</span>
-                      </td>
-                    </tr>
-
+                        </td>
+                        <td></td>
+                      </tr>
+                      {% endcomment %}
                     {% endfor %}
                   </tbody>
                 </table>
               </div>
 
             </div>
+            {% endif %}
+
 
             <br>
-
 
             {% if messages %}
             <div class="toast">
@@ -135,13 +180,11 @@
             </div>
             {% endif %}
 
-            <p class="hidden alert-info alert-success"></p>
+            <p class="hidden alert-info alert-success toggle-warning text-gray-950 text-amber-950 opacity-30 ring-amber-600 ring-green-600 ring-gray-600"></p>
 
 
-
-
-            <hr class="">
-            <div class="mt-10 flex flex-wrap gap-4 ">
+            <hr>
+            <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 max-w-lg w-full mx-auto gap-4  ">
               <a href="{% url 'albums:album_detail' album.pk %}" class="btn btn-neutral">
                 <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
                   <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
@@ -151,10 +194,6 @@
                 </svg>
                 Back
               </a>
-              <button type="submit" name="album_form" class="flex gap-4 btn btn-primary text-white">
-                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M18.1716 1C18.702 1 19.2107 1.21071 19.5858 1.58579L22.4142 4.41421C22.7893 4.78929 23 5.29799 23 5.82843V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H18.1716ZM4 3C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21L5 21L5 15C5 13.3431 6.34315 12 8 12L16 12C17.6569 12 19 13.3431 19 15V21H20C20.5523 21 21 20.5523 21 20V6.82843C21 6.29799 20.7893 5.78929 20.4142 5.41421L18.5858 3.58579C18.2107 3.21071 17.702 3 17.1716 3H17V5C17 6.65685 15.6569 8 14 8H10C8.34315 8 7 6.65685 7 5V3H4ZM17 21V15C17 14.4477 16.5523 14 16 14L8 14C7.44772 14 7 14.4477 7 15L7 21L17 21ZM9 3H15V5C15 5.55228 14.5523 6 14 6H10C9.44772 6 9 5.55228 9 5V3Z" fill="currentColor"></path></svg>
-                Save changes
-              </button>
 
               <a href="{% url 'albums:album_delete' album.pk %}" class="btn btn-outline btn-error">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
@@ -170,6 +209,11 @@
       </div>
     </div>
   </section>
+
 </div>
 
 {% endblock body %}
+
+{% block javascript %}
+  <script src="{% static 'albums/js/modal_photo_access.js' %}"></script>
+{% endblock %}

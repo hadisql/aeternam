@@ -11,13 +11,13 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['body']
         widgets = {
-            'body': forms.Textarea(attrs={'class':'textarea textarea-primary textarea-sm', 'placeholder': 'Send a comment..','rows':2})
+            'body': forms.Textarea(attrs={'class':'textarea textarea-sm textarea-bordered', 'placeholder': 'Send a comment..','rows':2})
             }
 
 class PhotoUpdateForm(forms.Form):
     upload_photo = forms.ImageField(
         label="",
-        widget=forms.FileInput(attrs={'class':'file-input file-input-sm'}),
+        widget=forms.FileInput(attrs={'class':'file-input file-input-sm w-full'}),
         required=False)
 
     rotation_angle = forms.IntegerField(
@@ -31,7 +31,7 @@ class PhotoUpdateForm(forms.Form):
         required=False)
 
     set_as_default_photo = forms.BooleanField(
-        widget=forms.CheckboxInput(attrs={'class':'toggle toggle-success', 'id':'choose-as-default'}),
+        widget=forms.CheckboxInput(attrs={'class':'toggle toggle-info', 'id':'choose-as-default'}),
         required=False
     )
 
