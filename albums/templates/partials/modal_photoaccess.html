@@ -3,7 +3,7 @@
   class="relative w-auto h-auto">
 
   <button @click="modalOpen=true" type="button" id="albumaccess_button_{{relation.id}}"
-    class="relative font-semibold text-center py-0.5 px-1 sm:mx-1 text-{{color_class}}-950 bg-{{color_class}}-300/60 border border-{{color_class}}-300/30 rounded-xl w-full">
+    class="relative font-semibold text-center py-0.5 px-1 sm:mx-1 text-{{color_class}}-950 bg-{{color_class}}-300/80 border border-{{color_class}}-300/30 rounded-xl w-full">
     {{innertext}}
     <span
       class="absolute -top-3 -right-2 z-10  badge badge-sm border-{{color_class}}-400/60 border-2 text-base-content">{{allowed_photos.count}}/{{photo_count}}</span>
@@ -39,12 +39,13 @@
             {% for photo in photos_in_album %}
             <li class="relative">
               <input type="checkbox" id="checkbox_{{relation.id}}_{{photo.id}}" data-checkbox-photo-id="{{photo.id}}" data-checkbox-id="{{relation.id}}" value="" class="hidden" {% if photo in allowed_photos %}checked{% endif %}>
-              <label for="checkbox_{{relation.id}}_{{photo.id}}" class="photo-label group aspect-w-10 aspect-h-7 block w-full overflow-hidden rounded-lg cursor-pointer {% if photo in allowed_photos %}ring-2 ring-offset-2 ring-current {% endif %}">
+              <label for="checkbox_{{relation.id}}_{{photo.id}}" class="photo-label group aspect-w-10 aspect-h-7 block w-full overflow-hidden rounded-lg cursor-pointer {% if photo in allowed_photos %}ring-2 ring-offset-2 ring-current {% else %} blur-sm {% endif %}">
                   {% thumbnail photo.image "600x600" crop="center" as im %}
                     <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}"
-                      class="pointer-events-none object-cover group-hover:opacity-75 {% if photo not in allowed_photos %}opacity-50{% endif %}">
+                      class="pointer-events-none object-cover group-hover:opacity-75">
                   {% endthumbnail %}
-                  {% if photo not in allowed_photos %}
+                  {% comment %}
+                  <!-- {% if photo not in allowed_photos %}
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                       class="w-5 h-5 ml-1 mt-1">
                       <path fill-rule="evenodd"
@@ -53,8 +54,8 @@
                       <path
                         d="M10.748 13.93l2.523 2.523a9.987 9.987 0 01-3.27.547c-4.258 0-7.894-2.66-9.337-6.41a1.651 1.651 0 010-1.186A10.007 10.007 0 012.839 6.02L6.07 9.252a4 4 0 004.678 4.678z" />
                     </svg>
-                  {% endif %}
-
+                  {% endif %} -->
+                  {% endcomment %}
               </label>
             </li>
             {% endfor %}
@@ -62,7 +63,7 @@
         </div>
         <div class="flex gap-4 sm:gap-3 flex-row justify-end sm:space-x-2">
             <button @click="modalOpen=false" type="button" class="btn btn-sm btn-outline">Cancel</button>
-            <button @click="modalOpen=false" type="button" class="btn btn-sm" id="continue-button" data-relation-id="{{relation.id}}">Continue</button>
+            <button @click="modalOpen=false" type="button" class="btn btn-sm" id="continue-button" data-relation-id="{{relation.id}}">Save</button>
         </div>
       </div>
     </div>

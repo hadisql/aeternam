@@ -59,8 +59,10 @@ $(document).ready(function() {
     const checkbox = $(`#${checkboxId}`);
     if (checkbox.is(':checked')) {
       $(this).removeClass('ring-2 ring-offset-2 ring-current');
+      $(this).addClass('blur-sm');
     } else {
       $(this).addClass('ring-2 ring-offset-2 ring-current');
+      $(this).removeClass('blur-sm');
     }
   });
 

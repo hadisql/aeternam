@@ -9,8 +9,8 @@ class AlbumForm(forms.ModelForm):
         model = Album
         fields = ['title', 'description']
         widgets = {
-            'title': forms.TextInput(attrs={'class':'input input-bordered w-full'}),
-            'description': forms.Textarea(attrs={'class': 'textarea textarea-bordered w-full', 'rows':4}),
+            'title': forms.TextInput(attrs={'class':'input input-bordered w-full', 'oninput':'showSaveButton()'}),
+            'description': forms.Textarea(attrs={'class': 'textarea textarea-bordered w-full', 'rows':4, 'oninput':'showSaveButton()'}),
         }
 
 
