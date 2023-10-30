@@ -97,6 +97,10 @@ def user_search(request):
 
     if url_parameter:
         searched_users = CustomUser.objects.exclude(id=request.user.id).filter(Q(email__icontains = url_parameter) | Q(first_name__icontains = url_parameter) | Q(last_name__icontains = url_parameter) )
+        searched_users = searched_users.exclude(id__in=relations_users) # we exclude users already related from research
+        if not searched_users:
+            #if no user is found
+            searched_users = "No results"
     else:
         searched_users = url_parameter #None
 

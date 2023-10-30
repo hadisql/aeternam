@@ -1,4 +1,4 @@
-{% if searched_users %}
+{% if searched_users != "No results" %}
 <div class="overflow-x-auto" >
   <table class="table">
     {% comment %}<thead>
@@ -7,7 +7,6 @@
       </tr>
     </thead>{% endcomment %}
     {% for searched_user in searched_users %}
-      {% if searched_user not in relations_users %}
       <tbody>
         <tr class="hover">
           <th>
@@ -27,7 +26,6 @@
           </th>
         </tr>
       </tbody>
-      {% endif %}
     {% endfor %}
   </table>
 {% else %}
