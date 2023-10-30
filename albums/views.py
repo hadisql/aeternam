@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 
 from django.views.generic import CreateView, ListView, DeleteView, DetailView
 
-from django.db.models import Count, Q
+from django.db.models import Count, Sum, Case, When, IntegerField, Q
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
@@ -85,7 +85,9 @@ class AlbumListView(LoginRequiredMixin, ListView):
 
         # Annotate each album with the count of photos associated with it
         my_albums = my_albums.annotate(photo_count=Count('photos_album'))
-        shared_albums = shared_albums.annotate(photo_count=Count('photos_album'))
+
+        # the following line uses Sum, Case and When functions in order to retrieve the number of allowed photos in an album for the user, so he only sees the corresponding total photos per shared albums
+        shared_albums = shared_albums.annotate(photo_count=Sum(Case(When(photos_album__accessed_photo__user=self.request.user,then=1),output_field=IntegerField())))
 
         # Create a dictionary to hold album objects and their default photos
         albums_with_default_photos = {}
