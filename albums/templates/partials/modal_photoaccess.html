@@ -3,7 +3,7 @@
   class="relative w-auto h-auto">
 
   <button @click="modalOpen=true" type="button" id="albumaccess_button_{{relation.id}}"
-    class="relative font-semibold text-center py-0.5 px-1 sm:mx-1 text-{{color_class}}-950 bg-{{color_class}}-300/80 border border-{{color_class}}-300/30 rounded-xl w-full">
+    class="relative font-semibold text-center py-0.5 px-1 sm:mx-1 text-{{color_class}}-950 bg-{{color_class}}-300/80 border border-{{color_class}}-300/30 rounded-lg w-full">
     {{innertext}}
     <span
       class="absolute -top-3 -right-2 z-10  badge badge-sm border-{{color_class}}-400/60 border-2 text-base-content">{{allowed_photos.count}}/{{photo_count}}</span>

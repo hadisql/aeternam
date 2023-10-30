@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from django.http import JsonResponse
-from accounts.models import Notification, CustomUser
+from accounts.models import Notification, CustomUser, create_notification, mark_notification_as_read
+from django.contrib.contenttypes.models import ContentType
+
 from photos.models import Photo, PhotoAccess
 from albums.models import Album, AlbumAccess
 
@@ -39,7 +41,7 @@ def photo_access_manager(request):
         user = CustomUser.objects.get(id=relation_id)
         album = Album.objects.get(id=album_id)
 
-        print(f"you would like to grant {CustomUser.objects.get(id=relation_id)} access to photos: {selected_photos} from the album {album_id}")
+        print(f"you would like to grant {user} access to photos: {selected_photos} from the album {album_id}")
 
         # For selected_photos -> update PhotoAccess objects accordingly
         access_to_add, access_to_remove = update_photo_access(selected_photos, album_id, relation_id)
@@ -57,10 +59,28 @@ def photo_access_manager(request):
 
         if len(access_to_add) and len(access_to_remove):
             messages.success(request, f"You gave {user.get_full_name() or user.email} access to {len(access_to_add)} and revoked their access to {len(access_to_remove)}")
+            create_notification(user=user, user_from=request.user, content_type=ContentType.objects.get_for_model(Album), object_id=album.id, message=f"{request.user.get_full_name() or request.user.email} gave you access to {len(access_to_add)} photos", title="Photo access")
+            # we change the default 'identifier' in order for it to contain the photos information
+            notif_to_update = Notification.objects.last()
+            notif_to_update.identifier += '-photos:' + '+'.join(access_to_add)
+            notif_to_update.save()
+            # we check if the photos revoked have a notification associated with them
+            notif_to_delete = Notification.objects.filter(identifier=f"album{album_id}-{user.id}-photos:{'+'.join(access_to_remove)}")
+            if notif_to_delete:
+                notif_to_delete.delete()
         elif len(access_to_add) and not len(access_to_remove):
             messages.success(request, f"You gave {user.get_full_name() or user.email} access to {len(access_to_add)} photos")
+            create_notification(user=user, user_from=request.user, content_type=ContentType.objects.get_for_model(Album), object_id=album.id, message=f"{request.user.get_full_name() or request.user.email} gave you access to {len(access_to_add)} photos", title="Photo access")
+            notif_to_update = Notification.objects.last()
+            notif_to_update.identifier += '-photos:' + '+'.join(access_to_add)
+            notif_to_update.save()
         else:
-            messages.success(request, f"You revoked {user.get_full_name() or user.email} their access to {len(access_to_remove)} photos")
+            message = f"You revoked {user.get_full_name() or user.email} their access to {len(access_to_remove)} photos"
+            messages.success(request, message)
+            # we check if the photos revoked have a notification associated with them
+            notif_to_delete = Notification.objects.filter(identifier=f"album{album_id}-{user.id}-photos:{'+'.join(access_to_remove)}")
+            if notif_to_delete:
+                notif_to_delete.delete()
 
         if not PhotoAccess.objects.filter(user=user, photo__album=album_id):
             # no more photos with access for this album -> delete the album access
@@ -68,6 +88,10 @@ def photo_access_manager(request):
             albumaccess_to_delete.delete()
             print(f'deleting album access for photo {photo_id} ')
             messages.success(request, f'{user.get_full_name() or user.email} won\'t have access to your album anymore')
+            # if their was photoaccess notifications for this album, delete them
+            notif_to_delete = Notification.objects.filter(identifier__contains=f"album{album_id}-{user.id}")
+            if notif_to_delete:
+                notif_to_delete.delete()
         elif PhotoAccess.objects.filter(user=user, photo__album=album_id) and not AlbumAccess.objects.filter(album=album_id, user=user):
             # giving access to photos -> creates the album access if it didn't exist
             AlbumAccess.objects.create(album=album, user=user)
