@@ -2,9 +2,13 @@
 {% load thumbnail %}
 {% block title %}Add photos{% endblock title %}
 
+{% block  breadcrumbs %}
+  {% include 'partials/breadcrumb_add_photos.html' %}
+{% endblock breadcrumbs %}
+
 {% block body %}
 <div class="bg-base-100">
-  <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-20 lg:max-w-7xl lg:px-8">
+  <div class="mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-16 lg:max-w-7xl lg:px-8">
       <div class="rounded-lg bg-base-200 p-8 shadow-lg lg:p-12"">
 
         <form method="post" enctype="multipart/form-data">

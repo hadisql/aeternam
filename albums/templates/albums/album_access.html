@@ -5,6 +5,10 @@
 {% load thumbnail %}
 {% load static %}
 
+{% block  breadcrumbs %}
+  {% include 'partials/breadcrumb_settings.html' %}
+{% endblock breadcrumbs %}
+
 {% block body %}
 <div class="bg-base-200">
   <section class="relative block h-[400px]">

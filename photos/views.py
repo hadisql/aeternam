@@ -129,14 +129,20 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         form_description = PhotoDescriptionForm(initial={'description': photo_description})
 
         users_with_photo_access = CustomUser.objects.filter(photo_accessing_user__photo=photo)
-        #relations_without_access = related_users.filter(~Q(photo_accessing_user__photo=photo))
+
+        # the following lines are for exporting additional context for the breadcrumbs to work
+        album = Album.objects.get(photos_album=photo)
+        photos_with_access = Photo.objects.filter(album=album, accessed_photo__user=self.request.user)
+        album_photo_pk_list = [photo.pk for photo in photos_with_access]
 
         context['photo'] = photo
         context['photo_update_form'] = PhotoUpdateForm(initial={'set_as_default_photo': photo.is_default})
         context['form_description_form'] = form_description
         context['users_with_photo_access'] = users_with_photo_access # for testing in template
         context['related_users'] = related_users
-        # context['relations_without_access'] = relations_without_access
+        context['album'] = album # used fro breadcrumbs
+        context['album_photo_pk_list'] = album_photo_pk_list # used for breadcrumbs
+        context['photo_index'] = album_photo_pk_list.index(photo.id) # used for breadcrumbs
 
         return context
 
@@ -279,6 +285,8 @@ class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         context['comments_from_user'] = comments_from_user
         context['comment_form'] = comment_form
         context['album_photo_pk_list'] = album_photo_pk_list # for testing in template
+        context['photo_index'] = album_photo_pk_list.index(photo.id) # used for breadcrumbs
+        context['album'] = album # used fro breadcrumbs
 
         return context
 

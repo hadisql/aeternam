@@ -5,7 +5,7 @@
 
 <div class="navbar bg-base-100 shadow-md">
   <div class="flex-1">
-    <a href="/" class=" normal-case ml-2 px-3 pb-2 hover:bg-gray-50/25 rounded-lg font-normal text-5xl">æ<span class="ml-px text-2xl tracking-wide hidden sm:inline-block align-middle">ternam</span></a>
+    <a href="{% url 'albums:albums_view' %}" class=" normal-case ml-2 px-3 pb-2 hover:bg-gray-50/25 rounded-lg font-normal text-5xl">æ<span class="ml-px text-2xl tracking-wide hidden sm:inline-block align-middle">ternam</span></a>
   </div>
   {% if request.user.is_authenticated %}
   <div class="flex-none">

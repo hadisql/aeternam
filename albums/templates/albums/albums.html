@@ -9,118 +9,141 @@
 
 
 <div class="bg-base-100">
-  <div class="mx-auto max-w-2xl px-6 pt-16 pb-10 sm:px-8 sm:pt-24 sm:pb-16 lg:max-w-7xl lg:px-8">
+  <div class="mx-auto max-w-2xl px-6 pt-16 sm:px-8 sm:pt-24 sm:pb-16 lg:max-w-7xl lg:px-8">
     {% if messages %}
     {% for message in messages %}
-      <div class="my-6 alert alert-error mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-        <span>{{message}}</span>
-      </div>
+    <div class="my-6 alert alert-error mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span>{{message}}</span>
+    </div>
     {% endfor %}
     {% endif %}
-    <div class="flex justify-between lg:justify-normal lg:gap-4">
-      <div class="py-2 flex gap-6 items-center">
-        <h2 class="sr-only">Albums you created</h2>
-        <h2 class="text-3xl font-bold tracking-tight">Albums you created</h2>
-        <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M11 7C11 9.20914 9.20914 11 7 11C4.79086 11 3 9.20914 3 7C3 4.79086 4.79086 3 7 3C9.20914 3 11 4.79086 11 7ZM4.97715 7C4.97715 8.11719 5.88281 9.02284 7 9.02284C8.11719 9.02284 9.02284 8.11719 9.02284 7C9.02284 5.88281 8.11719 4.97716 7 4.97716C5.88281 4.97716 4.97715 5.88281 4.97715 7Z"></path>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M2.37162 14.2378C3.54371 13.3886 5.09751 13 7 13C8.90249 13 10.4563 13.3886 11.6284 14.2378C12.8188 15.1004 13.4914 16.3477 13.795 17.8079C14.1811 19.6647 12.5708 21 11 21H3C1.42922 21 -0.181121 19.6647 0.204962 17.8079C0.508602 16.3477 1.18119 15.1004 2.37162 14.2378ZM3.54511 15.8574C2.84896 16.3618 2.39073 17.1203 2.16308 18.2151C2.12425 18.4018 2.17618 18.5729 2.31828 18.7223C2.47041 18.8824 2.71717 19 3 19H11C11.2828 19 11.5296 18.8824 11.6817 18.7223C11.8238 18.5729 11.8757 18.4018 11.8369 18.2151C11.6093 17.1203 11.151 16.3618 10.4549 15.8574C9.74039 15.3397 8.65185 15 7 15C5.34815 15 4.25961 15.3397 3.54511 15.8574Z"></path>
-        </svg>
-        <a href="{% url 'albums:album_create' %}" class="btn btn-sm sm:btn-md btn-outline">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-          </svg>
-        </a>
-      </div>
-    </div>
 
-    <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+    <div class="grid grid-cols-1 xl:grid-cols-2 xl:gap-x-12">
       <!-- MY ALBUMS -->
-      {% for album, default_photo in albums_with_default_photos.items %}
-        <a href="{% url 'albums:album_detail' album.pk %}" class="group">
-          <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7 hover:ring ring-current ring-offset-2">
-            {% if default_photo %}
+      <div>
+        <!-- TITLE -->
+        <div class="flex justify-between lg:justify-normal lg:gap-4">
+          <div class="py-2 flex gap-6 items-center">
+            <h2 class="sr-only">Albums you created</h2>
+            <h2 class="text-3xl font-bold tracking-tight">Albums you created</h2>
+            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M11 7C11 9.20914 9.20914 11 7 11C4.79086 11 3 9.20914 3 7C3 4.79086 4.79086 3 7 3C9.20914 3 11 4.79086 11 7ZM4.97715 7C4.97715 8.11719 5.88281 9.02284 7 9.02284C8.11719 9.02284 9.02284 8.11719 9.02284 7C9.02284 5.88281 8.11719 4.97716 7 4.97716C5.88281 4.97716 4.97715 5.88281 4.97715 7Z">
+              </path>
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M2.37162 14.2378C3.54371 13.3886 5.09751 13 7 13C8.90249 13 10.4563 13.3886 11.6284 14.2378C12.8188 15.1004 13.4914 16.3477 13.795 17.8079C14.1811 19.6647 12.5708 21 11 21H3C1.42922 21 -0.181121 19.6647 0.204962 17.8079C0.508602 16.3477 1.18119 15.1004 2.37162 14.2378ZM3.54511 15.8574C2.84896 16.3618 2.39073 17.1203 2.16308 18.2151C2.12425 18.4018 2.17618 18.5729 2.31828 18.7223C2.47041 18.8824 2.71717 19 3 19H11C11.2828 19 11.5296 18.8824 11.6817 18.7223C11.8238 18.5729 11.8757 18.4018 11.8369 18.2151C11.6093 17.1203 11.151 16.3618 10.4549 15.8574C9.74039 15.3397 8.65185 15 7 15C5.34815 15 4.25961 15.3397 3.54511 15.8574Z">
+              </path>
+            </svg>
+            <a href="{% url 'albums:album_create' %}" class="btn btn-sm btn-outline">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+            </a>
+          </div>
+        </div>
+        <!-- MY ALBUMS THUMBNAILS -->
+        <div class="py-10 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 xl:gap-x-8">
+          {% for album, default_photo in albums_with_default_photos.items %}
+          <a href="{% url 'albums:album_detail' album.pk %}" class="group">
+            <div
+              class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7 hover:ring ring-current ring-offset-2">
+              {% if default_photo %}
               {% thumbnail default_photo.image "600x600" crop="center" as im %}
-                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}" class="h-full w-full object-cover object-center group-hover:opacity-75">
+              <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}"
+                class="h-full w-full object-cover object-center group-hover:opacity-75">
               {% endthumbnail %}
-            {% else %}
+              {% else %}
               <div class="grid place-content-center h-full w-full object-cover object-center group-hover:opacity-75">
                 {% if album|is_empty %}
-                  <p class="text-lg font-semibold tracking-wide">Empty album</p>
+                <p class="text-lg font-semibold tracking-wide">Empty album</p>
                 {% else %}
-                  <p class="text-lg font-semibold tracking-wide">No cover photo</p>
+                <p class="text-lg font-semibold tracking-wide">No cover photo</p>
                 {% endif %}
               </div>
-            {% endif %}
-          </div>
-          <h3 class="mt-4 text-sm">{{ album.photo_count }} photos | uploaded by {{ album.creator.first_name }} </h3>
-          <div class="flex flex-wrap gap-2">
-            <p class="mt-1 text-lg font-medium">{{ album.title }}</p>
-            {% if number_of_access|list_item:forloop.counter0 %}
-              <div class="tooltip tooltip-bottom" data-tip="shared with {{number_of_access|list_item:forloop.counter0}} user{{number_of_access|list_item:forloop.counter0|pluralize}}">
+              {% endif %}
+            </div>
+            <h3 class="mt-4 text-sm">{{ album.photo_count }} photos | uploaded by {{ album.creator.first_name }} </h3>
+            <div class="flex flex-wrap gap-2">
+              <p class="mt-1 text-lg font-medium">{{ album.title }}</p>
+              {% if number_of_access|list_item:forloop.counter0 %}
+              <div class="tooltip tooltip-bottom"
+                data-tip="shared with {{number_of_access|list_item:forloop.counter0}} user{{number_of_access|list_item:forloop.counter0|pluralize}}">
                 <div class="mt-2 badge badge-outline">
-                  {# <svg class="w-4 h-4 fill-current mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M13.803 5.33333C13.803 3.49238 15.3022 2 17.1515 2C19.0008 2 20.5 3.49238 20.5 5.33333C20.5 7.17428 19.0008 8.66667 17.1515 8.66667C16.2177 8.66667 15.3738 8.28596 14.7671 7.67347L10.1317 10.8295C10.1745 11.0425 10.197 11.2625 10.197 11.4872C10.197 11.9322 10.109 12.3576 9.94959 12.7464L15.0323 16.0858C15.6092 15.6161 16.3473 15.3333 17.1515 15.3333C19.0008 15.3333 20.5 16.8257 20.5 18.6667C20.5 20.5076 19.0008 22 17.1515 22C15.3022 22 13.803 20.5076 13.803 18.6667C13.803 18.1845 13.9062 17.7255 14.0917 17.3111L9.05007 13.9987C8.46196 14.5098 7.6916 14.8205 6.84848 14.8205C4.99917 14.8205 3.5 13.3281 3.5 11.4872C3.5 9.64623 4.99917 8.15385 6.84848 8.15385C7.9119 8.15385 8.85853 8.64725 9.47145 9.41518L13.9639 6.35642C13.8594 6.03359 13.803 5.6896 13.803 5.33333Z"></path></svg> #}
-                  <svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                  <svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                   {{number_of_access|list_item:forloop.counter0}}
                 </div>
               </div>
-            {% endif %}
-          </div>
-        </a>
-      {% endfor %}
-      {% comment %} <!-- commented -->
-      <a href="{% url 'albums:album_create' %}" class="tooltip tooltip-bottom tooltip-neutral group" data-tip="create new album">
-        <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-300 xl:aspect-h-8 xl:aspect-w-7">
-          <div class="grid place-content-center h-full w-full object-cover object-center group-hover:opacity-75">
-            <p class="text-8xl font-base text-slate-600"> + </p>
-          </div>
-        </div>
-      </a>
-      {% endcomment %}
-    </div>
-  </div>
-  <!-- ALBUMS SHARED WITH ME -->
-  {% if shared_albums_with_default_photos %}
-  <div class="mx-auto max-w-2xl px-4 pb-16 sm:px-6 sm:pb-24 lg:max-w-7xl lg:px-8">
-    <div class="py-2 flex gap-6 items-center">
-      <h2 class="text-3xl font-bold tracking-tight">Albums shared with you</h2>
-      <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M11 7C11 9.20914 9.20914 11 7 11C4.79086 11 3 9.20914 3 7C3 4.79086 4.79086 3 7 3C9.20914 3 11 4.79086 11 7ZM4.97715 7C4.97715 8.11719 5.88281 9.02284 7 9.02284C8.11719 9.02284 9.02284 8.11719 9.02284 7C9.02284 5.88281 8.11719 4.97716 7 4.97716C5.88281 4.97716 4.97715 5.88281 4.97715 7Z"></path>
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M2.37162 14.2378C3.54371 13.3886 5.09751 13 7 13C8.90249 13 10.4563 13.3886 11.6284 14.2378C12.8188 15.1004 13.4914 16.3477 13.795 17.8079C14.1811 19.6647 12.5708 21 11 21H3C1.42922 21 -0.181121 19.6647 0.204962 17.8079C0.508602 16.3477 1.18119 15.1004 2.37162 14.2378ZM3.54511 15.8574C2.84896 16.3618 2.39073 17.1203 2.16308 18.2151C2.12425 18.4018 2.17618 18.5729 2.31828 18.7223C2.47041 18.8824 2.71717 19 3 19H11C11.2828 19 11.5296 18.8824 11.6817 18.7223C11.8238 18.5729 11.8757 18.4018 11.8369 18.2151C11.6093 17.1203 11.151 16.3618 10.4549 15.8574C9.74039 15.3397 8.65185 15 7 15C5.34815 15 4.25961 15.3397 3.54511 15.8574Z"></path>
-        <path d="M21 7C21 9.20914 19.2091 11 17 11C14.7909 11 13 9.20914 13 7C13 4.79086 14.7909 3 17 3C19.2091 3 21 4.79086 21 7ZM14.9772 7C14.9772 8.11719 15.8828 9.02284 17 9.02284C18.1172 9.02284 19.0228 8.11719 19.0228 7C19.0228 5.88281 18.1172 4.97716 17 4.97716C15.8828 4.97716 14.9772 5.88281 14.9772 7Z"></path>
-        <path d="M14.5361 13.2689C13.9347 13.4165 13.7248 14.1168 14.0647 14.6344L14.1075 14.6995C14.3593 15.0829 14.839 15.239 15.2891 15.1501C15.7787 15.0534 16.3451 15 17 15C18.6519 15 19.7404 15.3397 20.4549 15.8574C21.1511 16.3618 21.6093 17.1203 21.8369 18.2151C21.8758 18.4018 21.8238 18.5729 21.6817 18.7223C21.5296 18.8824 21.2828 19 21 19H16C15.4478 19 15 19.4477 15 20C15 20.5523 15.4478 21 16 21H21C22.5708 21 24.1811 19.6647 23.7951 17.8079C23.4914 16.3477 22.8188 15.1004 21.6284 14.2378C20.4563 13.3886 18.9025 13 17 13C16.0994 13 15.2769 13.0871 14.5361 13.2689Z"></path>
-      </svg>
-    </div>
-    <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-
-
-      {% for album, default_photo in shared_albums_with_default_photos.items %}
-      <a href="{% url 'albums:album_detail' album.pk %}" class="group">
-        <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7 hover:ring ring-current ring-offset-2">
-          {% if default_photo %}
-            {% thumbnail default_photo.image "600x600" crop="center" as im %}
-              <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}" class="h-full w-full object-cover object-center group-hover:opacity-75">
-            {% endthumbnail %}
-          {% else %}
-            <div class="grid place-content-center h-full w-full object-cover object-center group-hover:opacity-75">
-              {% if album|is_empty %}
-                <p class="text-lg font-semibold tracking-wide">Empty album</p>
-              {% else %}
-                <p class="text-lg font-semibold tracking-wide">No cover photo</p>
               {% endif %}
             </div>
-          {% endif %}
+          </a>
+          {% endfor %}
         </div>
-        <h3 class="mt-4 text-sm">{{ album.photo_count }} photos | uploaded by {% firstof album.creator.get_full_name album.creator.email %} </h3>
-        <p class="mt-1 text-lg font-medium">{{ album.title }}</p>
-      </a>
-      {% endfor %}
+      </div>
+
+
+      <!-- ALBUMS SHARED WITH ME -->
+      {% if shared_albums_with_default_photos %}
+      <div>
+        <!-- TITLE -->
+        <div class="flex justify-between lg:justify-normal lg:gap-4">
+          <div class="py-2 flex gap-6 items-center">
+            <h2 class="text-3xl font-bold tracking-tight">Albums shared with you</h2>
+            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M11 7C11 9.20914 9.20914 11 7 11C4.79086 11 3 9.20914 3 7C3 4.79086 4.79086 3 7 3C9.20914 3 11 4.79086 11 7ZM4.97715 7C4.97715 8.11719 5.88281 9.02284 7 9.02284C8.11719 9.02284 9.02284 8.11719 9.02284 7C9.02284 5.88281 8.11719 4.97716 7 4.97716C5.88281 4.97716 4.97715 5.88281 4.97715 7Z">
+              </path>
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M2.37162 14.2378C3.54371 13.3886 5.09751 13 7 13C8.90249 13 10.4563 13.3886 11.6284 14.2378C12.8188 15.1004 13.4914 16.3477 13.795 17.8079C14.1811 19.6647 12.5708 21 11 21H3C1.42922 21 -0.181121 19.6647 0.204962 17.8079C0.508602 16.3477 1.18119 15.1004 2.37162 14.2378ZM3.54511 15.8574C2.84896 16.3618 2.39073 17.1203 2.16308 18.2151C2.12425 18.4018 2.17618 18.5729 2.31828 18.7223C2.47041 18.8824 2.71717 19 3 19H11C11.2828 19 11.5296 18.8824 11.6817 18.7223C11.8238 18.5729 11.8757 18.4018 11.8369 18.2151C11.6093 17.1203 11.151 16.3618 10.4549 15.8574C9.74039 15.3397 8.65185 15 7 15C5.34815 15 4.25961 15.3397 3.54511 15.8574Z">
+              </path>
+              <path
+                d="M21 7C21 9.20914 19.2091 11 17 11C14.7909 11 13 9.20914 13 7C13 4.79086 14.7909 3 17 3C19.2091 3 21 4.79086 21 7ZM14.9772 7C14.9772 8.11719 15.8828 9.02284 17 9.02284C18.1172 9.02284 19.0228 8.11719 19.0228 7C19.0228 5.88281 18.1172 4.97716 17 4.97716C15.8828 4.97716 14.9772 5.88281 14.9772 7Z">
+              </path>
+              <path
+                d="M14.5361 13.2689C13.9347 13.4165 13.7248 14.1168 14.0647 14.6344L14.1075 14.6995C14.3593 15.0829 14.839 15.239 15.2891 15.1501C15.7787 15.0534 16.3451 15 17 15C18.6519 15 19.7404 15.3397 20.4549 15.8574C21.1511 16.3618 21.6093 17.1203 21.8369 18.2151C21.8758 18.4018 21.8238 18.5729 21.6817 18.7223C21.5296 18.8824 21.2828 19 21 19H16C15.4478 19 15 19.4477 15 20C15 20.5523 15.4478 21 16 21H21C22.5708 21 24.1811 19.6647 23.7951 17.8079C23.4914 16.3477 22.8188 15.1004 21.6284 14.2378C20.4563 13.3886 18.9025 13 17 13C16.0994 13 15.2769 13.0871 14.5361 13.2689Z">
+              </path>
+            </svg>
+          </div>
+        </div>
+        <!-- SHARED ALBUMS THUMBNAILS -->
+        <div class="pt-10 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 xl:gap-x-8">
+          {% for album, default_photo in shared_albums_with_default_photos.items %}
+          <a href="{% url 'albums:album_detail' album.pk %}" class="group">
+            <div
+              class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7 hover:ring ring-current ring-offset-2">
+              {% if default_photo %}
+              {% thumbnail default_photo.image "600x600" crop="center" as im %}
+              <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}"
+                class="h-full w-full object-cover object-center group-hover:opacity-75">
+              {% endthumbnail %}
+              {% else %}
+              <div class="grid place-content-center h-full w-full object-cover object-center group-hover:opacity-75">
+                {% if album|is_empty %}
+                <p class="text-lg font-semibold tracking-wide">Empty album</p>
+                {% else %}
+                <p class="text-lg font-semibold tracking-wide">No cover photo</p>
+                {% endif %}
+              </div>
+              {% endif %}
+            </div>
+            <h3 class="mt-4 text-sm">{{ album.photo_count }} photos | uploaded by {% firstof album.creator.get_full_name album.creator.email %} </h3>
+            <p class="mt-1 text-lg font-medium">{{ album.title }}</p>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
     </div>
   </div>
-  {% endif %}
 
 </div>
 

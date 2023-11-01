@@ -21,6 +21,13 @@
     {% include 'partials/navbar.html' %}
   </header>
 
+  <div class="bg-base-100">
+    <div class="mx-auto max-w-2xl px-6 pt-8 sm:pt-10 sm:px-6 lg:max-w-7xl lg:px-8">
+      {% block breadcrumbs %}
+      {% endblock breadcrumbs %}
+    </div>
+  </div>
+
   <main>
     <div class="min-h-screen place-content-center">
       {% block body %}
