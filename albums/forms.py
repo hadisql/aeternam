@@ -3,6 +3,7 @@ from django import forms
 from .models import Album, AlbumAccess
 from accounts.models import CustomUser
 
+from django.utils.translation import gettext_lazy as _
 
 class AlbumForm(forms.ModelForm):
     class Meta:
@@ -11,7 +12,7 @@ class AlbumForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class':'input input-sm input-bordered w-full', 'oninput':'showSaveButton()'}),
             'description': forms.Textarea(attrs={'class': 'textarea textarea-bordered w-full',
-                                                'placeholder': 'Add a description for this album',
+                                                'placeholder': _('Add a description for this album'),
                                                 'rows':3,
                                                 'oninput':'showSaveButton()',
                                                 'x-data':'{ resize () { $el.style.height = "0px"; $el.style.height = $el.scrollHeight + "px" } }',

@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load i18n %}
 
 {% block title %}Your Album{% endblock title %}
 
@@ -10,23 +11,25 @@
 <div class="bg-base-100">
   <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-20 lg:max-w-7xl lg:px-8">
     <div class="prose">
-      <h1 class="sr-only">Create a new album</h1>
-      <h1>Create a new album</h1>
+      <h1 class="sr-only">{% trans "Create a new album" %}</h1>
+      <h1>{% trans "Create a new album" %}</h1>
 
       <div class="rounded-lg bg-base-200 p-8 shadow-lg lg:p-12">
         <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="grid grid-cols-1 gap-4 w-full max-w-xs">
-            {% for field in form %}
             <div>
-              <label class="text-sm font-medium" for="id_{{field.label}}">{{field.label|capfirst}}</label>
-              {{field}}
+              <label class="text-sm font-medium" for="id_{{field.label}}">{% trans "Title" %}</label>
+              {{form.title}}
             </div>
-            {% endfor %}
+            <div>
+              <label class="text-sm font-medium" for="id_{{field.label}}">{% trans "Description" %}</label>
+              {{form.description}}
+            </div>
           </div>
           <div class="hidden textarea-bordered"></div> <!-- to add missing tailwind styling-->
           <div class="mt-4">
-              <label for="images" class="text-xl font-bold tracking-tight">Upload photos:</label>
+              <label for="images" class="text-xl font-bold tracking-tight">{% trans "Upload photos:" %}</label>
               <input type="file" name="images" multiple class="mt-4 block file-input file-input-bordered w-full max-w-xs" required>
               <div class="flex gap-4 mt-8">
                 <a href="{% url 'albums:albums_view' %}" class="btn btn-neutral">
@@ -34,9 +37,9 @@
                     <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
                     <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
                   </svg>
-                  Back
+                  {% trans "Back" %}
                 </a>
-                <button type="submit" class="inline-block btn btn-outline">Save</button>
+                <button type="submit" class="inline-block btn btn-outline">{% trans "Save" %}</button>
               </div>
           </div>
         </form>

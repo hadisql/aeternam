@@ -1,14 +1,15 @@
 {% extends 'core/base.html' %}
 {% load thumbnail %}
+{% load i18n %}
 
 {% block title %}Delete Album{% endblock %}
 
 {% block body %}
 <div class="grid place-content-center">
-  <div class="prose prose-sm md:prose-base text-center">
-    <h2>Delete the Album "{{album.title}}" ?</h2>
+  <div class="text-center">
+    <h2 class="text-xl font-medium pt-4 py-6">{% blocktrans with album.title as "album" %}Delete the Album "{{album}}" ?{% endblocktrans %}</h2>
 
-    <div class="mt-3 flex -space-x-8 overflow-hidden">
+    <div class="mt-3 flex place-content-center -space-x-8 overflow-hidden">
       {% for photo in album_photos %}
       {% thumbnail photo.image "600x600" crop="center" as im %}
         <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}" class="inline-block h-36 w-36 ring-2 ring-white rounded-full">
@@ -16,15 +17,15 @@
       {% endfor %}
     </div>
     <div class="mt-3 font-medium">
-      <a>{% if rest > 0 %}+ {{rest}} other{{rest|pluralize}}{% endif %}</a>
+      <a>{% if rest > 0 %}+ {{rest}} {% trans "other" %}{{rest|pluralize}}{% endif %}</a>
     </div>
 
     <br>
     <form method="POST">
       {% csrf_token %}
       <div class="flex gap-2 py-4 justify-center">
-        <input type="submit" value="Yes" class="btn btn-error hover:brightness-75">
-        <a href="{% url 'albums:album-access' album.pk %}" class="btn btn-neutral">No</a>
+        <input type="submit" value={% trans "Yes" %} class="btn btn-error hover:brightness-75">
+        <a href="{% url 'albums:album-access' album.pk %}" class="btn btn-neutral">{% trans "No" %}</a>
       </div>
 
 

@@ -87,28 +87,37 @@ $(document).ready(function() {
 
   // function to fetch selected photos and trigger the python function
   function updatePhotoAccess(relationId, selectedPhotos, albumId) {
-      fetch('/photo_access_manager/', {
-        method: 'POST',
-        body: JSON.stringify({
-          relationId: relationId,
-          selectedPhotos: selectedPhotos,
-          albumId: albumId }),
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCookie('csrftoken'), // Include CSRF token
-        },
+    var baseUrlElement = document.getElementById('base-url');
+    var baseUrl = baseUrlElement ? baseUrlElement.getAttribute('data-url') : '';
+
+    if (!baseUrl) {
+      console.error('Base URL not found');
+      return;
+    }
+    var url = baseUrl;
+
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({
+        relationId: relationId,
+        selectedPhotos: selectedPhotos,
+        albumId: albumId }),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'), // Include CSRF token
+      },
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          // console.log('success !! :', response.json());
+          location.reload(); // refresh the page so the user sees the right informations
+        } else {
+          // console.log('error :',response.json());
+        }
       })
-        .then((response) => {
-          if (response.status === 200) {
-            // console.log('success !! :', response.json());
-            location.reload(); // refresh the page so the user sees the right informations
-          } else {
-            // console.log('error :',response.json());
-          }
-        })
-        .catch((error) => {
-          // Handle network error
-        })
+      .catch((error) => {
+        // Handle network error
+      })
     }
 
   function getCookie(name) {

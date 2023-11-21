@@ -2,6 +2,7 @@
 {% load static %}
 {% load static_image %}
 {% load thumbnail %}
+{% load i18n %}
 
 {% block title %}Edit account{% endblock %}
 
@@ -39,11 +40,11 @@
 
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label class="sr-only" for="first_name">First Name</label>
+              <label class="sr-only" for="first_name">{% trans "First Name" %}</label>
               {{form.first_name}}
             </div>
             <div>
-              <label class="sr-only" for="last_name">Last Name</label>
+              <label class="sr-only" for="last_name">{% trans "Last Name" %}</label>
               {{form.last_name}}
             </div>
           </div>
@@ -55,7 +56,7 @@
             </div>
 
             <div>
-              <label class="sr-only" for="birthday">Date of Birth</label>
+              <label class="sr-only" for="birthday">{% trans "Date of Birth" %}</label>
               {{form.date_of_birth}}
             </div>
           </div>
@@ -66,7 +67,7 @@
                 <svg class="w-6 h-6 flex-none" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" >
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
                 </svg>
-                <span class="label-text font-semibold">hide connections on your profile</span>
+                <span class="label-text font-semibold">{% trans "hide connections on your profile" %}</span>
                 {{form.hide_connections}}
               </label>
             </div>
@@ -86,13 +87,13 @@
                 <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
                 <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
               </svg>
-              Back
+              {% trans "Back" %}
             </a>
             <button
               type="submit"
               class="inline-block btn btn-accent btn-block px-5 py-3 font-medium text-white sm:w-auto sm:col-span-1"
             >
-              Save changes
+              {% trans "Save changes" %}
             </button>
         </div>
       </form>

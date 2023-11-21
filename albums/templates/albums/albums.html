@@ -4,6 +4,7 @@
 
 {% load thumbnail %}
 {% load custom_filters %}
+{% load i18n %}
 
 {% block body %}
 
@@ -28,8 +29,8 @@
         <!-- TITLE -->
         <div class="flex justify-between lg:justify-normal lg:gap-4">
           <div class="py-2 flex gap-6 items-center">
-            <h2 class="sr-only">Albums you created</h2>
-            <h2 class="text-3xl font-bold tracking-tight">Albums you created</h2>
+            <h2 class="sr-only">{% trans "Albums you created" %}</h2>
+            <h2 class="text-3xl font-bold tracking-tight">{% trans "Albums you created"%}</h2>
             <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M11 7C11 9.20914 9.20914 11 7 11C4.79086 11 3 9.20914 3 7C3 4.79086 4.79086 3 7 3C9.20914 3 11 4.79086 11 7ZM4.97715 7C4.97715 8.11719 5.88281 9.02284 7 9.02284C8.11719 9.02284 9.02284 8.11719 9.02284 7C9.02284 5.88281 8.11719 4.97716 7 4.97716C5.88281 4.97716 4.97715 5.88281 4.97715 7Z">
@@ -60,14 +61,14 @@
               {% else %}
               <div class="grid place-content-center h-full w-full object-cover object-center group-hover:opacity-75">
                 {% if album|is_empty %}
-                <p class="text-lg font-semibold tracking-wide">Empty album</p>
+                <p class="text-lg font-semibold tracking-wide">{% trans "Empty album" %}</p>
                 {% else %}
-                <p class="text-lg font-semibold tracking-wide">No cover photo</p>
+                <p class="text-lg font-semibold tracking-wide">{% trans "No cover photo" %}</p>
                 {% endif %}
               </div>
               {% endif %}
             </div>
-            <h3 class="mt-4 text-sm">{{ album.photo_count }} photos | uploaded by {{ album.creator.first_name }} </h3>
+            <h3 class="mt-4 text-sm">{{ album.photo_count }} photos | {% blocktrans count counter=album.photo_count %}uploaded by{% plural %}uploaded by{% endblocktrans %} {{ album.creator.first_name }} </h3>
             <div class="flex flex-wrap gap-2">
               <p class="mt-1 text-lg font-medium">{{ album.title }}</p>
               {% if number_of_access|list_item:forloop.counter0 %}
@@ -97,7 +98,7 @@
         <!-- TITLE -->
         <div class="flex justify-between lg:justify-normal lg:gap-4">
           <div class="py-2 flex gap-6 items-center">
-            <h2 class="text-3xl font-bold tracking-tight">Albums shared with you</h2>
+            <h2 class="text-3xl font-bold tracking-tight">{% trans "Albums shared with you" %}</h2>
             <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M11 7C11 9.20914 9.20914 11 7 11C4.79086 11 3 9.20914 3 7C3 4.79086 4.79086 3 7 3C9.20914 3 11 4.79086 11 7ZM4.97715 7C4.97715 8.11719 5.88281 9.02284 7 9.02284C8.11719 9.02284 9.02284 8.11719 9.02284 7C9.02284 5.88281 8.11719 4.97716 7 4.97716C5.88281 4.97716 4.97715 5.88281 4.97715 7Z">
@@ -128,14 +129,14 @@
               {% else %}
               <div class="grid place-content-center h-full w-full object-cover object-center group-hover:opacity-75">
                 {% if album|is_empty %}
-                <p class="text-lg font-semibold tracking-wide">Empty album</p>
+                <p class="text-lg font-semibold tracking-wide">{% trans "Empty album" %}</p>
                 {% else %}
-                <p class="text-lg font-semibold tracking-wide">No cover photo</p>
+                <p class="text-lg font-semibold tracking-wide">{% trans "No cover photo" %}</p>
                 {% endif %}
               </div>
               {% endif %}
             </div>
-            <h3 class="mt-4 text-sm">{{ album.photo_count }} photos | uploaded by {% firstof album.creator.get_full_name album.creator.email %} </h3>
+            <h3 class="mt-4 text-sm">{{ album.photo_count }} photos | {% blocktrans count counter=album.photo_count %}uploaded by{% plural %}uploaded by{% endblocktrans %} {% firstof album.creator.get_full_name album.creator.email %} </h3>
             <p class="mt-1 text-lg font-medium">{{ album.title }}</p>
           </a>
           {% endfor %}

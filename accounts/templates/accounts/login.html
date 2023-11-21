@@ -1,14 +1,14 @@
 {% extends 'core/base.html' %}
 {% load static %}
 {% block title %}Login{% endblock title %}
-
+{% load i18n %}
 {% block body %}
 
 
 <section class="relative flex flex-wrap lg:h-screen lg:items-center">
   <div class="w-full px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
     <div class="mx-auto max-w-lg text-center">
-      <h1 class="text-2xl font-bold sm:text-3xl">Get started today!</h1>
+      <h1 class="text-2xl font-bold sm:text-3xl">{% trans "Get started today!" %}</h1>
 
       <p class="mt-4">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Et libero nulla
@@ -68,11 +68,11 @@
 
       <div class="flex items-center justify-between">
         <p class="text-sm ">
-          No account?
-          <a class="underline" href="{% url 'accounts:register' %}">Sign up</a>
+          {% trans "No account?" %}
+          <a class="underline" href="{% url 'accounts:register' %}">{% trans "Sign up" %}</a>
         </p>
 
-        <button type="submit" class="btn btn-primary mt-2">Sign in</button>
+        <button type="submit" class="btn btn-primary mt-2">{% trans "Sign in" %}</button>
       </div>
     </form>
   </div>

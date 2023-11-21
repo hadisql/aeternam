@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %}
 {% load thumbnail %}
+{% load i18n %}
 {% block title %}Add photos{% endblock title %}
 
 {% block  breadcrumbs %}
@@ -14,7 +15,7 @@
         <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="grid grid-cols-1 w-full max-w-xl mx-auto place-items-center">
-            <h1 class="py-6 text-3xl font-bold tracking-tight">Upload new photos:</h1>
+            <h1 class="py-6 text-3xl font-bold tracking-tight">{% trans "Upload new photos:" %}</h1>
             <div class="my-6 flex -space-x-8 overflow-hidden">
               {% for photo in album_photos %}
               {% thumbnail photo.image "600x600" crop="center" as im %}
@@ -23,7 +24,7 @@
               {% endfor %}
             </div>
             <div class="my-6 font-medium">
-              <a>{% if rest > 0 %}+ {{rest}} other{{rest|pluralize}}{% endif %}</a>
+              <a>{% if rest > 0 %}+ {{rest}} {% trans "other" %}{{rest|pluralize}}{% endif %}</a>
             </div>
 
             <input type="file" name="images" required multiple class="mt-6 block file-input file-inp file-input-bordered w-full max-w-xs">
@@ -35,9 +36,9 @@
                   <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
                   <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"></path>
                 </svg>
-                Back
+                {% trans "Back" %}
               </a>
-              <button class="btn btn-block btn-outline" type="submit">Save</button>
+              <button class="btn btn-block btn-outline" type="submit">{% trans "Save" %}</button>
             </div>
           </div>
         </form>

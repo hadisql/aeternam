@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %}
 {% load static %}
-
+{% load i18n %}
 {% load get_custom %}
 {% load static_image %}
 
@@ -59,7 +59,7 @@
             <div class="max-sm:text-center pt-6 pb-4 px-3 mt-28 sm:mt-0">
               <a href="{% url 'accounts:edit_account' user.pk %}" class="btn btn-sm " type="button">
                 <svg class="w-5 h-5 stroke-current"  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
-                settings
+                {% translate "settings" %}
               </a>
             </div>
           </div>
@@ -80,7 +80,9 @@
                       <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
                     </svg>
                     <div>
+                      {% blocktranslate %}
                       your connections are <span class="font-bold">hidden</span> from other users
+                      {% endblocktranslate %}
                     </div>
                   </div>
                 {% endif %}
@@ -111,10 +113,10 @@
                 <details class="collapse collapse-arrow grid h-auto py-4 card bg-base-300 rounded-box place-items-center">
 
                   <summary class="collapse-title text-center">
-                    {% if account.first_name %}{{account.first_name}}{% else %}{{account.email}}{% endif %} and you are connected as <span class="ml-1 badge">{{ users_relations_dict|get_relation:user }}</span>
+                    {% if account.first_name %}{{account.first_name}}{% else %}{{account.email}}{% endif %} {% trans "and you are connected as" %} <span class="ml-1 badge">{{ users_relations_dict|get_relation:user }}</span>
                   </summary>
                   <div class="collapse-content flex flex-wrap place-content-center gap-3">
-                    <p class="px-2">...not the right relation type ? you can change it</p>
+                    <p class="px-2">{% trans "...not the right relation type ? you can change it" %}</p>
                     <select name="change_relation" id="id_change_relation" class="select select-xs">
                         {% for choice in relation_change_form.change_relation.field.choices %}
                             <option value="{{ choice.0 }}" {% if choice.0 == relation_to_change.relation_type %}selected{% endif %}>{{ choice.1 }}</option>
@@ -135,7 +137,7 @@
                     <span>
                       <svg class="w-5 h-5 stroke-current stroke-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path id="Vector" d="M16 20V18M18 16H20M7.04996 11.293L5.63574 12.7072C4.07365 14.2693 4.07466 16.8016 5.63675 18.3637C7.19885 19.9258 9.7308 19.9262 11.2929 18.3641L12.7076 16.9497M6 8H4M8 4V6M11.293 7.05044L12.7072 5.63623C14.2693 4.07413 16.8016 4.07368 18.3637 5.63578C19.9258 7.19787 19.9254 9.7308 18.3633 11.2929L16.9492 12.7071" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                     </span>
-                    disconnect
+                    {% trans disconnect %}
                   </button>
                 </form>
               </div>

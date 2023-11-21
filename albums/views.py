@@ -20,7 +20,7 @@ from django.contrib.messages.views import SuccessMessageMixin # used in AlbumDel
 from .forms import AlbumAccessGrantForm, AlbumAccessRevokeForm
 from accounts.models import CustomUser, Relation, Notification
 
-from django.contrib.contenttypes.models import ContentType
+from django.utils.translation import gettext_lazy as _
 
 # ----------------------------
 # ------ CREATE ALBUM --------
@@ -190,7 +190,7 @@ class AlbumDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMix
     fields = '__all__'
     success_url = reverse_lazy('albums:albums_view')
     context_object_name = 'album'
-    success_message = "Album was deleted successfully"
+    success_message = _("Album was deleted successfully")
 
     def test_func(self):
         album_id = self.kwargs['pk']

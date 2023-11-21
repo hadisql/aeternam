@@ -100,14 +100,14 @@ class Relation(models.Model):
     user_sending = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='relation_sender')
 
     RELATION_CHOICES =(
-        ("UNDEFINED", "UNDEFINED"),
-        ("SIBLING", "SIBLING"),
-        ("PARENT/CHILDREN", "PARENT/CHILDREN"),
-        ("COUSIN", "COUSIN"),
-        ("AUNT-UNCLE/NEPHEW-NIECE", "AUNT-UNCLE/NEPHEW-NIECE"),
-        ("GRANDPARENT/GRANDCHILDREN", "GRANDPARENT/GRANDCHILDREN"),
-        ("BROTHER/SISTER IN LAW", "BROTHER/SISTER IN LAW"),
-        ("FRIEND", "FRIEND"),
+        ("UNDEFINED", _("UNDEFINED")),
+        ("SIBLING", _("SIBLING")),
+        ("PARENT/CHILDREN", _("PARENT/CHILDREN")),
+        ("COUSIN", _("COUSIN")),
+        ("AUNT-UNCLE/NEPHEW-NIECE", _("AUNT-UNCLE/NEPHEW-NIECE")),
+        ("GRANDPARENT/GRANDCHILDREN", _("GRANDPARENT/GRANDCHILDREN")),
+        ("BROTHER/SISTER IN LAW", _("BROTHER/SISTER IN LAW")),
+        ("FRIEND", _("FRIEND")),
         )
 
     relation_type = models.CharField(max_length=50, choices=RELATION_CHOICES, default="UNDEFINED")
@@ -133,7 +133,7 @@ class RelationRequest(models.Model):
 
     RELATION_CHOICES = Relation.RELATION_CHOICES
 
-    relation_type = models.CharField(max_length=50, choices=RELATION_CHOICES, default="UNDEFINED")
+    relation_type = models.CharField(max_length=50, choices=RELATION_CHOICES, default=_("UNDEFINED"))
 
     class Meta:
         # Unique_together constraint to ensure unique pairs of users
