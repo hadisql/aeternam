@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-21 20:29+0000\n"
+"POT-Creation-Date: 2023-11-21 20:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,6 +111,11 @@ msgstr "et vous êtes connectés en tant que"
 msgid "...not the right relation type ? you can change it"
 msgstr "...pas le bon type de relation ? vous pouvez le modifier"
 
+#: accounts/templates/accounts/account.html:140
+#| msgid "Connected"
+msgid "disconnect"
+msgstr "Déconnecter la relation"
+
 #: accounts/templates/accounts/account_update.html:59
 msgid "Date of Birth"
 msgstr "Date de naissance"
@@ -176,6 +181,11 @@ msgstr "Qui est"
 #: accounts/templates/partials/account_connection_buttons.html:28
 msgid "to you ?"
 msgstr "pour vous ?"
+
+#: accounts/templates/partials/account_connection_buttons.html:44
+#| msgid "Connected"
+msgid "Connect"
+msgstr "Se connecter"
 
 #: accounts/templates/partials/account_connections_list.html:7
 msgid "Connected accounts"
@@ -611,7 +621,6 @@ msgid "Replace this photo :"
 msgstr "Remplacer cette photo :"
 
 #: photos/templates/photos/photo_edit.html:94
-#| msgid "Replace this photo :"
 msgid "Choose who can access this photo :"
 msgstr "Choisissez qui peut accéder à cette photo:"
 

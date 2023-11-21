@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-21 20:29+0000\n"
+"POT-Creation-Date: 2023-11-21 20:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -107,6 +107,10 @@ msgstr ""
 msgid "...not the right relation type ? you can change it"
 msgstr ""
 
+#: accounts/templates/accounts/account.html:140
+msgid "disconnect"
+msgstr ""
+
 #: accounts/templates/accounts/account_update.html:59
 msgid "Date of Birth"
 msgstr ""
@@ -171,6 +175,10 @@ msgstr ""
 
 #: accounts/templates/partials/account_connection_buttons.html:28
 msgid "to you ?"
+msgstr ""
+
+#: accounts/templates/partials/account_connection_buttons.html:44
+msgid "Connect"
 msgstr ""
 
 #: accounts/templates/partials/account_connections_list.html:7
