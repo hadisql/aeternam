@@ -223,6 +223,9 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                 checkbox_name = f'photoaccess_user_{user.id}'
                 if checkbox_name in self.request.POST:
                     if not PhotoAccess.objects.filter(photo=photo, user=user).exists():
+                        if not AlbumAccess.objects.filter(user=user, album=photo.album):
+                            AlbumAccess.objects.create(user=user, album=photo.album)
+                            print(f'created album access for user {user}')
                         PhotoAccess.objects.create(photo=photo, user=user)
                         messages.success(request, _('{} has now access to your photo').format(user.get_full_name() or user.email))
                 else: # delete PhotoAccess if it exist for that user with unchecked checkbox
@@ -230,7 +233,12 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                     if photo_access_to_delete:
                         photo_access_to_delete.delete()
                         messages.info(request, _('{} photo access has been revoked').format(user.get_full_name() or user.email))
-
+                    # in case we revoke the last photo to the album, make sure the albumaccess is deleted :
+                    is_there_any_photo = PhotoAccess.objects.filter(user=user, photo__album=photo.album)
+                    if not is_there_any_photo:
+                        print(f'{is_there_any_photo} there is no photo left in this album')
+                        albumaccess_to_delete = AlbumAccess.objects.filter(album=photo.album, user=user)
+                        albumaccess_to_delete.delete()
 
         return self.form_valid(photo_update_form)
 

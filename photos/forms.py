@@ -49,10 +49,10 @@ class PhotoUpdateForm(forms.Form):
 class PhotoDescriptionForm(forms.Form):
     description = forms.CharField(
         label="",
-        widget=forms.Textarea(attrs={'class':'textarea textarea-bordered',
+        widget=forms.Textarea(attrs={'class':'block px-2.5 pb-2.5 pt-4 bg-base-200 w-full text-sm rounded-lg border-1 border-base-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer',
                                      'rows':2,
                                      'id':'photo_description',
-                                     'placeholder':_('Add a photo description..'),
+                                     'placeholder':'',
                                      'x-data':'{ resize () { $el.style.height = "0px"; $el.style.height = $el.scrollHeight + "px" } }',
                                      'x-init':'resize()',
                                      '@input':'resize()',

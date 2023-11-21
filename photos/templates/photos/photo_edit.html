@@ -49,8 +49,9 @@
       </div>
 
       <div class="relative grid grid-cols-1 mb-6 lg:mb-10">
-        <label for="description" class="absolute text-xs font-medium left-2.5 -top-2 z-10 bg-base-100 px-2">{% trans "Photo description" %}</label>
         {{form_description_form}}
+        <label for="photo_description" class="absolute text-sm bg-base-200 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">{% trans "Photo description" %}</label>
+
       </div>
       <div class="flex flex-col w-full lg:flex-row">
         <div class="grid flex-grow h-24 lg:h-32 card bg-base-300 rounded-box place-items-center">
@@ -90,25 +91,52 @@
 
       <!-- Photo access -->
 
-      <div class="divider"></div>
+      <div class="divider">{% trans "Choose who can access this photo :" %}</div>
 
-      <div class="table w-full">
-        <div class="table-header-group">
-          <div class="table-row">
-            <div class="table-cell text-left">{% trans "Photo access" %}</div>
-            <div class="table-cell text-left">{% trans "Full Name" %}</div>
-          </div>
-        </div>
-        <div class="table-row-group">
-          {% for user in related_users %}
-            <div class="table-row">
-              <div class="table-cell">
-                <input type="checkbox" {% if user in users_with_photo_access %}checked{% endif %} name="photoaccess_user_{{user.id}}">
-              </div>
-              <div class="table-cell">{% firstof user.get_full_name user.email %}</div>
-            </div>
-          {% endfor %}
-        </div>
+      <div class="overflow-x-auto rounded-lg">
+        <table class="table">
+          <thead>
+            <tr class="bg-base-300">
+              <th class="text-center">{% trans "Photo access" %}</th>
+              <th class="text-left">{% trans "Full Name" %}</th>
+            </tr>
+          </thead>
+          <tbody class="bg-base-200">
+            {% for user in related_users %}
+              <tr class="text-center">
+                <th >
+                  <input type="checkbox" class="checkbox checkbox-success checkbox-sm" {% if user in users_with_photo_access %}checked{% endif %} name="photoaccess_user_{{user.id}}" >
+                </th>
+                <td>
+                  <a href="{% url 'accounts:account_view' user.pk %}" class="cursor-pointer">
+                    <div class="flex items-center space-x-3">
+                      <div class="avatar">
+                        <div class="mask mask-squircle w-12 h-12">
+                          {% if user.profile_picture %}
+                          {% thumbnail user.profile_picture "50x50" crop="center" as im %}
+                          <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+                            alt="{% firstof user.get_full_name user.email %}'s profile pic"
+                            class="h-full w-full object-cover object-center group-hover:opacity-75">
+                          {% endthumbnail %}
+                          {% else %}
+                          <img
+                            src="https://api.dicebear.com/6.x/initials/svg?seed={% firstof user.get_full_name user.email %}"
+                            width="50" height="50" alt=""
+                            class="h-full w-full object-cover object-center group-hover:opacity-75">
+                          {% endif %}
+                        </div>
+                      </div>
+                      <div>
+                        <div class="font-bold">{% firstof user.get_full_name user.email %}</div>
+                        <p class="text-sm opacity-50 text-ellipsis">{{user.email|truncatechars:10}}</p>
+                      </div>
+                    </div>
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
 
       {% if messages %}
@@ -126,9 +154,8 @@
         </div>
       {% endif %}
 
-      <hr>
       <!-- Back + Save changes -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 mt-6 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 mt-10 sm:mt-12 gap-4">
         <div class="flex">
           <a href="{% url 'photos:photo_detail' photo.pk %}" class="btn btn-block btn-neutral">
             <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
