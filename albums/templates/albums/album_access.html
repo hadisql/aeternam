@@ -4,6 +4,7 @@
 
 {% load thumbnail %}
 {% load static %}
+{% load i18n %}
 
 {% block  breadcrumbs %}
   {% include 'partials/breadcrumb_settings.html' %}
@@ -29,8 +30,8 @@
     <div class="container mx-auto px-4">
       <div class="relative flex flex-col min-w-0 break-words bg-base-100 w-full mb-6 shadow-xl rounded-lg -mt-64">
         <div>
-          <h1 class="sr-only">Album settings</h1>
-          <h1 class="mt-10 py-8 text-3xl font-bold tracking-tight text-center">Album settings</h1>
+          <h1 class="sr-only">{% trans "Album settings" %}</h1>
+          <h1 class="mt-10 py-8 text-3xl font-bold tracking-tight text-center">{% trans "Album settings" %}</h1>
         </div>
 
         <form method="POST" id="access_form">
@@ -38,7 +39,7 @@
           <div class="grid grid-cols-1 p-6 lg:p-12 mx-auto gap-x-4 max-w-7xl ">
             <div class=" mt-4 block space-y-4 w-full mx-auto max-w-lg bg-base-100 ">
               <div class="flex gap-4 prose">
-                <h2 class="mb-4">Edit your album infos</h2>
+                <h2 class="mb-4">{% trans "Edit your album infos" %}</h2>
                 <svg viewBox="0 0 24 24" class="fill-transparent stroke-current stroke-2 h-8 w-8" xmlns="http://www.w3.org/2000/svg">
                   <path d="M3 7C3 4.79086 4.79086 3 7 3H17C19.2091 3 21 4.79086 21 7V17C21 19.2091 19.2091 21 17 21H7C4.79086 21 3 19.2091 3 17V7Z"></path>
                   <path d="M16.2739 11.1377C16.6644 10.7472 16.6644 10.114 16.2739 9.7235L14.4823 7.9319C14.0918 7.54137 13.4586 7.54138 13.0681 7.9319L8.96106 12.0389L8.34768 15.7477C8.3365 15.8154 8.39516 15.874 8.4628 15.8627L12.1669 15.2448L16.2739 11.1377Z"></path>
@@ -53,7 +54,7 @@
 
               <button id="btn-access-form" form="access_form" type="submit" name="album_form" class="hidden gap-4 btn btn-outline sm:col-span-2 md:col-span-1 order-2 sm:order-3 md:order-2">
                 <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M18.1716 1C18.702 1 19.2107 1.21071 19.5858 1.58579L22.4142 4.41421C22.7893 4.78929 23 5.29799 23 5.82843V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H18.1716ZM4 3C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21L5 21L5 15C5 13.3431 6.34315 12 8 12L16 12C17.6569 12 19 13.3431 19 15V21H20C20.5523 21 21 20.5523 21 20V6.82843C21 6.29799 20.7893 5.78929 20.4142 5.41421L18.5858 3.58579C18.2107 3.21071 17.702 3 17.1716 3H17V5C17 6.65685 15.6569 8 14 8H10C8.34315 8 7 6.65685 7 5V3H4ZM17 21V15C17 14.4477 16.5523 14 16 14L8 14C7.44772 14 7 14.4477 7 15L7 21L17 21ZM9 3H15V5C15 5.55228 14.5523 6 14 6H10C9.44772 6 9 5.55228 9 5V3Z" fill="currentColor"></path></svg>
-                Save changes
+                {% trans "Save changes" %}
               </button>
             </div>
 
@@ -62,14 +63,14 @@
             <div class=" my-8 mx-auto max-w-lg w-full bg-base-100 ">
               <a name="access_control"></a>
               <div class="flex gap-4 prose">
-                <h2>Control your privacy</h2>
+                <h2>{% trans "Control your privacy" %}</h2>
                 <svg class="w-8 h-8 stroke-current stroke-2 fill-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round"
                     d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                 </svg>
               </div>
               <div class="prose">
-                <h3 class="mb-4">Decide who can access your album :</h3>
+                <h3 class="mb-4">{% trans "Decide who can access your album :" %}</h3>
               </div>
 
               <input class="hidden" id="album_id" value="{{album.id}}"/> {# used in the 'modal_photo_access.js' to fetch photo_access_manager with album.id info #}
@@ -78,9 +79,11 @@
                 <table class="table">
                   <thead>
                     <tr class="bg-base-300 text-center">
+                      {% blocktranslate %}
                       <th class="px-2"><div class="flex flex-wrap place-content-center gap-1"><p>Album</p><p>access</p></div></th>
                       <th class="px-2"><div class="flex flex-wrap place-content-center gap-1"><p>Photo</p><p>access</p></div></th>
                       <th class="px-2">User</th>
+                      {% endblocktranslate %}
                       {#<th>Relation</th>#}
                     </tr>
                   </thead>
@@ -89,17 +92,17 @@
                       {% firstof 'success' as toggle_color %}
                       {% if allowed_photos.count == photo_count %}
                         {% firstof 'green' as color_class %}
-                        {% firstof 'full' as innertext %}
-                        {% firstof 'has <span class="italic underline decoration-4 decoration-green-600">full</span> access  to your album :' as modaltext %}
+                        {% trans 'full' as innertext %}
+                        {% trans 'has <span class="italic underline decoration-4 decoration-green-600">full</span> access  to your album :' as modaltext %}
                       {% elif allowed_photos.count == 0 %}
                         {% firstof 'gray' as color_class %}
-                        {% firstof 'none' as innertext %}
-                        {% firstof 'has <span class="italic underline decoration-4">no access</span> to your album and its photos.' as modaltext %}
+                        {% trans 'none' as innertext %}
+                        {% trans 'has <span class="italic underline decoration-4">no access</span> to your album and its photos.' as modaltext %}
                       {% else %}
                         {% firstof 'amber' as color_class %}
-                        {% firstof 'partial' as innertext %}
+                        {% trans 'partial' as innertext %}
                         {% firstof 'warning' as toggle_color %}
-                        {% firstof 'has <span class="italic underline decoration-4 decoration-amber-600 underline-offset-4">partially</span> access to your album :' as modaltext %}
+                        {% trans 'has <span class="italic underline decoration-4 decoration-amber-600 underline-offset-4">partially</span> access to your album :' as modaltext %}
                       {% endif %}
                       <tr class="bg-base-200">
                         <th class="px-2 text-center">
@@ -137,25 +140,6 @@
                           </a>
                         </td>
                       </tr>
-                      {# ACCESS DETAIL (UNFINISHED) #}
-                      {% comment %}
-                      <!-- ACCESS DETAIL -->
-                      <tr class="hidden bg-base-200">
-                        <td class="py-0 {% if forloop.last %}pb-4{% endif %}" colspan="2">
-                          <div class="grid grid-rows-2 gap-2">
-                            <div class="flex gap-2 tooltip tooltip-top" data-tip="give access to all photos">
-                              <input type="checkbox" class="toggle toggle-xs" checked />
-                              <p class="text-xs">all photos access</p>
-                            </div>
-                            <div class="flex gap-2 tooltip tooltip-right" data-tip="select manually from photo settings">
-                              <input type="checkbox" class="toggle toggle-xs" />
-                              <p class="text-xs">partial access</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td></td>
-                      </tr>
-                      {% endcomment %}
                     {% endfor %}
                   </tbody>
                 </table>
@@ -201,7 +185,7 @@
                     d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z">
                   </path>
                 </svg>
-                Back
+                {% trans "Back" %}
               </a>
 
               <a href="{% url 'albums:album_delete' album.pk %}" class="btn btn-outline btn-error">
@@ -210,7 +194,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round"
                     d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                 </svg>
-                Delete album
+                {% trans "Delete album" %}
               </a>
             </div>
           </div>
@@ -224,6 +208,10 @@
 {% endblock body %}
 
 {% block javascript %}
+
+{# the following allows the ajax call to fetch the correct url with the correct language prefix #}
+  <script id="base-url" data-url="{% url 'core:photo_access_manager' %}"></script>
+
   <script src="{% static 'albums/js/modal_photo_access.js' %}"></script>
   <script>
     function showSaveButton() {

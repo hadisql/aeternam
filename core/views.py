@@ -9,6 +9,7 @@ from photos.models import Photo, PhotoAccess
 from albums.models import Album, AlbumAccess
 
 from django.contrib import messages
+from django.utils.translation import gettext_lazy as _
 
 def index(request):
 
@@ -58,7 +59,7 @@ def photo_access_manager(request):
             p_to_remove.delete()
 
         if len(access_to_add) and len(access_to_remove):
-            messages.success(request, f"You gave {user.get_full_name() or user.email} access to {len(access_to_add)} and revoked their access to {len(access_to_remove)}")
+            messages.success(request, _("You gave {username} access to {add} and revoked their access to {revoke}").format(username=(user.get_full_name() or user.email), add=len(access_to_add), revoke=len(access_to_remove)) )
             create_notification(user=user, user_from=request.user, content_type=ContentType.objects.get_for_model(Album), object_id=album.id, message=f"{request.user.get_full_name() or request.user.email} gave you access to {len(access_to_add)} photos", title="Photo access")
             # we change the default 'identifier' in order for it to contain the photos information
             notif_to_update = Notification.objects.last()
@@ -69,13 +70,13 @@ def photo_access_manager(request):
             if notif_to_delete:
                 notif_to_delete.delete()
         elif len(access_to_add) and not len(access_to_remove):
-            messages.success(request, f"You gave {user.get_full_name() or user.email} access to {len(access_to_add)} photos")
+            messages.success(request, _("You gave {username} access to {number} photos").format(username=(user.get_full_name() or user.email), number=len(access_to_add)) )
             create_notification(user=user, user_from=request.user, content_type=ContentType.objects.get_for_model(Album), object_id=album.id, message=f"{request.user.get_full_name() or request.user.email} gave you access to {len(access_to_add)} photos", title="Photo access")
             notif_to_update = Notification.objects.last()
             notif_to_update.identifier += '-photos:' + '+'.join(access_to_add)
             notif_to_update.save()
         else:
-            message = f"You revoked {user.get_full_name() or user.email} their access to {len(access_to_remove)} photos"
+            message = _("You revoked {username} their access to {number} photos").format(username=(user.get_full_name() or user.email), number=len(access_to_remove))
             messages.success(request, message)
             # we check if the photos revoked have a notification associated with them
             notif_to_delete = Notification.objects.filter(identifier=f"album{album_id}-{user.id}-photos:{'+'.join(access_to_remove)}")
@@ -87,7 +88,7 @@ def photo_access_manager(request):
             albumaccess_to_delete = AlbumAccess.objects.filter(album=album_id, user=user)
             albumaccess_to_delete.delete()
             print(f'deleting album access for photo {photo_id} ')
-            messages.success(request, f'{user.get_full_name() or user.email} won\'t have access to your album anymore')
+            messages.success(request, _('{} won\'t have access to your album anymore').format(user.get_full_name() or user.email))
             # if their was photoaccess notifications for this album, delete them
             notif_to_delete = Notification.objects.filter(identifier__contains=f"album{album_id}-{user.id}")
             if notif_to_delete:
@@ -96,7 +97,7 @@ def photo_access_manager(request):
             # giving access to photos -> creates the album access if it didn't exist
             AlbumAccess.objects.create(album=album, user=user)
             print(f'creating album access for photo {photo_id} ')
-            messages.success(request, f'{user.get_full_name() or user.email} can now access your album ({PhotoAccess.objects.filter(user=user, photo__album=album_id).count()} photos)')
+            messages.success(request, _('{username} can now access your album ({number} photos)').format(username=(user.get_full_name() or user.email), number=PhotoAccess.objects.filter(user=user, photo__album=album_id).count()))
 
         return JsonResponse({'message': 'Success'}, status=200)
     else:

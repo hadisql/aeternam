@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from .models import CustomUser, RelationRequest, Relation
 
@@ -39,9 +40,9 @@ class CustomUserChangeForm(UserChangeForm):
         input_class = 'w-full input input-bordered text-sm'
         textarea_class = 'w-full textarea textarea-bordered p-3 text-sm'
         widgets = {
-            'first_name': forms.TextInput(attrs={'class': input_class, 'placeholder':'First Name', 'id':'first_name'}),
-            'last_name': forms.TextInput(attrs={'class': input_class, 'placeholder':'Last Name', 'id':'last_name'}),
-            'email': forms.EmailInput(attrs={'class':input_class,'placeholder':'Email Adress', 'id':'email'}),
+            'first_name': forms.TextInput(attrs={'class': input_class, 'placeholder':_('First Name'), 'id':'first_name'}),
+            'last_name': forms.TextInput(attrs={'class': input_class, 'placeholder':_('Last Name'), 'id':'last_name'}),
+            'email': forms.EmailInput(attrs={'class':input_class,'placeholder':_('Email Adress'), 'id':'email'}),
             'date_of_birth': forms.DateInput(attrs={'class': input_class, 'id':'date_of_birth','type':'date'}),
             'profile_picture': CustomProfilePicWidget(),
             'hide_connections': forms.CheckboxInput(attrs={'class':'toggle toggle-error'})
@@ -65,7 +66,7 @@ class RelationAcceptForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Set the initial value for the relation_type field
-        self.fields['relation_type'].initial = 'UNDEFINED'
+        self.fields['relation_type'].initial = _('UNDEFINED')
 
 class RelationRequestUndoForm(forms.Form):
     pass

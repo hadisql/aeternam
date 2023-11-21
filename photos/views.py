@@ -17,7 +17,7 @@ from accounts.models import CustomUser, Relation
 
 from comments_likes.models import Comment
 
-from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
 
 import os
 from PIL import Image, ImageOps
@@ -88,15 +88,15 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
                 PhotoAccess.objects.create(photo=photo, user=self.request.user)
                 total_photos = Photo.objects.filter(uploaded_by=self.request.user) # refresh the number for each iteration
                 if len(total_photos) == int(.8 * self.request.user.photo_limit):
-                    messages.warning(self.request, f"You've reached 80% of your maximum photo upload limit")
+                    messages.warning(self.request, _("You've reached 80% of your maximum photo upload limit"))
 
             if len(images)<=1:
                 # if you add 1 photo to an empty album -> the list length is 0 because of the default_photo pop(0) treatment
-                messages.success(self.request, '1 photo was uploaded successfully')
+                messages.success(self.request, _('1 photo was uploaded successfully'))
             else:
-                messages.success(self.request, f'{len(images)} photos were uploaded successfully')
+                messages.success(self.request, _('{} photos were uploaded successfully').format(len(images)))
         else:
-            messages.error(self.request, f"You have reached your maximum amount of photos to upload: {self.request.user.photo_limit} photos")
+            messages.error(self.request, _("You have reached your maximum amount of photos to upload: {} photos").format(self.request.user.photo_limit))
 
         return super().form_valid(form)
 
@@ -224,12 +224,12 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                 if checkbox_name in self.request.POST:
                     if not PhotoAccess.objects.filter(photo=photo, user=user).exists():
                         PhotoAccess.objects.create(photo=photo, user=user)
-                        messages.success(request, f'{user.get_full_name() or user.email} has now access to your photo')
+                        messages.success(request, _('{} has now access to your photo').format(user.get_full_name() or user.email))
                 else: # delete PhotoAccess if it exist for that user with unchecked checkbox
                     photo_access_to_delete = PhotoAccess.objects.filter(photo=photo, user=user)
                     if photo_access_to_delete:
                         photo_access_to_delete.delete()
-                        messages.info(request, f'{user.get_full_name() or user.email} photo access has been revoked')
+                        messages.info(request, _('{} photo access has been revoked').format(user.get_full_name() or user.email))
 
 
         return self.form_valid(photo_update_form)

@@ -79,7 +79,7 @@ coverage.xml
 cover/
 
 # Translations
-*.mo
+#*.mo
 *.pot
 
 # Flask stuff:

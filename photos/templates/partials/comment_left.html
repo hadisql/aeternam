@@ -1,5 +1,6 @@
 {% load thumbnail %}
 {% load up_to %}
+{% load i18n %}
 <div class="flex items-center w-full bg-base-100 ">
   <div class="bg-base-100 px-4 py-2 antialiased flex max-w-lg">
     {% if comment.author.profile_picture %}
@@ -19,7 +20,19 @@
         </div>
       </div>
       <div class="text-sm ml-4 mt-0.5 text-gray-500 dark:text-gray-400">
-        {% firstof comment.updated|timesince|up_to:',' comment.created|timesince|up_to:',' %} ago{% if comment.updated|date != comment.created|date %} (edited){% endif %}
+        {% firstof comment.updated|timesince|up_to:',' comment.created|timesince|up_to:',' as timing %}
+
+        {% if comment.updated|date != comment.created|date %}
+          {% blocktrans %}
+            {{timing}} ago (edited)
+          {% endblocktrans %}
+        {% else %}
+          {% blocktrans %}
+            {{timing}} ago
+          {% endblocktrans %}
+        {% endif %}
+
+
       </div>
         {% if comment in comments_from_user %}
         <div class="button-pair float-right -mt-10 -mr-6 inline-flex items-center ">

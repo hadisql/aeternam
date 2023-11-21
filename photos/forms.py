@@ -3,6 +3,8 @@ from django import forms
 from comments_likes.models import Comment
 from .models import Photo
 
+from django.utils.translation import gettext_lazy as _
+
 class PhotoForm(forms.Form):
     pass
 
@@ -12,7 +14,7 @@ class CommentForm(forms.ModelForm):
         fields = ['body']
         widgets = {
             'body': forms.Textarea(attrs={'class':'textarea textarea-sm textarea-bordered',
-                                        'placeholder': 'Send a comment..','rows':2,
+                                        'placeholder': _('Send a comment..'),'rows':2,
                                         'x-data':'{ resize () { $el.style.height = "0px"; $el.style.height = $el.scrollHeight + "px" } }',
                                         'x-init':'resize()',
                                         '@input':'resize()',
@@ -50,7 +52,7 @@ class PhotoDescriptionForm(forms.Form):
         widget=forms.Textarea(attrs={'class':'textarea textarea-bordered',
                                      'rows':2,
                                      'id':'photo_description',
-                                     'placeholder':'Add a photo description..',
+                                     'placeholder':_('Add a photo description..'),
                                      'x-data':'{ resize () { $el.style.height = "0px"; $el.style.height = $el.scrollHeight + "px" } }',
                                      'x-init':'resize()',
                                      '@input':'resize()',

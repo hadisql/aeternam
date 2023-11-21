@@ -1,4 +1,5 @@
 {% load get_notif_name get_url_mapping get_notif_param up_to from core_custom_filters %}
+{% load i18n %}
 
 {% for notification in all_notifications %}
   {% with notification_content_type=notification.content_type.model %}
@@ -13,7 +14,7 @@
               </svg>
           </button>
           <button type="button" class="hidden confirm-delete-notif  ml-auto -mx-1.5 -my-1.5 bg-base-100 justify-center items-center flex-shrink-0 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 inline-flex h-8 w-8" aria-label="Confirm Delete">
-              <span class="sr-only">Confirm Delete</span>
+              <span class="sr-only">{% trans "Confirm Delete" %}</span>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
                 <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd" />
               </svg>
@@ -50,7 +51,7 @@
             <div class="ml-3 text-sm font-normal">
                 <div class="text-sm font-semibold">{% firstof notification.user_from.get_full_name notification.user_from.email %}</div>
                 <div class="text-sm font-normal">{% firstof notification.message|truncatechars:60 %}</div>
-                <span class="text-xs font-medium text-blue-600 dark:text-blue-500">{{notification.created_at|timesince|up_to:','}} ago</span>
+                <span class="text-xs font-medium text-blue-600 dark:text-blue-500">{% blocktrans with notification.created_at|timesince|up_to:',' as timing%}{{timing}} ago {% endblocktrans %}</span>
             </div>
         </a>
       </div>

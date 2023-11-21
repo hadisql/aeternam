@@ -1,25 +1,22 @@
 {% extends 'core/base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Welcome{% endblock %}
+{% block title %}{% trans "Welcome" %}{% endblock %}
 
 {% block body %}
-<div class="hero min-h-screen" style="background-image: url(https://images.unsplash.com/photo-1528569937393-ee892b976859?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80);">
+<div class="hero min-h-screen -mt-8 sm:-mt-10" style="background-image: url(https://images.unsplash.com/photo-1528569937393-ee892b976859?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80);">
   <div class="hero-overlay bg-opacity-60"></div>
   <div class="hero-content text-center text-neutral-content">
     <div class="max-w-md">
-      <h1 class="mb-5 text-5xl font-bold">Precious moments</h1>
+      <h1 class="mb-5 text-5xl font-bold">{% trans "Precious moments" %}</h1>
       <p class="mb-5">
+        {% blocktrans %}
         A site dedicated to sharing old family photos. Dust off those old albums and bring them back to life! <br>
         This is a first version of the site: it's experimental and under development.Please bear with the author for any bugs 😇
+        {% endblocktrans %}
       </p>
-      <hr>
-      <br>
-      <p class="mb-5">
-        Un site dédié au partage de photos de famille laissées au placard. Dépoussierez tous ces vieux albums et redonnez-leur vie ! <br>
-        C'est une première version du site: elle est expérimentale et en cours de développement. Soyez indulgent envers son auteur pour d'éventuels bugs  😇
-      </p>
-      <a href="{% url 'accounts:login' %}" class="btn btn-accent">Get Started</a>
+      <a href="{% url 'accounts:login' %}" class="btn btn-accent">{% trans "Get Started" %}</a>
     </div>
   </div>
 </div>
