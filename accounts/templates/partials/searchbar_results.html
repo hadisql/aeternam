@@ -1,3 +1,5 @@
+{% load i18n %}
+
 {% if searched_users != "No results" %}
 <div class="overflow-x-auto" >
   <table class="table">
@@ -29,6 +31,6 @@
     {% endfor %}
   </table>
 {% else %}
-  <p>No results</p>
+  <p>{% trans "No results" %}</p>
 {% endif %}
 </div>
