@@ -93,51 +93,15 @@
 
       <div class="divider">{% trans "Choose who can access this photo :" %}</div>
 
-      <div class="overflow-x-auto rounded-lg">
-        <table class="table">
-          <thead>
-            <tr class="bg-base-300">
-              <th class="text-center">{% trans "Photo access" %}</th>
-              <th class="text-left">{% trans "Full Name" %}</th>
-            </tr>
-          </thead>
-          <tbody class="bg-base-200">
-            {% for user in related_users %}
-              <tr class="text-center">
-                <th >
-                  <input type="checkbox" class="checkbox checkbox-success checkbox-sm" {% if user in users_with_photo_access %}checked{% endif %} name="photoaccess_user_{{user.id}}" >
-                </th>
-                <td>
-                  <a href="{% url 'accounts:account_view' user.pk %}" class="cursor-pointer">
-                    <div class="flex items-center space-x-3">
-                      <div class="avatar">
-                        <div class="mask mask-squircle w-12 h-12">
-                          {% if user.profile_picture %}
-                          {% thumbnail user.profile_picture "50x50" crop="center" as im %}
-                          <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
-                            alt="{% firstof user.get_full_name user.email %}'s profile pic"
-                            class="h-full w-full object-cover object-center group-hover:opacity-75">
-                          {% endthumbnail %}
-                          {% else %}
-                          <img
-                            src="https://api.dicebear.com/6.x/initials/svg?seed={% firstof user.get_full_name user.email %}"
-                            width="50" height="50" alt=""
-                            class="h-full w-full object-cover object-center group-hover:opacity-75">
-                          {% endif %}
-                        </div>
-                      </div>
-                      <div>
-                        <div class="font-bold">{% firstof user.get_full_name user.email %}</div>
-                        <p class="text-sm opacity-50 text-ellipsis">{{user.email|truncatechars:10}}</p>
-                      </div>
-                    </div>
-                  </a>
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+      {% if request.user != photo.album.creator and users_with_album_access %}
+        {% include 'partials/photoaccess_relations.html' with related_users_to_show=users_with_album_access %}
+      {% else %}
+        {% if related_users %}
+          {% include 'partials/photoaccess_relations.html' with related_users_to_show=related_users %}
+       {% endif %}
+      {% endif %}
+
+
 
       {% if messages %}
         <div class="toast">
