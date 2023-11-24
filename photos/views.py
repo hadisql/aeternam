@@ -77,8 +77,11 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
                 first_image = images.pop(0)
                 photo = Photo(album=album, image=first_image, is_default=True, uploaded_by=self.request.user)
                 photo.save() #save the instance, applying resize from model save method
-                # when uploading a photo, the uploading user gets access to this photo :
+                # when uploading a photo, the uploading user gets access to this photo:
                 PhotoAccess.objects.create(photo=photo, user=self.request.user)
+                # as well as the album owner if different
+                if self.request.user != album.creator:
+                    PhotoAccess.objects.create(photo=photo, user=album.creator)
 
             for image in images:
                 total_photos = Photo.objects.filter(uploaded_by=self.request.user) # refresh the number for each iteration
@@ -86,6 +89,9 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
                 photo.save() #save the instance, applying resize from model save method
                 # when uploading a photo, the uploading user gets access to this photo :
                 PhotoAccess.objects.create(photo=photo, user=self.request.user)
+                # as well as the album owner if different
+                if self.request.user != album.creator:
+                    PhotoAccess.objects.create(photo=photo, user=album.creator)
                 total_photos = Photo.objects.filter(uploaded_by=self.request.user) # refresh the number for each iteration
                 if len(total_photos) == int(.8 * self.request.user.photo_limit):
                     messages.warning(self.request, _("You've reached 80% of your maximum photo upload limit"))
