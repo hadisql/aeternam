@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-21 20:42+0000\n"
+"POT-Creation-Date: 2023-11-25 13:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -112,7 +112,6 @@ msgid "...not the right relation type ? you can change it"
 msgstr "...pas le bon type de relation ? vous pouvez le modifier"
 
 #: accounts/templates/accounts/account.html:140
-#| msgid "Connected"
 msgid "disconnect"
 msgstr "Déconnecter la relation"
 
@@ -130,13 +129,13 @@ msgstr "masquer vos connexions sur votre profile"
 #: albums/templates/albums/album_form.html:40
 #: photos/templates/photos/add_photos_to_album.html:39
 #: photos/templates/photos/photo_detail.html:87
-#: photos/templates/photos/photo_edit.html:165
+#: photos/templates/photos/photo_edit.html:129
 msgid "Back"
 msgstr "Retour"
 
 #: accounts/templates/accounts/account_update.html:97
 #: albums/templates/albums/album_access.html:57
-#: photos/templates/photos/photo_edit.html:170
+#: photos/templates/photos/photo_edit.html:134
 msgid "Save changes"
 msgstr "Sauvegarder"
 
@@ -183,7 +182,6 @@ msgid "to you ?"
 msgstr "pour vous ?"
 
 #: accounts/templates/partials/account_connection_buttons.html:44
-#| msgid "Connected"
 msgid "Connect"
 msgstr "Se connecter"
 
@@ -444,9 +442,47 @@ msgstr "je choisis"
 msgid "Album was deleted successfully"
 msgstr "L'album a été supprimé avec succès"
 
+#: core/templates/core/about.html:5 core/templates/core/about.html:12
 #: core/templates/core/base.html:41
-msgid "About me"
+#| msgid "About me"
+msgid "About"
 msgstr "À propos"
+
+#: core/templates/core/about.html:16
+msgid ""
+"\n"
+"        Lorem ipsum dolor, sit amet consectetur adipisicing elit. "
+"Voluptatibus sequi voluptatum fugit doloribus debitis vel natus quos? Aut "
+"tempore hic vel autem quidem sint voluptate quia. Consequatur voluptas aut "
+"cumque.\n"
+"        Nemo, ex voluptatem. Dolorem excepturi ea blanditiis repudiandae? "
+"Enim minima aliquam culpa distinctio, odit fuga nam officia ad illo et, unde "
+"autem suscipit corporis consectetur sit quisquam repellat. Placeat, "
+"aliquam?\n"
+"        Tempora laborum similique magni expedita iste deserunt. Laboriosam, "
+"consequuntur? Distinctio, sint! Quisquam magnam labore laudantium! Commodi "
+"delectus ab maiores et iusto accusantium? Doloribus voluptates eum id "
+"quisquam impedit neque ut!\n"
+"        "
+msgstr ""
+
+#: core/templates/core/about.html:25
+msgid "Upcoming"
+msgstr "Prochainement"
+
+#: core/templates/core/about.html:29
+#| msgid "Send a comment.."
+msgid "Edit comments"
+msgstr "Editer les commentaires"
+
+#: core/templates/core/about.html:30
+msgid "Tagging photos"
+msgstr "Photos: système de tags"
+
+#: core/templates/core/about.html:31
+#| msgid "Add photos"
+msgid "Crop photos"
+msgstr "Recadrer les photos"
 
 #: core/templates/core/base.html:42
 msgid "Contact"
@@ -522,28 +558,28 @@ msgstr "Confirmer la suppression"
 msgid "%(timing)s ago "
 msgstr "il y a %(timing)s"
 
-#: core/views.py:62
+#: core/views.py:64
 #, python-brace-format
 msgid ""
 "You gave {username} access to {add} and revoked their access to {revoke}"
 msgstr "Vous avez donné à {username} {add} accès et révoqué {revoke} accès"
 
-#: core/views.py:73
+#: core/views.py:75
 #, python-brace-format
 msgid "You gave {username} access to {number} photos"
 msgstr "Vous avez donné à {username} accès à {number} photos"
 
-#: core/views.py:79
+#: core/views.py:81
 #, python-brace-format
 msgid "You revoked {username} their access to {number} photos"
 msgstr "Vous avez révoqué l'accès de {username} à {number} photos"
 
 #
-#: core/views.py:91
+#: core/views.py:93
 msgid "{} won't have access to your album anymore"
 msgstr "{} n'aura plus accès à votre album"
 
-#: core/views.py:100
+#: core/views.py:102
 #, python-brace-format
 msgid "{username} can now access your album ({number} photos)"
 msgstr "{username} a maintenant accès à votre album ({number} photos)"
@@ -579,6 +615,14 @@ msgstr ""
 "\n"
 "          il y a  %(timing)s \n"
 "          "
+
+#: photos/templates/partials/photoaccess_relations.html:8
+msgid "Photo access"
+msgstr "Accès à la photo"
+
+#: photos/templates/partials/photoaccess_relations.html:9
+msgid "Full Name"
+msgstr "Nom complet"
 
 #: photos/templates/photos/add_photos_to_album.html:18
 msgid "Upload new photos:"
@@ -624,36 +668,28 @@ msgstr "Remplacer cette photo :"
 msgid "Choose who can access this photo :"
 msgstr "Choisissez qui peut accéder à cette photo:"
 
-#: photos/templates/photos/photo_edit.html:100
-msgid "Photo access"
-msgstr "Accès à la photo"
-
-#: photos/templates/photos/photo_edit.html:101
-msgid "Full Name"
-msgstr "Nom complet"
-
-#: photos/views.py:91
+#: photos/views.py:97
 #, python-format
 msgid "You've reached 80% of your maximum photo upload limit"
 msgstr "Vous avez atteint 80% de votre limite de stockage"
 
-#: photos/views.py:95
+#: photos/views.py:101
 msgid "1 photo was uploaded successfully"
 msgstr "1 photo a été uploadée avec succès"
 
-#: photos/views.py:97
+#: photos/views.py:103
 msgid "{} photos were uploaded successfully"
 msgstr "{} photos ont été uploadées avec succès"
 
-#: photos/views.py:99
+#: photos/views.py:105
 msgid "You have reached your maximum amount of photos to upload: {} photos"
 msgstr "Vous avez atteint le nombre maximal de photos à uploader: {} photos"
 
-#: photos/views.py:230
+#: photos/views.py:240
 msgid "{} has now access to your photo"
 msgstr "{} a maintenant accès à votre photo"
 
-#: photos/views.py:235
+#: photos/views.py:245
 msgid "{} photo access has been revoked"
 msgstr "L'accès de {} à la photo a été révoqué "
 

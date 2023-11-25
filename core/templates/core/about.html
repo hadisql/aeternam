@@ -1,0 +1,95 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "About" %}{% endblock %}
+
+{% block body %}
+  <div class="mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-16 lg:max-w-4xl lg:px-8">
+    <div class="px-6">
+      <span class="relative flex justify-center">
+        <div class="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-transparent bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-75"></div>
+        <span class="relative z-5 bg-base-100 text-3xl font-semibold px-6">{% trans "About" %}</span>
+      </span>
+
+      <p class="mt-8 mb-12">
+        {% blocktranslate %}
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatibus sequi voluptatum fugit doloribus debitis vel natus quos? Aut tempore hic vel autem quidem sint voluptate quia. Consequatur voluptas aut cumque.
+        Nemo, ex voluptatem. Dolorem excepturi ea blanditiis repudiandae? Enim minima aliquam culpa distinctio, odit fuga nam officia ad illo et, unde autem suscipit corporis consectetur sit quisquam repellat. Placeat, aliquam?
+        Tempora laborum similique magni expedita iste deserunt. Laboriosam, consequuntur? Distinctio, sint! Quisquam magnam labore laudantium! Commodi delectus ab maiores et iusto accusantium? Doloribus voluptates eum id quisquam impedit neque ut!
+        {% endblocktranslate %}
+      </p>
+
+      <span class="sm:pt-6 relative flex justify-center">
+        <div class="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-transparent bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-75"></div>
+        <span class="relative z-10 bg-base-100 text-2xl font-normal px-6">
+          <div class="flex gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+            </svg>
+            {% trans "Upcoming" %}
+          </div>
+        </span>
+      </span>
+
+      <div class="my-8">
+        <div class="grid grid-cols-12 gap-y-2">
+
+          <div class="flex col-span-10 gap-4 items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
+            </svg>
+            {% trans "Edit comments" %}
+          </div>
+          <div class="col-span-2 radial-progress text-sm" style="--value:50; --size:3rem;"  role="progressbar">50%</div>
+
+          <div class="flex col-span-10 gap-4 items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" />
+            </svg>
+            {% trans "Tagging photos" %}
+          </div>
+          <div class="col-span-2 radial-progress text-sm" style="--value:10; --size:3rem;"  role="progressbar">10%</div>
+
+          <div class="flex col-span-10 gap-4 items-center">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+              <path d="M6 3V14.8C6 15.9201 6 16.4802 6.21799 16.908C6.40973 17.2843 6.71569 17.5903 7.09202 17.782C7.51984 18 8.0799 18 9.2 18H15M21 18H18M18 21V9.2C18 8.0799 18 7.51984 17.782 7.09202C17.5903 6.71569 17.2843 6.40973 16.908 6.21799C16.4802 6 15.9201 6 14.8 6H9M3 6H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            {% trans "Crop photos" %}
+          </div>
+          <div class="col-span-2 radial-progress text-sm" style="--value:0; --size:3rem;"  role="progressbar">0%</div>
+
+        </div>
+      </div>
+
+
+    {% if request.user.is_authenticated %}
+      <span class="relative flex justify-center">
+        <div class="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-transparent bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-75"></div>
+        <span class="relative z-10 bg-base-100 text-2xl font-normal px-6">
+          <div class="flex gap-3">
+            <svg class="w-6 h-6" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M10 16.584V18.9996C10 20.1042 10.8954 20.9996 12 20.9996C13.1046 20.9996 14 20.1042 14 18.9996L14 16.584M12 3V4M18.3643 5.63574L17.6572 6.34285M5.63574 5.63574L6.34285 6.34285M4 12H3M21 12H20M17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+            {% trans "Feedback & ideas" %}
+          </div>
+        </span>
+      </span>
+
+      <p class="my-8">
+        {% trans "Give a feedback about the website, its functionalities and what you wish to see improved:" %}
+      </p>
+
+      <form method="POST">
+        {% csrf_token %}
+        {{form}}
+        <div class="flex items-center justify-end bg-base-100 py-3">
+          <button type="submit" class="btn btn-sm sm:btn-md btn-outline">
+            {% trans "Send" %}
+          </button>
+        </div>
+      </form>
+    {% endif %}
+  </div>
+
+  </div>
+{% endblock body %}
