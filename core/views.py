@@ -1,7 +1,7 @@
+from typing import Any
 from django.shortcuts import render, redirect
-from django.urls import reverse
 
-from django.http import JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from accounts.models import Notification, CustomUser, create_notification, mark_notification_as_read
 from django.contrib.contenttypes.models import ContentType
 
@@ -11,12 +11,43 @@ from albums.models import Album, AlbumAccess
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 
+from django.views.generic import FormView
+from .forms import FeedbackForm
+from django.urls import reverse_lazy
+from django.core.mail import send_mail
+from .models import Feedback
+
 def index(request):
 
     if request.method == 'GET' and request.user.is_authenticated:
         return redirect('accounts:account_view', pk=request.user.pk) #forces to redirect to main page when user is authenticated
 
     return render(request, "core/index.html")
+
+class AboutView(FormView):
+    template_name = 'core/about.html'
+    form_class = FeedbackForm
+    success_url = reverse_lazy('about')  # Redirect to the same page after successful form submission
+
+    def form_valid(self, form):
+        # Save feedback to Feedback model
+        feedback_instance = Feedback(
+            user = self.request.user,
+            feedback = form.cleaned_data['feedback']
+        )
+        feedback_instance.save()
+
+        # Send email
+        subject = 'New Feedback from {}'.format(self.request.user.email)
+        message = 'Name: {}\nFeedback: {}'.format(
+            self.request.user.get_full_name(),
+            form.cleaned_data['feedback'],
+        )
+        from_email = 'yourwebsite@example.com'  # Replace with your website's email
+        to_email = 'hadi.sqalli@laplateforme.io'  # Replace with your personal email
+        send_mail(subject, message, from_email, [to_email])
+
+        return super().form_valid(form)
 
 
 def clear_notif_from_navbar(request, notification_id):

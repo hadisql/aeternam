@@ -1,20 +1,15 @@
+{% extends 'core/base.html' %}
 {% load static %}
 {% load thumbnail %}
-<!DOCTYPE html >
-<html lang="en" >
-<head>
-  <link rel="stylesheet" href="{% static 'css/output.css' %}">
+{% load i18n %}
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> Register | æternam  </title>
-</head>
+{% block title %}Register{% endblock title %}
 
-
+{% block body %}
 <section class="bg-base-100">
-  <div class="lg:grid lg:min-h-screen lg:grid-cols-12">
+  <div class="lg:grid lg:min-h-screen lg:grid-cols-12 -mt-8 sm:-mt-10">
     <section
-      class="relative flex h-40 items-end bg-base-100 lg:col-span-5 lg:h-full xl:col-span-6"
+      class="relative flex h-48 items-end bg-base-100 lg:col-span-5 lg:h-full xl:col-span-6"
     >
       <img
         alt="Cover Photo"
@@ -30,11 +25,11 @@
         </a>
 
         <h2 class="mt-6 text-2xl font-bold sm:text-3xl md:text-4xl">
-          Welcome to Æternam
+          {% trans "Welcome to Æternam" %}
         </h2>
 
-        <p class="mt-4 leading-relaxed font-semibold">
-          This website is designed for families, where you can comment on and share your memories of albums that have been put away for too long, and which deserve to spread smiles and happiness
+        <p class="mt-8 leading-relaxed font-semibold text-justify">
+          {% trans "This website has been designed for families as a place to share and exchange your memories and forgotten photos. Involve your family and friends to collectively restore color and presence to your shared memories" %}
         </p>
       </div>
     </section>
@@ -47,11 +42,11 @@
           <h1
             class="mt-2 text-2xl font-bold sm:text-3xl md:text-4xl"
           >
-            Welcome to Æternam
+            {% trans "Welcome to Æternam" %}
           </h1>
 
-          <p class="mt-4 leading-relaxed text-gray-500">
-            This website is designed for families, where you can comment on and share your memories of albums that have been put away for too long, and which deserve to spread smiles and happiness
+          <p class="mt-8 leading-relaxed text-justify">
+            {% trans "This website has been designed for families as a place to share and exchange your memories and forgotten photos. Involve your family and friends to collectively restore color and presence to your shared memories" %}
           </p>
         </div>
 
@@ -62,7 +57,7 @@
               for="FirstName"
               class="block text-sm font-medium"
             >
-              First Name
+              {% trans "First Name" %}
             </label>
 
             {{form.first_name}}
@@ -73,7 +68,7 @@
               for="LastName"
               class="block text-sm font-medium "
             >
-              Last Name
+              {% trans "Last Name" %}
             </label>
 
             {{form.last_name}}
@@ -81,7 +76,7 @@
 
           <div class="col-span-6">
             <label for="Email" class="block text-sm font-medium ">
-              Email
+              {% trans "Email" %}
             </label>
 
             {{form.email}}
@@ -92,7 +87,7 @@
               for="Password"
               class="block text-sm font-medium "
             >
-              Password
+              {% trans "Password" %}
             </label>
 
             {{form.password1}}
@@ -103,13 +98,13 @@
               for="PasswordConfirmation"
               class="block text-sm font-medium "
             >
-              Password Confirmation
+              {% trans "Password Confirmation" %}
             </label>
 
             {{form.password2}}
           </div>
 
-
+          {% comment %}
           <div class="col-span-6">
             <p class="text-sm">
               By creating an account, you agree to our
@@ -120,18 +115,19 @@
               <a href="#" class=" underline">privacy policy</a>.
             </p>
           </div>
+          {% endcomment %}
 
-          <div class="col-span-6 sm:flex sm:items-center sm:gap-4">
+          <div class="col-span-6 sm:flex sm:items-center sm:gap-4 mt-4">
             <button
               class="btn btn-primary"
               type="submit"
             >
-              Create an account
+              {% trans "Create an account" %}
             </button>
 
             <p class="mt-4 text-sm  sm:mt-0">
-              Already have an account?
-              <a href="{% url 'accounts:login' %}" class=" underline">Log in</a>.
+              {% trans "Already have an account?" %}
+              <a href="{% url 'accounts:login' %}" class=" underline">{% trans "Log in" %}</a>.
             </p>
           </div>
         </form>
@@ -139,3 +135,4 @@
     </main>
   </div>
 </section>
+{% endblock body %}
