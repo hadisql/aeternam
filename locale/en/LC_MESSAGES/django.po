@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-25 13:18+0000\n"
+"POT-Creation-Date: 2023-11-28 08:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,10 +31,12 @@ msgid "Important dates"
 msgstr ""
 
 #: accounts/forms.py:43 accounts/templates/accounts/account_update.html:43
+#: accounts/templates/accounts/register.html:60
 msgid "First Name"
 msgstr ""
 
 #: accounts/forms.py:44 accounts/templates/accounts/account_update.html:47
+#: accounts/templates/accounts/register.html:71
 msgid "Last Name"
 msgstr ""
 
@@ -146,19 +148,57 @@ msgid "Clear"
 msgstr ""
 
 #: accounts/templates/accounts/login.html:11
-msgid "Get started today!"
+msgid "Welcome (back)!"
 msgstr ""
 
-#: accounts/templates/accounts/login.html:71
+#: accounts/templates/accounts/login.html:14
+#: accounts/templates/accounts/register.html:32
+#: accounts/templates/accounts/register.html:49
+msgid ""
+"This website has been designed for families as a place to share and exchange "
+"your memories and forgotten photos. Involve your family and friends to "
+"collectively restore color and presence to your shared memories"
+msgstr ""
+
+#: accounts/templates/accounts/login.html:73
 msgid "No account?"
 msgstr ""
 
-#: accounts/templates/accounts/login.html:72
+#: accounts/templates/accounts/login.html:74
 msgid "Sign up"
 msgstr ""
 
-#: accounts/templates/accounts/login.html:75
+#: accounts/templates/accounts/login.html:77
 msgid "Sign in"
+msgstr ""
+
+#: accounts/templates/accounts/register.html:28
+#: accounts/templates/accounts/register.html:45
+msgid "Welcome to Æternam"
+msgstr ""
+
+#: accounts/templates/accounts/register.html:79
+msgid "Email"
+msgstr ""
+
+#: accounts/templates/accounts/register.html:90
+msgid "Password"
+msgstr ""
+
+#: accounts/templates/accounts/register.html:101
+msgid "Password Confirmation"
+msgstr ""
+
+#: accounts/templates/accounts/register.html:126
+msgid "Create an account"
+msgstr ""
+
+#: accounts/templates/accounts/register.html:130
+msgid "Already have an account?"
+msgstr ""
+
+#: accounts/templates/accounts/register.html:131
+msgid "Log in"
 msgstr ""
 
 #: accounts/templates/partials/account_connection_buttons.html:8
@@ -415,6 +455,10 @@ msgstr ""
 msgid "Album was deleted successfully"
 msgstr ""
 
+#: core/forms.py:8
+msgid "Give a feedback and/or ideas.."
+msgstr ""
+
 #: core/templates/core/about.html:5 core/templates/core/about.html:12
 #: core/templates/core/base.html:41
 msgid "About"
@@ -438,20 +482,47 @@ msgid ""
 "        "
 msgstr ""
 
-#: core/templates/core/about.html:25
+#: core/templates/core/about.html:30
 msgid "Upcoming"
 msgstr ""
 
-#: core/templates/core/about.html:29
-msgid "edit comments"
+#: core/templates/core/about.html:42
+msgid "Edit comments"
 msgstr ""
 
-#: core/templates/core/about.html:30
-msgid "tagging photos"
+#: core/templates/core/about.html:51
+msgid "Tagging photos"
 msgstr ""
 
-#: core/templates/core/about.html:31
-msgid "crop photos"
+#: core/templates/core/about.html:59
+msgid "Crop photos"
+msgstr ""
+
+#: core/templates/core/about.html:72
+msgid "Feedback & ideas"
+msgstr ""
+
+#: core/templates/core/about.html:79
+msgid ""
+"Give a feedback about the website, its functionalities and what you wish to "
+"see improved:"
+msgstr ""
+
+#: core/templates/core/about.html:87
+msgid "Send"
+msgstr ""
+
+#: core/templates/core/about.html:93
+msgid "Connect to your account "
+msgstr ""
+
+#: core/templates/core/about.html:94
+msgid ""
+"in order to give your feedback ! If you don't have an account, follow this "
+msgstr ""
+
+#: core/templates/core/about.html:94
+msgid "link"
 msgstr ""
 
 #: core/templates/core/base.html:42
@@ -521,27 +592,27 @@ msgstr ""
 msgid "%(timing)s ago "
 msgstr ""
 
-#: core/views.py:64
+#: core/views.py:93
 #, python-brace-format
 msgid ""
 "You gave {username} access to {add} and revoked their access to {revoke}"
 msgstr ""
 
-#: core/views.py:75
+#: core/views.py:104
 #, python-brace-format
 msgid "You gave {username} access to {number} photos"
 msgstr ""
 
-#: core/views.py:81
+#: core/views.py:110
 #, python-brace-format
 msgid "You revoked {username} their access to {number} photos"
 msgstr ""
 
-#: core/views.py:93
+#: core/views.py:122
 msgid "{} won't have access to your album anymore"
 msgstr ""
 
-#: core/views.py:102
+#: core/views.py:131
 #, python-brace-format
 msgid "{username} can now access your album ({number} photos)"
 msgstr ""

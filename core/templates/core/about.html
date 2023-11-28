@@ -12,7 +12,7 @@
         <span class="relative z-5 bg-base-100 text-3xl font-semibold px-6">{% trans "About" %}</span>
       </span>
 
-      <p class="mt-8 mb-12">
+      <p class="mt-8 mb-12 text-justify">
         {% blocktranslate %}
         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatibus sequi voluptatum fugit doloribus debitis vel natus quos? Aut tempore hic vel autem quidem sint voluptate quia. Consequatur voluptas aut cumque.
         Nemo, ex voluptatem. Dolorem excepturi ea blanditiis repudiandae? Enim minima aliquam culpa distinctio, odit fuga nam officia ad illo et, unde autem suscipit corporis consectetur sit quisquam repellat. Placeat, aliquam?
@@ -21,7 +21,7 @@
       </p>
 
       <span class="sm:pt-6 relative flex justify-center">
-        <div class="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-transparent bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-75"></div>
+        <div class="sm:mt-3 absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-transparent bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-75"></div>
         <span class="relative z-10 bg-base-100 text-2xl font-normal px-6">
           <div class="flex gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -64,7 +64,6 @@
       </div>
 
 
-    {% if request.user.is_authenticated %}
       <span class="relative flex justify-center">
         <div class="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-transparent bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-75"></div>
         <span class="relative z-10 bg-base-100 text-2xl font-normal px-6">
@@ -75,6 +74,7 @@
         </span>
       </span>
 
+      {% if request.user.is_authenticated %}
       <p class="my-8">
         {% trans "Give a feedback about the website, its functionalities and what you wish to see improved:" %}
       </p>
@@ -88,6 +88,11 @@
           </button>
         </div>
       </form>
+    {% else %}
+    <p class="my-8 text-justify">
+      <span><a href="{% url 'accounts:login' %}" class="underline">{% trans "Connect to your account " %}</a></span>
+      {% trans "in order to give your feedback ! If you don't have an account, follow this " %}<span><a href="{% url 'accounts:register' %}" class="underline">{% trans "link" %}</a></span>
+    </p>
     {% endif %}
   </div>
 
