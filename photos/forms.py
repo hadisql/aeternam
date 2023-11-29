@@ -49,7 +49,7 @@ class PhotoUpdateForm(forms.Form):
 class PhotoDescriptionForm(forms.Form):
     description = forms.CharField(
         label="",
-        widget=forms.Textarea(attrs={'class':'textarea textarea-bordered',
+        widget=forms.Textarea(attrs={'class':'textarea textarea-bordered w-full',
                                      'rows':4,
                                      'id':'photo_description',
                                      'placeholder':_('Add a photo description..'),
