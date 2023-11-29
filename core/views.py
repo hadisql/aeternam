@@ -27,7 +27,7 @@ def index(request):
 class AboutView(FormView):
     template_name = 'core/about.html'
     form_class = FeedbackForm
-    success_url = reverse_lazy('about')  # Redirect to the same page after successful form submission
+    success_url = reverse_lazy('core:about')  # Redirect to the same page after successful form submission
 
     def form_valid(self, form):
         # Save feedback to Feedback model
@@ -37,15 +37,17 @@ class AboutView(FormView):
         )
         feedback_instance.save()
 
+        messages.success(self.request, _("Your feedback has been successfully.\nThank you! =)"))
+
         # Send email
-        subject = 'New Feedback from {}'.format(self.request.user.email)
-        message = 'Name: {}\nFeedback: {}'.format(
-            self.request.user.get_full_name(),
-            form.cleaned_data['feedback'],
-        )
-        from_email = 'yourwebsite@example.com'  # Replace with your website's email
-        to_email = 'hadi.sqalli@laplateforme.io'  # Replace with your personal email
-        send_mail(subject, message, from_email, [to_email])
+        # subject = 'New Feedback from {}'.format(self.request.user.email)
+        # message = 'Name: {}\nFeedback: {}'.format(
+        #     self.request.user.get_full_name(),
+        #     form.cleaned_data['feedback'],
+        # )
+        # from_email = 'yourwebsite@example.com'  # Replace with your website's email
+        # to_email = 'hadi.sqalli@laplateforme.io'  # Replace with your personal email
+        # send_mail(subject, message, from_email, [to_email])
 
         return super().form_valid(form)
 
