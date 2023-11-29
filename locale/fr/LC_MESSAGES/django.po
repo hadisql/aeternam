@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-28 08:49+0000\n"
+"POT-Creation-Date: 2023-11-29 08:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -131,18 +131,18 @@ msgstr "masquer vos connexions sur votre profile"
 #: albums/templates/albums/album_form.html:40
 #: photos/templates/photos/add_photos_to_album.html:39
 #: photos/templates/photos/photo_detail.html:87
-#: photos/templates/photos/photo_edit.html:129
+#: photos/templates/photos/photo_edit.html:136
 msgid "Back"
 msgstr "Retour"
 
 #: accounts/templates/accounts/account_update.html:97
 #: albums/templates/albums/album_access.html:57
-#: photos/templates/photos/photo_edit.html:134
+#: photos/templates/photos/photo_edit.html:141
 msgid "Save changes"
 msgstr "Sauvegarder"
 
 #: accounts/templates/accounts/custom_widget.html:11
-#: photos/templates/photos/photo_edit.html:69
+#: photos/templates/photos/photo_edit.html:71
 msgid "OR"
 msgstr "OU"
 
@@ -539,26 +539,22 @@ msgid ""
 "see improved:"
 msgstr ""
 "Donnez un avis à propos du site, ses fonctionnalités et ce que vous aimeriez "
-"voir amélioré:"
+"voir s'améliorer:"
 
 #: core/templates/core/about.html:87
 msgid "Send"
 msgstr "Envoyer"
 
 #: core/templates/core/about.html:93
-#| msgid "Connected accounts"
 msgid "Connect to your account "
 msgstr "Connectez-vous"
 
 #: core/templates/core/about.html:94
-#| msgid ""
-#| "Connect to your account in order to give your feedback ! If you don't "
-#| "have an account, follow this "
 msgid ""
 "in order to give your feedback ! If you don't have an account, follow this "
 msgstr ""
-"pour faire un retour et/ou donner votre avis ! Si vous n'avez pas de "
-"compte, suivez ce "
+"pour faire un retour et/ou donner votre avis ! Si vous n'avez pas de compte, "
+"suivez ce "
 
 #: core/templates/core/about.html:94
 msgid "link"
@@ -668,6 +664,10 @@ msgstr "{username} a maintenant accès à votre album ({number} photos)"
 msgid "Send a comment.."
 msgstr "Poster un commentaire.."
 
+#: photos/forms.py:55
+msgid "Add a photo description.."
+msgstr "Ajouter une description à la photo.."
+
 #: photos/templates/partials/breadcrumb_add_photos.html:11
 msgid "Add photos"
 msgstr "Ajouter des photos"
@@ -726,7 +726,7 @@ msgstr "réglages photo"
 
 #: photos/templates/photos/photo_edit.html:20
 msgid "Uploaded by "
-msgstr "uploadée par"
+msgstr "uploadée par "
 
 #: photos/templates/photos/photo_edit.html:39
 msgid "This photo is your Album cover"
@@ -736,15 +736,23 @@ msgstr "Cette photo est en couverture de l'album"
 msgid "Choose this photo as your Album cover"
 msgstr "Choisir cette photo comme couverture de l'album"
 
-#: photos/templates/photos/photo_edit.html:53
-msgid "Photo description"
-msgstr "Description de la photo"
+#: photos/templates/photos/photo_edit.html:57
+msgid "rotation"
+msgstr ""
 
-#: photos/templates/photos/photo_edit.html:76
+#: photos/templates/photos/photo_edit.html:63
+msgid ""
+"\n"
+"            <div class=\"tooltip\" data-tip=\"mirror flip\"> "
+msgstr ""
+"\n"
+"            <div class=\"tooltip\" data-tip=\"symétrie axiale\"> "
+
+#: photos/templates/photos/photo_edit.html:78
 msgid "Replace this photo :"
 msgstr "Remplacer cette photo :"
 
-#: photos/templates/photos/photo_edit.html:94
+#: photos/templates/photos/photo_edit.html:100
 msgid "Choose who can access this photo :"
 msgstr "Choisissez qui peut accéder à cette photo:"
 
@@ -1969,8 +1977,8 @@ msgstr ""
 msgid "Connect, get help, or contribute"
 msgstr ""
 
-#~ msgid "Add a photo description.."
-#~ msgstr "Ajouter une description à la photo.."
+#~ msgid "Photo description"
+#~ msgstr "Description de la photo"
 
 #, python-format
 #~ msgid "%(notification.created_at|timesince|up_to:',')s ago "

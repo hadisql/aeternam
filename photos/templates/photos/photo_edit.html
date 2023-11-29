@@ -50,20 +50,22 @@
 
       <div class="relative grid grid-cols-1 mb-6 lg:mb-10">
         {{form_description_form}}
-        <label for="photo_description" class="absolute text-sm bg-base-200 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">{% trans "Photo description" %}</label>
-
       </div>
       <div class="flex flex-col w-full lg:flex-row">
         <div class="grid flex-grow h-24 lg:h-32 card bg-base-300 rounded-box place-items-center">
           <div class="flex gap-4">
-            <button type="button" class="btn btn-outline" id="rotate_btn" onclick="rotateImage(-90)">
-              <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M6.23706 2.0007C6.78897 2.02117 7.21978 2.48517 7.19931 3.03708L7.10148 5.67483C8.45455 4.62548 10.154 4.00001 12 4.00001C16.4183 4.00001 20 7.58174 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 11.4477 4.44772 11 5 11C5.55228 11 6 11.4477 6 12C6 15.3137 8.68629 18 12 18C15.3137 18 18 15.3137 18 12C18 8.68631 15.3137 6.00001 12 6.00001C10.4206 6.00001 8.98317 6.60994 7.91098 7.60891L11.3161 8.00677C11.8646 8.07087 12.2573 8.56751 12.1932 9.11607C12.1291 9.66462 11.6325 10.0574 11.0839 9.99326L5.88395 9.38567C5.36588 9.32514 4.98136 8.87659 5.00069 8.35536L5.20069 2.96295C5.22116 2.41104 5.68516 1.98023 6.23706 2.0007Z"></path></svg>
-            </button>
-            <!-- <input type="hidden" name="rotate" value="rotate"> -->
-            <span class="hidden transform -scale-x-100 file-input file-input-sm toggle-info"></span>
-            <button type="button" class="btn btn-outline" id="mirror_flip_btn">
-              <svg class="w-6 h-6 stroke-current" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M3 12C3 16.2426 3 18.364 4.31802 19.682C5.63604 21 7.75736 21 12 21M12 3C7.75736 3 5.63604 3 4.31802 4.31802C3.50241 5.13363 3.19151 6.25685 3.073 8" stroke-width="1.5" stroke-linecap="round"></path> <path d="M11 21H15C17.8284 21 19.2426 21 20.1213 20.1213C21 19.2426 21 17.8284 21 15V9C21 6.17157 21 4.75736 20.1213 3.87868C19.2426 3 17.8284 3 15 3H11" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2.5 3"></path> <path d="M12 22L12 2" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
-            </button>
+            <div class="tooltip" data-tip={% trans "rotation" %}>
+              <button type="button" class="btn btn-outline" id="rotate_btn" onclick="rotateImage(-90)">
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M6.23706 2.0007C6.78897 2.02117 7.21978 2.48517 7.19931 3.03708L7.10148 5.67483C8.45455 4.62548 10.154 4.00001 12 4.00001C16.4183 4.00001 20 7.58174 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 11.4477 4.44772 11 5 11C5.55228 11 6 11.4477 6 12C6 15.3137 8.68629 18 12 18C15.3137 18 18 15.3137 18 12C18 8.68631 15.3137 6.00001 12 6.00001C10.4206 6.00001 8.98317 6.60994 7.91098 7.60891L11.3161 8.00677C11.8646 8.07087 12.2573 8.56751 12.1932 9.11607C12.1291 9.66462 11.6325 10.0574 11.0839 9.99326L5.88395 9.38567C5.36588 9.32514 4.98136 8.87659 5.00069 8.35536L5.20069 2.96295C5.22116 2.41104 5.68516 1.98023 6.23706 2.0007Z"></path></svg>
+              </button>
+            </div>
+            {# <span class="hidden transform -scale-x-100 file-input file-input-sm toggle-info"></span> #}
+            {% blocktrans %}
+            <div class="tooltip" data-tip="mirror flip"> {% endblocktrans %}
+              <button type="button" class="btn btn-outline" id="mirror_flip_btn">
+                <svg class="w-6 h-6 stroke-current" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M3 12C3 16.2426 3 18.364 4.31802 19.682C5.63604 21 7.75736 21 12 21M12 3C7.75736 3 5.63604 3 4.31802 4.31802C3.50241 5.13363 3.19151 6.25685 3.073 8" stroke-width="1.5" stroke-linecap="round"></path> <path d="M11 21H15C17.8284 21 19.2426 21 20.1213 20.1213C21 19.2426 21 17.8284 21 15V9C21 6.17157 21 4.75736 20.1213 3.87868C19.2426 3 17.8284 3 15 3H11" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2.5 3"></path> <path d="M12 22L12 2" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
+              </button>
+            </div>
           </div>
         </div>
         <div class="divider lg:divider-horizontal">{% trans "OR" %}</div>
@@ -71,7 +73,7 @@
           <div class="grid flex-grow h-28 sm:h-32 card bg-base-300 rounded-box place-items-center">
             <div class="flex flex-wrap-reverse gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 sm:w-6 sm:h-6 mb-0.5 sm:mb-1">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
               </svg>
               <p class="font-semibold sm:text-lg">{% trans "Replace this photo :" %}</p>
             </div>
@@ -91,7 +93,12 @@
 
       <!-- Photo access -->
 
-      <div class="divider">{% trans "Choose who can access this photo :" %}</div>
+      <div class="place-content-center my-4 flex gap-4 font-medium">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 sm:w-6 sm:h-6 mb-0.5 sm:mb-1">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+        </svg>
+        {% trans "Choose who can access this photo :" %}
+      </div>
 
       {% if request.user != photo.album.creator and users_with_album_access %}
         {% include 'partials/photoaccess_relations.html' with related_users_to_show=users_with_album_access %}
