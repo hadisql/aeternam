@@ -22,7 +22,7 @@
 
       <span class="sm:pt-6 relative flex justify-center">
         <div class="sm:mt-3 absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-transparent bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-75"></div>
-        <span class="relative z-10 bg-base-100 text-2xl font-normal px-6">
+        <span class="relative z-5 bg-base-100 text-2xl font-normal px-6">
           <div class="flex gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
@@ -66,7 +66,7 @@
 
       <span class="relative flex justify-center">
         <div class="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-transparent bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-75"></div>
-        <span class="relative z-10 bg-base-100 text-2xl font-normal px-6">
+        <span class="relative z-5 bg-base-100 text-2xl font-normal px-6">
           <div class="flex gap-3">
             <svg class="w-6 h-6" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M10 16.584V18.9996C10 20.1042 10.8954 20.9996 12 20.9996C13.1046 20.9996 14 20.1042 14 18.9996L14 16.584M12 3V4M18.3643 5.63574L17.6572 6.34285M5.63574 5.63574L6.34285 6.34285M4 12H3M21 12H20M17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
             {% trans "Feedback & ideas" %}
@@ -97,4 +97,14 @@
   </div>
 
   </div>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="toast">
+        <div class="alert alert-{{message.tags}}">
+          <span>{{message}}</span>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
 {% endblock body %}
