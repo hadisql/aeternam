@@ -21,8 +21,6 @@ jstoolchain/package-lock.json
 
 staticfiles/
 
-output.css
-
 .DS_Store
 accounts/templates/accounts/account_copy.html
 
