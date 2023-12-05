@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-29 09:51+0000\n"
+"POT-Creation-Date: 2023-12-05 11:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -426,36 +426,36 @@ msgstr "Uploadez des photos:"
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: albums/templates/albums/albums.html:32
-#: albums/templates/albums/albums.html:33
+#: albums/templates/albums/albums.html:34
+#: albums/templates/albums/albums.html:35
 msgid "Albums you created"
 msgstr "Vos albums crées"
 
-#: albums/templates/albums/albums.html:64
-#: albums/templates/albums/albums.html:132
+#: albums/templates/albums/albums.html:66
+#: albums/templates/albums/albums.html:137
 msgid "Empty album"
 msgstr "Album vide"
 
-#: albums/templates/albums/albums.html:66
-#: albums/templates/albums/albums.html:134
+#: albums/templates/albums/albums.html:68
+#: albums/templates/albums/albums.html:139
 msgid "No cover photo"
 msgstr "Pas d'image de couverture"
 
-#: albums/templates/albums/albums.html:71
-#: albums/templates/albums/albums.html:139
+#: albums/templates/albums/albums.html:73
+#: albums/templates/albums/albums.html:144
 msgid "uploaded by"
 msgid_plural "uploaded by"
 msgstr[0] "uploadée par"
 msgstr[1] "uploadées par"
 
-#: albums/templates/albums/albums.html:101
+#: albums/templates/albums/albums.html:106
 msgid "Albums shared with you"
 msgstr "Albums partagés avec vous"
 
 #
 #: albums/templates/partials/breadcrumb_add_album.html:11
 msgid "New album"
-msgstr "Supprimez l'album"
+msgstr "Nouvel album"
 
 #: albums/templates/partials/breadcrumb_settings.html:13
 #: photos/templates/partials/breadcrumb_photo_settings.html:12
@@ -570,7 +570,7 @@ msgstr "Bienvenue"
 
 #: core/templates/core/index.html:12
 msgid "Precious moments"
-msgstr "Instants précieux"
+msgstr "Précieux instants"
 
 #: core/templates/core/index.html:14
 msgid ""
