@@ -5,6 +5,7 @@
 {% load thumbnail %}
 {% load custom_filters %}
 {% load i18n %}
+{% load static %}
 
 {% block body %}
 
@@ -41,7 +42,7 @@
                 d="M2.37162 14.2378C3.54371 13.3886 5.09751 13 7 13C8.90249 13 10.4563 13.3886 11.6284 14.2378C12.8188 15.1004 13.4914 16.3477 13.795 17.8079C14.1811 19.6647 12.5708 21 11 21H3C1.42922 21 -0.181121 19.6647 0.204962 17.8079C0.508602 16.3477 1.18119 15.1004 2.37162 14.2378ZM3.54511 15.8574C2.84896 16.3618 2.39073 17.1203 2.16308 18.2151C2.12425 18.4018 2.17618 18.5729 2.31828 18.7223C2.47041 18.8824 2.71717 19 3 19H11C11.2828 19 11.5296 18.8824 11.6817 18.7223C11.8238 18.5729 11.8757 18.4018 11.8369 18.2151C11.6093 17.1203 11.151 16.3618 10.4549 15.8574C9.74039 15.3397 8.65185 15 7 15C5.34815 15 4.25961 15.3397 3.54511 15.8574Z">
               </path>
             </svg>
-            <a href="{% url 'albums:album_create' %}" class="btn btn-outline btn-circle">
+            <a href="{% url 'albums:album_create' %}" class="btn btn-outline btn-square btn-sm {% if not albums_with_default_photos %}sm:hidden{% endif %}">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -54,7 +55,7 @@
           {% for album, default_photo in albums_with_default_photos.items %}
           <a href="{% url 'albums:album_detail' album.pk %}" class="group">
             <div
-              class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7 hover:ring ring-current ring-offset-2">
+              class="w-full overflow-hidden rounded-lg bg-gray-200 hover:ring ring-current ring-offset-2">
               {% if default_photo %}
               {% thumbnail default_photo.image "600x600" crop="center" as im %}
               <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}"
@@ -90,6 +91,27 @@
             </div>
           </a>
           {% endfor %}
+
+          {% if not albums_with_default_photos %}
+            <a class="group">
+              <div class="relative flex justify-center items-center w-full overflow-hidden rounded-lg hover:ring ring-current ring-offset-2">
+                {% thumbnail "images/flowers_png.png"|static_image "600x600" crop="center" as im %}
+                  <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="flowers"
+                    class="h-full w-full object-cover object-center group-hover:opacity-75">
+                {% endthumbnail %}
+                <div class="absolute flex justify-center items-center">
+                  <p class="px-4 py-2 text-xl xl:text-lg font-semibold tracking-tight bg-base-100 ">{% trans "No albums yet !" %}</p>
+                </div>
+              </div>
+            </a>
+            <a href="{% url 'albums:album_create' %}" class="max-sm:hidden tooltip" data-tip="{% trans 'create a new album' %}">
+              <div class="grid place-content-center h-full w-full object-cover object-center group-hover:opacity-75 rounded-lg border-2 border-dashed border-content hover:border-none hover:ring ring-current ring-offset-2 " >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+              </div>
+            </a>
+          {% endif %}
         </div>
       </div>
 
@@ -125,7 +147,7 @@
           {% for album, default_photo in shared_albums_with_default_photos.items %}
           <a href="{% url 'albums:album_detail' album.pk %}" class="group">
             <div
-              class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7 hover:ring ring-current ring-offset-2">
+              class="w-full overflow-hidden rounded-lg bg-gray-200 hover:ring ring-current ring-offset-2">
               {% if default_photo %}
               {% thumbnail default_photo.image "600x600" crop="center" as im %}
               <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}"
