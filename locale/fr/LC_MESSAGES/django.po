@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-05 11:31+0000\n"
+"POT-Creation-Date: 2023-12-07 11:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -426,29 +426,38 @@ msgstr "Uploadez des photos:"
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: albums/templates/albums/albums.html:34
 #: albums/templates/albums/albums.html:35
+#: albums/templates/albums/albums.html:36
 msgid "Albums you created"
 msgstr "Vos albums crées"
 
-#: albums/templates/albums/albums.html:66
-#: albums/templates/albums/albums.html:137
+#: albums/templates/albums/albums.html:67
+#: albums/templates/albums/albums.html:159
 msgid "Empty album"
 msgstr "Album vide"
 
-#: albums/templates/albums/albums.html:68
-#: albums/templates/albums/albums.html:139
+#: albums/templates/albums/albums.html:69
+#: albums/templates/albums/albums.html:161
 msgid "No cover photo"
 msgstr "Pas d'image de couverture"
 
-#: albums/templates/albums/albums.html:73
-#: albums/templates/albums/albums.html:144
+#: albums/templates/albums/albums.html:74
+#: albums/templates/albums/albums.html:166
 msgid "uploaded by"
 msgid_plural "uploaded by"
 msgstr[0] "uploadée par"
 msgstr[1] "uploadées par"
 
-#: albums/templates/albums/albums.html:106
+#: albums/templates/albums/albums.html:103
+msgid "No albums yet !"
+msgstr "Pas encore d'album !"
+
+#: albums/templates/albums/albums.html:107
+#| msgid "Create a new album"
+msgid "create a new album"
+msgstr "Créez un nouvel album"
+
+#: albums/templates/albums/albums.html:128
 msgid "Albums shared with you"
 msgstr "Albums partagés avec vous"
 
@@ -589,7 +598,7 @@ msgstr ""
 "bugs  😇\n"
 "        "
 
-#: core/templates/core/index.html:19
+#: core/templates/core/index.html:20
 msgid "Get Started"
 msgstr "Commencer"
 
