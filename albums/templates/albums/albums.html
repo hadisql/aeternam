@@ -95,10 +95,11 @@
           {% if not albums_with_default_photos %}
             <a class="group">
               <div class="relative flex justify-center items-center w-full overflow-hidden rounded-lg hover:ring ring-current ring-offset-2">
-                {% thumbnail "images/flowers_png.png"|static_image "600x600" crop="center" as im %}
+                <!-- {% thumbnail "images/flowers_png.png"|static_image "600x600" crop="center" as im %}
                   <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="flowers"
                     class="h-full w-full object-cover object-center group-hover:opacity-75">
-                {% endthumbnail %}
+                {% endthumbnail %} -->
+                  {% include 'partials/flowers.svg' %}
                 <div class="absolute flex justify-center items-center">
                   <p class="px-4 py-2 text-xl xl:text-lg font-semibold tracking-tight bg-base-100 ">{% trans "No albums yet !" %}</p>
                 </div>
@@ -106,7 +107,7 @@
             </a>
             <a href="{% url 'albums:album_create' %}" class="max-sm:hidden tooltip" data-tip="{% trans 'create a new album' %}">
               <div class="grid place-content-center h-full w-full object-cover object-center group-hover:opacity-75 rounded-lg border-2 border-dashed border-content hover:border-none hover:ring ring-current ring-offset-2 " >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
               </div>
