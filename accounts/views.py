@@ -21,6 +21,7 @@ from photos.models import Photo
 from comments_likes.models import Comment
 
 from django.contrib import messages #used in NotificationsView
+from django.utils.translation import gettext_lazy as _
 
 
 class RegisterPage(FormView):
@@ -44,19 +45,31 @@ class RegisterPage(FormView):
 
 
 def loginpage(request):
-
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
 
         # Use eamail to authenticate instead of username
         user = authenticate(request, email=email, password=password)
+
         if user is not None:
             login(request, user)
             return HttpResponseRedirect(reverse_lazy('albums:albums_view'))
         else:
-            return HttpResponse('User doesnt exist')   #FOR ERROR PURPOSE
+            # Check for the specific reason for authentication failure
+            try:
+                user = CustomUser.objects.get(email=email)
+                if not user.check_password(password):
+                    # Password is incorrect
+                    messages.error(request, _('Incorrect password. Please try again.'))
+                else:
+                    # User exists, but some other issue (should not reach here in normal cases)
+                    messages.error(request, _('Authentication failed. Please try again.'))
+            except CustomUser.DoesNotExist:
+                # User with the given email does not exist
+                messages.error(request, _('User with this email does not exist.'))
 
+            return render(request, 'accounts/login.html')
     else:
         return render(request, 'accounts/login.html')
 
