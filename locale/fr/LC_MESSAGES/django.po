@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-10 11:18+0000\n"
+"POT-Creation-Date: 2023-12-10 21:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -153,15 +153,15 @@ msgstr "Retour"
 msgid "Save changes"
 msgstr "Sauvegarder"
 
-#: accounts/templates/accounts/activation_email.html:2
+#: accounts/templates/accounts/activation_email.html:3
 msgid "Hi"
 msgstr "Bonjour"
 
-#: accounts/templates/accounts/activation_email.html:4
+#: accounts/templates/accounts/activation_email.html:5
 msgid "Please click on the following link to activate your account:"
 msgstr "Veuillez clicker sur le lien ci-dessous afin d'activer votre compte:"
 
-#: accounts/templates/accounts/activation_email.html:8
+#: accounts/templates/accounts/activation_email.html:9
 msgid "Thank you!"
 msgstr "Merci !"
 
@@ -264,8 +264,40 @@ msgid "to you ?"
 msgstr "pour vous ?"
 
 #: accounts/templates/partials/account_connection_buttons.html:44
+#: accounts/templates/partials/account_connection_buttons.html:54
 msgid "Connect"
 msgstr "Se connecter"
+
+#: accounts/templates/partials/account_connection_buttons.html:76
+#| msgid "Connections"
+msgid "Connection request"
+msgstr "Demande de connexion"
+
+#: accounts/templates/partials/account_connection_buttons.html:82
+#| msgid ""
+#| "\n"
+#| "                      your connections are <span class=\"font-"
+#| "bold\">hidden</span> from other users\n"
+#| "                      "
+msgid ""
+"\n"
+"                    <p>Are you sure you want to send %(username)s a "
+"connection request ?</p>\n"
+"                    "
+msgstr ""
+"\n"
+"                    <p>Êtes-vous sûr de vouloir envoyer une demande de connexion à "
+" %(username)s ? </p>\n"
+"                    "
+
+
+#: accounts/templates/partials/account_connection_buttons.html:87
+msgid "Cancel"
+msgstr "Annuler"
+
+#: accounts/templates/partials/account_connection_buttons.html:88
+msgid "Continue"
+msgstr "Continuer"
 
 #: accounts/templates/partials/account_connections_list.html:7
 msgid "Connected accounts"

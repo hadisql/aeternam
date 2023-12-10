@@ -1,4 +1,6 @@
 {% load i18n %}
+{% load static %}
+
 <div class="text-center py-6 px-3 mt-32 lg:mt-0">
   {% if relation_exists %}
     <button class="btn btn-disabled">
@@ -13,7 +15,8 @@
     <form method="POST">
       {% csrf_token %}
       <div class="tooltip tooltip-top tooltip-error" data-tip="click to cancel request">
-        <button type="submit" name="undo_request_form" class="btn btn-success opacity-50 border-2 border-emerald-700"><span class="loading loading-spinner"></span>{% trans "Request Sent" %}</button>
+        <button id="request_btn" type="submit" name="undo_request_form" class="hidden"></button>
+        {% include 'partials/modal_request_confirmation.html' with modal_type="cancel_request" %}
       </div>
     </form>
     {% elif request_from_exists %}
@@ -37,13 +40,17 @@
     {% else %}
     <form method="POST"> <!-- REQUEST FRIENDSHIP -->
       {% csrf_token %}
-      <button type="submit" name="request_form" class="btn btn-outline">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 sm:w-6 h-5 sm:h-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-        </svg>
-        {% trans "Connect" %}
+      <button id="request_btn" type="submit" name="request_form" class="hidden btn btn-outline">
       </button>
+      {% include 'partials/modal_request_confirmation.html' with modal_type="send_request" %}
     </form>
     {% endif %}
   {% endif %}
 </div>
+
+
+{% block javascript %}
+  <!-- JQuery -->
+  <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+{% endblock javascript %}
+<script src="{% static 'accounts/js/confirm_request.js' %}"></script>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-10 11:18+0000\n"
+"POT-Creation-Date: 2023-12-10 21:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -147,15 +147,15 @@ msgstr ""
 msgid "Save changes"
 msgstr ""
 
-#: accounts/templates/accounts/activation_email.html:2
+#: accounts/templates/accounts/activation_email.html:3
 msgid "Hi"
 msgstr ""
 
-#: accounts/templates/accounts/activation_email.html:4
+#: accounts/templates/accounts/activation_email.html:5
 msgid "Please click on the following link to activate your account:"
 msgstr ""
 
-#: accounts/templates/accounts/activation_email.html:8
+#: accounts/templates/accounts/activation_email.html:9
 msgid "Thank you!"
 msgstr ""
 
@@ -249,7 +249,29 @@ msgid "to you ?"
 msgstr ""
 
 #: accounts/templates/partials/account_connection_buttons.html:44
+#: accounts/templates/partials/account_connection_buttons.html:54
 msgid "Connect"
+msgstr ""
+
+#: accounts/templates/partials/account_connection_buttons.html:76
+msgid "Connection request"
+msgstr ""
+
+#: accounts/templates/partials/account_connection_buttons.html:82
+#, python-format
+msgid ""
+"\n"
+"                    <p>Are you sure you want to send %(username)s a "
+"connection request ?</p>\n"
+"                    "
+msgstr ""
+
+#: accounts/templates/partials/account_connection_buttons.html:87
+msgid "Cancel"
+msgstr ""
+
+#: accounts/templates/partials/account_connection_buttons.html:88
+msgid "Continue"
 msgstr ""
 
 #: accounts/templates/partials/account_connections_list.html:7
