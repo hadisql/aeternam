@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-09 19:25+0000\n"
+"POT-Creation-Date: 2023-12-10 11:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -153,6 +153,18 @@ msgstr "Retour"
 msgid "Save changes"
 msgstr "Sauvegarder"
 
+#: accounts/templates/accounts/activation_email.html:2
+msgid "Hi"
+msgstr "Bonjour"
+
+#: accounts/templates/accounts/activation_email.html:4
+msgid "Please click on the following link to activate your account:"
+msgstr "Veuillez clicker sur le lien ci-dessous afin d'activer votre compte:"
+
+#: accounts/templates/accounts/activation_email.html:8
+msgid "Thank you!"
+msgstr "Merci !"
+
 #: accounts/templates/accounts/custom_widget.html:11
 #: photos/templates/photos/photo_edit.html:74
 msgid "OR"
@@ -294,23 +306,39 @@ msgstr "Commentaires"
 msgid "No results"
 msgstr "Pas de résultats"
 
-#: accounts/views.py:64
+#: accounts/views.py:53
+msgid "Please check your email to activate your account."
+msgstr "Veuillez consulter votre boîte mail afin d'activer votre compte."
+
+#: accounts/views.py:60
+msgid "Aeternam - Activate Your Account"
+msgstr "Aeternam - Activez Votre Compte"
+
+#: accounts/views.py:88
+msgid "Your account has been activated!"
+msgstr "Votre compte a été activé!"
+
+#: accounts/views.py:91
+msgid "Activation link is invalid or expired."
+msgstr "Votre lien d'activation a expiré."
+
+#: accounts/views.py:110
 msgid "Incorrect password. Please try again."
 msgstr "Mot de passe incorrect. Veuillez réessayer."
 
-#: accounts/views.py:67
+#: accounts/views.py:113
 msgid "Authentication failed. Please try again."
 msgstr "L'authentification a échoué. Veuillez réessayer."
 
-#: accounts/views.py:70
+#: accounts/views.py:116
 msgid "User with this email does not exist."
 msgstr "Aucun utilisateur n'existe pour cet identifiant."
 
-#: aeternam/settings.py:166
+#: aeternam/settings.py:176
 msgid "French"
 msgstr "Français"
 
-#: aeternam/settings.py:167
+#: aeternam/settings.py:177
 msgid "English"
 msgstr "Anglais"
 
@@ -464,37 +492,37 @@ msgstr "Uploadez des photos:"
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: albums/templates/albums/albums.html:35
 #: albums/templates/albums/albums.html:36
+#: albums/templates/albums/albums.html:37
 msgid "Albums you created"
 msgstr "Vos albums crées"
 
-#: albums/templates/albums/albums.html:67
-#: albums/templates/albums/albums.html:160
+#: albums/templates/albums/albums.html:68
+#: albums/templates/albums/albums.html:161
 msgid "Empty album"
 msgstr "Album vide"
 
-#: albums/templates/albums/albums.html:69
-#: albums/templates/albums/albums.html:162
+#: albums/templates/albums/albums.html:70
+#: albums/templates/albums/albums.html:163
 msgid "No cover photo"
 msgstr "Pas d'image de couverture"
 
-#: albums/templates/albums/albums.html:74
-#: albums/templates/albums/albums.html:167
+#: albums/templates/albums/albums.html:75
+#: albums/templates/albums/albums.html:168
 msgid "uploaded by"
 msgid_plural "uploaded by"
 msgstr[0] "uploadée par"
 msgstr[1] "uploadées par"
 
-#: albums/templates/albums/albums.html:104
+#: albums/templates/albums/albums.html:105
 msgid "No albums yet !"
 msgstr "Pas encore d'album !"
 
-#: albums/templates/albums/albums.html:108
+#: albums/templates/albums/albums.html:109
 msgid "create a new album"
 msgstr "Créez un nouvel album"
 
-#: albums/templates/albums/albums.html:129
+#: albums/templates/albums/albums.html:130
 msgid "Albums shared with you"
 msgstr "Albums partagés avec vous"
 
