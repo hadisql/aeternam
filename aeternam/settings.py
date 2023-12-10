@@ -64,7 +64,17 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 DISPOSABLE_EMAIL_DOMAINS = "accounts/blacklist/disposable_email_domains.txt"
 
+# Use the SMTP email backend
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
 
+# Set your Gmail credentials as environment variables
+# EMAIL_HOST_USER = 'aeternam.service@gmail.com'
+EMAIL_HOST_USER = os.getenv('AETERNAM_GMAIL_USER')
+# EMAIL_HOST_PASSWORD = 'zolb dvdq yztt bwtx'
+EMAIL_HOST_PASSWORD = os.getenv('AETERNAM_GMAIL_PASSWORD')
 
 MIDDLEWARE = [
     "django_browser_reload.middleware.BrowserReloadMiddleware",

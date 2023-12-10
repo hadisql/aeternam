@@ -21,7 +21,15 @@ from photos.models import Photo
 from comments_likes.models import Comment
 
 from django.contrib import messages #used in NotificationsView
+from django.utils.translation import gettext_lazy as _
 
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from .tokens import account_activation_token
+from django.core.mail import send_mail
+
+from aeternam.settings import EMAIL_HOST_USER
 
 class RegisterPage(FormView):
     template_name = 'accounts/register.html'
@@ -30,12 +38,35 @@ class RegisterPage(FormView):
     success_url = reverse_lazy('albums:albums_view')
 
     def form_valid(self, form):
-        # we override the form_valid function so it logs the user in after registering
-        user = form.save()
-        if user is not None:
-            # if the user form is successfully saved, go ahead and login the user
-            login(self.request, user)
+        print('FORM IS VALID')
+        user = form.save(commit=False)
+        user.is_active = False  # User is not active until they click the activation link
+        user.save()
+
+        # Send activation email
+        self.send_activation_email(user)
+        print('send_activation_email FUNCTION TRIGGERED IN VIEWS')
+
+        # Display a message to the user
+        messages.success(
+            self.request,
+            _("Please check your email to activate your account.")
+        )
+
         return super(RegisterPage, self).form_valid(form)
+
+    def send_activation_email(self, user):
+        current_site = get_current_site(self.request)
+        subject = _('Aeternam - Activate Your Account')
+        message = render_to_string('accounts/activation_email.html', {
+            'user': user,
+            'domain': current_site.domain,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': account_activation_token.make_token(user),
+        })
+        from_email = EMAIL_HOST_USER
+        to_email = user.email
+        send_mail(subject, message, from_email, [to_email])
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
@@ -43,20 +74,48 @@ class RegisterPage(FormView):
         return super(RegisterPage, self).get(*args, **kwargs) #otherwise we apply the original method
 
 
-def loginpage(request):
+def activate_account(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = CustomUser.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+        user = None
 
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        messages.success(request, _('Your account has been activated!'))
+        return redirect('albums:albums_view')
+    else:
+        return HttpResponse(_('Activation link is invalid or expired.'))
+
+def loginpage(request):
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
 
         # Use eamail to authenticate instead of username
         user = authenticate(request, email=email, password=password)
+
         if user is not None:
             login(request, user)
             return HttpResponseRedirect(reverse_lazy('albums:albums_view'))
         else:
-            return HttpResponse('User doesnt exist')   #FOR ERROR PURPOSE
+            # Check for the specific reason for authentication failure
+            try:
+                user = CustomUser.objects.get(email=email)
+                if not user.check_password(password):
+                    # Password is incorrect
+                    messages.error(request, _('Incorrect password. Please try again.'))
+                else:
+                    # User exists, but some other issue (should not reach here in normal cases)
+                    messages.error(request, _('Authentication failed. Please try again.'))
+            except CustomUser.DoesNotExist:
+                # User with the given email does not exist
+                messages.error(request, _('User with this email does not exist.'))
 
+            return render(request, 'accounts/login.html')
     else:
         return render(request, 'accounts/login.html')
 

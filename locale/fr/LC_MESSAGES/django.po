@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-07 11:53+0000\n"
+"POT-Creation-Date: 2023-12-10 11:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,23 +30,27 @@ msgstr ""
 msgid "Important dates"
 msgstr ""
 
-#: accounts/forms.py:43 accounts/templates/accounts/account_update.html:43
+#: accounts/forms.py:38 accounts/templates/accounts/account_update.html:43
 #: accounts/templates/accounts/register.html:60
 msgid "First Name"
 msgstr "Prénom"
 
-#: accounts/forms.py:44 accounts/templates/accounts/account_update.html:47
+#: accounts/forms.py:39 accounts/templates/accounts/account_update.html:47
 #: accounts/templates/accounts/register.html:71
 msgid "Last Name"
 msgstr "Nom"
 
-#: accounts/forms.py:45
+#: accounts/forms.py:40
 msgid "Email Adress"
 msgstr "adresse mail"
 
-#: accounts/forms.py:69 accounts/models.py:103 accounts/models.py:136
+#: accounts/forms.py:64 accounts/models.py:103 accounts/models.py:136
 msgid "UNDEFINED"
 msgstr "NON DEFINI"
+
+#: accounts/models.py:23
+msgid "The given email must be set"
+msgstr "Un email doit être procuré"
 
 #: accounts/models.py:53
 msgid "email address"
@@ -87,6 +91,14 @@ msgstr "BEAU-FRERE/BELLE-SOEUR"
 #: accounts/models.py:110
 msgid "FRIEND"
 msgstr "AMI(E)"
+
+#: accounts/models.py:147
+msgid ""
+"{self.user_sending.first_name or self.user_sending} sent you a connection "
+"request."
+msgstr ""
+"{self.user_sending.first_name or self.user_sending} vous a envoyé une "
+"demande de connexion."
 
 #: accounts/templates/accounts/account.html:62
 #: photos/templates/photos/photo_detail.html:97
@@ -141,6 +153,18 @@ msgstr "Retour"
 msgid "Save changes"
 msgstr "Sauvegarder"
 
+#: accounts/templates/accounts/activation_email.html:2
+msgid "Hi"
+msgstr "Bonjour"
+
+#: accounts/templates/accounts/activation_email.html:4
+msgid "Please click on the following link to activate your account:"
+msgstr "Veuillez clicker sur le lien ci-dessous afin d'activer votre compte:"
+
+#: accounts/templates/accounts/activation_email.html:8
+msgid "Thank you!"
+msgstr "Merci !"
+
 #: accounts/templates/accounts/custom_widget.html:11
 #: photos/templates/photos/photo_edit.html:74
 msgid "OR"
@@ -168,15 +192,29 @@ msgstr ""
 "afin de redonner collectivement de la couleur et du présent à vos souvenirs "
 "communs"
 
-#: accounts/templates/accounts/login.html:73
+#: accounts/templates/accounts/login.html:55
+msgid ""
+"\n"
+"          <input type=\"password\" name=\"password\" class=\"mt-1 w-full "
+"input input-bordered shadow-sm\" id=\"pw\" placeholder=\"Password\" "
+"required=\"\">\n"
+"          "
+msgstr ""
+"\n"
+"          <input type=\"password\" name=\"password\" class=\"mt-1 w-full "
+"input input-bordered shadow-sm\" id=\"pw\" placeholder=\"Mot de passe\" "
+"required=\"\">\n"
+"          "
+
+#: accounts/templates/accounts/login.html:74
 msgid "No account?"
 msgstr "Pas encore de compte ?"
 
-#: accounts/templates/accounts/login.html:74
+#: accounts/templates/accounts/login.html:75
 msgid "Sign up"
 msgstr "Inscrivez-vous"
 
-#: accounts/templates/accounts/login.html:77
+#: accounts/templates/accounts/login.html:78
 msgid "Sign in"
 msgstr "Valider"
 
@@ -268,11 +306,39 @@ msgstr "Commentaires"
 msgid "No results"
 msgstr "Pas de résultats"
 
-#: aeternam/settings.py:166
+#: accounts/views.py:53
+msgid "Please check your email to activate your account."
+msgstr "Veuillez consulter votre boîte mail afin d'activer votre compte."
+
+#: accounts/views.py:60
+msgid "Aeternam - Activate Your Account"
+msgstr "Aeternam - Activez Votre Compte"
+
+#: accounts/views.py:88
+msgid "Your account has been activated!"
+msgstr "Votre compte a été activé!"
+
+#: accounts/views.py:91
+msgid "Activation link is invalid or expired."
+msgstr "Votre lien d'activation a expiré."
+
+#: accounts/views.py:110
+msgid "Incorrect password. Please try again."
+msgstr "Mot de passe incorrect. Veuillez réessayer."
+
+#: accounts/views.py:113
+msgid "Authentication failed. Please try again."
+msgstr "L'authentification a échoué. Veuillez réessayer."
+
+#: accounts/views.py:116
+msgid "User with this email does not exist."
+msgstr "Aucun utilisateur n'existe pour cet identifiant."
+
+#: aeternam/settings.py:176
 msgid "French"
 msgstr "Français"
 
-#: aeternam/settings.py:167
+#: aeternam/settings.py:177
 msgid "English"
 msgstr "Anglais"
 
@@ -426,38 +492,37 @@ msgstr "Uploadez des photos:"
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: albums/templates/albums/albums.html:35
 #: albums/templates/albums/albums.html:36
+#: albums/templates/albums/albums.html:37
 msgid "Albums you created"
 msgstr "Vos albums crées"
 
-#: albums/templates/albums/albums.html:67
-#: albums/templates/albums/albums.html:159
+#: albums/templates/albums/albums.html:68
+#: albums/templates/albums/albums.html:161
 msgid "Empty album"
 msgstr "Album vide"
 
-#: albums/templates/albums/albums.html:69
-#: albums/templates/albums/albums.html:161
+#: albums/templates/albums/albums.html:70
+#: albums/templates/albums/albums.html:163
 msgid "No cover photo"
 msgstr "Pas d'image de couverture"
 
-#: albums/templates/albums/albums.html:74
-#: albums/templates/albums/albums.html:166
+#: albums/templates/albums/albums.html:75
+#: albums/templates/albums/albums.html:168
 msgid "uploaded by"
 msgid_plural "uploaded by"
 msgstr[0] "uploadée par"
 msgstr[1] "uploadées par"
 
-#: albums/templates/albums/albums.html:103
+#: albums/templates/albums/albums.html:105
 msgid "No albums yet !"
 msgstr "Pas encore d'album !"
 
-#: albums/templates/albums/albums.html:107
-#| msgid "Create a new album"
+#: albums/templates/albums/albums.html:109
 msgid "create a new album"
 msgstr "Créez un nouvel album"
 
-#: albums/templates/albums/albums.html:128
+#: albums/templates/albums/albums.html:130
 msgid "Albums shared with you"
 msgstr "Albums partagés avec vous"
 
@@ -2000,10 +2065,3 @@ msgstr ""
 #, python-format
 #~ msgid "%(notification.created_at|timesince|up_to:',')s ago "
 #~ msgstr "il y a %(notification.created_at|timesince|up_to:',')s"
-
-#~ msgid ""
-#~ "{self.user_sending.first_name or self.user_sending} sent you a connection "
-#~ "request."
-#~ msgstr ""
-#~ "{self.user_sending.first_name or self.user_sending} vous a envoyé une "
-#~ "demande de connexion."

@@ -20,7 +20,7 @@ class CustomUserManager(UserManager):
           Create and save a user with the given username, email, and password.
           """
         if not email:
-            raise ValueError('The given email must be set')
+            raise ValueError(_('The given email must be set'))
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
@@ -144,7 +144,7 @@ class RelationRequest(models.Model):
 
         # Create a notification when user sends a request
         title = "Connection request"
-        message=f"{self.user_sending.first_name or self.user_sending} sent you a connection request."
+        message=_(f"{self.user_sending.first_name or self.user_sending} sent you a connection request.")
         create_notification(self.user_receiving, self.user_sending, ContentType.objects.get_for_model(self), self.pk, message, title)
 
 

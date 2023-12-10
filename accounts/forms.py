@@ -11,20 +11,15 @@ class RegisterForm(UserCreationForm):
         fields = ('email', 'first_name', 'last_name',)
 
     input_class = 'mt-1 w-full input input-bordered shadow-sm'
-
     first_name = forms.CharField(
         widget=forms.TextInput(attrs={'class': input_class, 'id':'FirstName'}), required=False)
-
     last_name = forms.CharField(
         widget=forms.TextInput(attrs={'class': input_class, 'id':'LastName'}), required=False)
-
     email = forms.CharField(
         widget=forms.EmailInput(attrs={'class': input_class, 'id':'Email', 'name':'email',}),
         required=True)
-
     password1 = forms.CharField(
         widget=forms.PasswordInput(attrs={'class':input_class, 'id':'Password'}))
-
     password2 = forms.CharField(
         widget=forms.PasswordInput(attrs={'class':input_class, 'id':'PasswordConfirmation'}))
 
