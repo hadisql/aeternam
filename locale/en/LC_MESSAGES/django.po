@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-10 21:47+0000\n"
+"POT-Creation-Date: 2023-12-11 01:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,6 +90,11 @@ msgstr ""
 
 #: accounts/models.py:110
 msgid "FRIEND"
+msgstr ""
+
+#: accounts/models.py:146
+#: accounts/templates/partials/modal_request_confirmation.html:41
+msgid "Connection request"
 msgstr ""
 
 #: accounts/models.py:147
@@ -232,46 +237,24 @@ msgstr ""
 msgid "Log in"
 msgstr ""
 
-#: accounts/templates/partials/account_connection_buttons.html:8
+#: accounts/templates/partials/account_connection_buttons.html:10
 msgid "Connected"
 msgstr ""
 
-#: accounts/templates/partials/account_connection_buttons.html:16
-msgid "Request Sent"
+#: accounts/templates/partials/account_connection_buttons.html:27
+msgid ""
+"\n"
+"        <input type=\"submit\" name=\"accept_form\" class=\"btn btn-outline "
+"btn-info\" value=\"Accept connection request\">\n"
+"        "
 msgstr ""
 
-#: accounts/templates/partials/account_connection_buttons.html:28
+#: accounts/templates/partials/account_connection_buttons.html:32
 msgid "Who is"
 msgstr ""
 
-#: accounts/templates/partials/account_connection_buttons.html:28
+#: accounts/templates/partials/account_connection_buttons.html:32
 msgid "to you ?"
-msgstr ""
-
-#: accounts/templates/partials/account_connection_buttons.html:44
-#: accounts/templates/partials/account_connection_buttons.html:54
-msgid "Connect"
-msgstr ""
-
-#: accounts/templates/partials/account_connection_buttons.html:76
-msgid "Connection request"
-msgstr ""
-
-#: accounts/templates/partials/account_connection_buttons.html:82
-#, python-format
-msgid ""
-"\n"
-"                    <p>Are you sure you want to send %(username)s a "
-"connection request ?</p>\n"
-"                    "
-msgstr ""
-
-#: accounts/templates/partials/account_connection_buttons.html:87
-msgid "Cancel"
-msgstr ""
-
-#: accounts/templates/partials/account_connection_buttons.html:88
-msgid "Continue"
 msgstr ""
 
 #: accounts/templates/partials/account_connections_list.html:7
@@ -304,36 +287,77 @@ msgstr ""
 msgid "Comments"
 msgstr ""
 
+#: accounts/templates/partials/modal_request_confirmation.html:11
+msgid "Connect"
+msgstr ""
+
+#: accounts/templates/partials/modal_request_confirmation.html:16
+msgid "Request Sent"
+msgstr ""
+
+#: accounts/templates/partials/modal_request_confirmation.html:48
+msgid "Cancel request"
+msgstr ""
+
+#: accounts/templates/partials/modal_request_confirmation.html:60
+#, python-format
+msgid ""
+"\n"
+"                        <p>Are you sure you want to send %(username)s a "
+"connection request ?</p>\n"
+"                      "
+msgstr ""
+
+#: accounts/templates/partials/modal_request_confirmation.html:64
+msgid "Are you sure you want to cancel your connection request ?"
+msgstr ""
+
+#: accounts/templates/partials/modal_request_confirmation.html:68
+msgid "Cancel"
+msgstr ""
+
+#: accounts/templates/partials/modal_request_confirmation.html:69
+msgid "Continue"
+msgstr ""
+
 #: accounts/templates/partials/searchbar_results.html:35
 msgid "No results"
 msgstr ""
 
-#: accounts/views.py:53
+#: accounts/views.py:55
 msgid "Please check your email to activate your account."
 msgstr ""
 
-#: accounts/views.py:60
+#: accounts/views.py:62
 msgid "Aeternam - Activate Your Account"
 msgstr ""
 
-#: accounts/views.py:88
+#: accounts/views.py:90
 msgid "Your account has been activated!"
 msgstr ""
 
-#: accounts/views.py:91
+#: accounts/views.py:93
 msgid "Activation link is invalid or expired."
 msgstr ""
 
-#: accounts/views.py:110
+#: accounts/views.py:112
 msgid "Incorrect password. Please try again."
 msgstr ""
 
-#: accounts/views.py:113
+#: accounts/views.py:115
 msgid "Authentication failed. Please try again."
 msgstr ""
 
-#: accounts/views.py:116
+#: accounts/views.py:118
 msgid "User with this email does not exist."
+msgstr ""
+
+#: accounts/views.py:268
+msgid "Connection created"
+msgstr ""
+
+#: accounts/views.py:269
+msgid "{} has accepted your connection request"
 msgstr ""
 
 #: aeternam/settings.py:176
@@ -676,7 +700,7 @@ msgstr ""
 msgid "Confirm Delete"
 msgstr ""
 
-#: core/templates/partials/notifications.html:54
+#: core/templates/partials/notifications.html:60
 #, python-format
 msgid "%(timing)s ago "
 msgstr ""

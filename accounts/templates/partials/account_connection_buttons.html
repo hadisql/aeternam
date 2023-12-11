@@ -24,8 +24,9 @@
     <form method="POST">
       {% csrf_token %}
       <div class="max-lg:mt-0 grid grid-cols-1 space-y-2">
+        {% blocktrans %}
         <input type="submit" name="accept_form" class="btn btn-outline btn-info" value="Accept connection request">
-
+        {% endblocktrans %}
         <!-- SELECT RELATION TYPE -->
         <label class="label">
           <p class="label-text">{% trans "Who is" %} <span class="font-bold">{% firstof account.first_name account.email %}</span> {% trans "to you ?" %}</p>

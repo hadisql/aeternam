@@ -143,7 +143,7 @@ class RelationRequest(models.Model):
         super().save(*args, **kwargs)
 
         # Create a notification when user sends a request
-        title = "Connection request"
+        title = _("Connection request")
         message=_(f"{self.user_sending.first_name or self.user_sending} sent you a connection request.")
         create_notification(self.user_receiving, self.user_sending, ContentType.objects.get_for_model(self), self.pk, message, title)
 
@@ -154,6 +154,8 @@ class RelationRequest(models.Model):
 
         super().delete(*args, **kwargs) #the deletion should happen AFTER marking the notification (in order to retrieve the correct object_id)
 
+    def __str__(self):
+        return f"{self.user_sending} -> {self.user_receiving}"
 
 
 
