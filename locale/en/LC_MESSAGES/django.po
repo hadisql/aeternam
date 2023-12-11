@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-11 01:06+0000\n"
+"POT-Creation-Date: 2023-12-11 11:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,14 +93,12 @@ msgid "FRIEND"
 msgstr ""
 
 #: accounts/models.py:146
-#: accounts/templates/partials/modal_request_confirmation.html:41
+#: accounts/templates/partials/modal_request_confirmation.html:49
 msgid "Connection request"
 msgstr ""
 
 #: accounts/models.py:147
-msgid ""
-"{self.user_sending.first_name or self.user_sending} sent you a connection "
-"request."
+msgid "{} sent you a connection request."
 msgstr ""
 
 #: accounts/templates/accounts/account.html:62
@@ -122,10 +120,6 @@ msgstr ""
 
 #: accounts/templates/accounts/account.html:119
 msgid "...not the right relation type ? you can change it"
-msgstr ""
-
-#: accounts/templates/accounts/account.html:140
-msgid "disconnect"
 msgstr ""
 
 #: accounts/templates/accounts/account_update.html:59
@@ -287,19 +281,27 @@ msgstr ""
 msgid "Comments"
 msgstr ""
 
-#: accounts/templates/partials/modal_request_confirmation.html:11
+#: accounts/templates/partials/modal_request_confirmation.html:12
 msgid "Connect"
 msgstr ""
 
-#: accounts/templates/partials/modal_request_confirmation.html:16
+#: accounts/templates/partials/modal_request_confirmation.html:17
 msgid "Request Sent"
 msgstr ""
 
-#: accounts/templates/partials/modal_request_confirmation.html:48
+#: accounts/templates/partials/modal_request_confirmation.html:24
+msgid "disconnect"
+msgstr ""
+
+#: accounts/templates/partials/modal_request_confirmation.html:56
 msgid "Cancel request"
 msgstr ""
 
-#: accounts/templates/partials/modal_request_confirmation.html:60
+#: accounts/templates/partials/modal_request_confirmation.html:63
+msgid "Disconnect user"
+msgstr ""
+
+#: accounts/templates/partials/modal_request_confirmation.html:75
 #, python-format
 msgid ""
 "\n"
@@ -308,15 +310,24 @@ msgid ""
 "                      "
 msgstr ""
 
-#: accounts/templates/partials/modal_request_confirmation.html:64
+#: accounts/templates/partials/modal_request_confirmation.html:79
 msgid "Are you sure you want to cancel your connection request ?"
 msgstr ""
 
-#: accounts/templates/partials/modal_request_confirmation.html:68
+#: accounts/templates/partials/modal_request_confirmation.html:87
+#, python-format
+msgid ""
+"\n"
+"                        You are about to disconnect %(username)s from your "
+"account.\n"
+"                        "
+msgstr ""
+
+#: accounts/templates/partials/modal_request_confirmation.html:94
 msgid "Cancel"
 msgstr ""
 
-#: accounts/templates/partials/modal_request_confirmation.html:69
+#: accounts/templates/partials/modal_request_confirmation.html:95
 msgid "Continue"
 msgstr ""
 

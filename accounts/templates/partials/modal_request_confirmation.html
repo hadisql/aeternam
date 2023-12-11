@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load get_full_name %}
 
 <div x-data="{ modalOpen: false }"
       @keydown.escape.window="modalOpen = false"
@@ -14,6 +15,13 @@
         <button type="button" @click="modalOpen=true" name="undo_request_form" class="btn btn-success opacity-50 border-2 border-emerald-700">
           <span class="loading loading-spinner"></span>
           {% trans "Request Sent" %}
+        </button>
+      {% elif modal_type == "disconnect" %}
+        <button @click="modalOpen=true" type="button" name="delete_form" class="btn btn-outline btn-error">
+          <span>
+            <svg class="w-5 h-5 stroke-current stroke-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path id="Vector" d="M16 20V18M18 16H20M7.04996 11.293L5.63574 12.7072C4.07365 14.2693 4.07466 16.8016 5.63675 18.3637C7.19885 19.9258 9.7308 19.9262 11.2929 18.3641L12.7076 16.9497M6 8H4M8 4V6M11.293 7.05044L12.7072 5.63623C14.2693 4.07413 16.8016 4.07368 18.3637 5.63578C19.9258 7.19787 19.9254 9.7308 18.3633 11.2929L16.9492 12.7071" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </span>
+          {% trans "disconnect" %}
         </button>
       {% endif %}
       <template x-teleport="body">
@@ -50,6 +58,13 @@
                           <svg class="w-8 h-8 stroke-current stroke-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path id="Vector" d="M16 20V18M18 16H20M7.04996 11.293L5.63574 12.7072C4.07365 14.2693 4.07466 16.8016 5.63675 18.3637C7.19885 19.9258 9.7308 19.9262 11.2929 18.3641L12.7076 16.9497M6 8H4M8 4V6M11.293 7.05044L12.7072 5.63623C14.2693 4.07413 16.8016 4.07368 18.3637 5.63578C19.9258 7.19787 19.9254 9.7308 18.3633 11.2929L16.9492 12.7071" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                         </span>
                       </h3>
+                    {% elif modal_type == "disconnect" %}
+                      <h3 class="inline-flex gap-4 text-xl font-semibold">
+                        {% trans "Disconnect user" %}
+                        <span>
+                          <svg class="w-8 h-8 stroke-current stroke-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path id="Vector" d="M16 20V18M18 16H20M7.04996 11.293L5.63574 12.7072C4.07365 14.2693 4.07466 16.8016 5.63675 18.3637C7.19885 19.9258 9.7308 19.9262 11.2929 18.3641L12.7076 16.9497M6 8H4M8 4V6M11.293 7.05044L12.7072 5.63623C14.2693 4.07413 16.8016 4.07368 18.3637 5.63578C19.9258 7.19787 19.9254 9.7308 18.3633 11.2929L16.9492 12.7071" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </span>
+                      </h3>
                     {% endif %}
                     <button @click="modalOpen=false" class="absolute top-0 right-0 flex items-center justify-center w-8 h-8 mt-5 mr-5 rounded-full hover:text-gray-800 hover:bg-gray-50">
                         <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -57,16 +72,27 @@
                   </div>
                   <div class="relative w-auto pb-8">
                     {% if modal_type == "send_request" %}
-                      {% blocktranslate with username=account.get_full_name %}
+                      {% blocktranslate with username=account|get_full_name %}
                         <p>Are you sure you want to send {{username}} a connection request ?</p>
                       {% endblocktranslate %}
                     {% elif modal_type == "cancel_request" %}
                       <p>{% trans "Are you sure you want to cancel your connection request ?" %}</p>
+                    {% elif modal_type == "disconnect" %}
+                      <p class="inline-flex gap-2">
+                        <span>
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                          </svg>
+                        </span>
+                        {% blocktranslate with username=account|get_full_name %}
+                        You are about to disconnect {{username}} from your account.
+                        {% endblocktranslate %}
+                      </p>
                     {% endif %}
                   </div>
                   <div class="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
                       <button @click="modalOpen=false" type="button" class="inline-flex items-center justify-center h-10 px-4 py-2 text-sm font-medium transition-colors border rounded-md focus:outline-none focus:ring-2 focus:ring-neutral-100 focus:ring-offset-2">{% trans "Cancel" %}</button>
-                      <button id="confirm_request" @click="modalOpen=false" type="button" class="inline-flex items-center justify-center h-10 px-4 py-2 text-sm font-medium text-white transition-colors border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2 bg-neutral-950 hover:bg-neutral-900">{% trans "Continue" %}</button>
+                      <button {% if modal_type == "disconnect" %} id="confirm_disconnect" {% else %} id="confirm_request" {% endif %} @click="modalOpen=false" type="button" class="inline-flex items-center justify-center h-10 px-4 py-2 text-sm font-medium text-white transition-colors border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2 bg-neutral-950 hover:bg-neutral-900">{% trans "Continue" %}</button>
                   </div>
               </div>
           </div>

@@ -144,7 +144,7 @@ class RelationRequest(models.Model):
 
         # Create a notification when user sends a request
         title = _("Connection request")
-        message=_(f"{self.user_sending.first_name or self.user_sending} sent you a connection request.")
+        message=_("{} sent you a connection request.").format(self.user_sending.first_name or self.user_sending)
         create_notification(self.user_receiving, self.user_sending, ContentType.objects.get_for_model(self), self.pk, message, title)
 
 
