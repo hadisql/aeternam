@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-11 01:06+0000\n"
+"POT-Creation-Date: 2023-12-11 11:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,17 +93,13 @@ msgid "FRIEND"
 msgstr "AMI(E)"
 
 #: accounts/models.py:146
-#: accounts/templates/partials/modal_request_confirmation.html:41
+#: accounts/templates/partials/modal_request_confirmation.html:49
 msgid "Connection request"
 msgstr "Demande de connexion"
 
 #: accounts/models.py:147
-msgid ""
-"{self.user_sending.first_name or self.user_sending} sent you a connection "
-"request."
-msgstr ""
-"{self.user_sending.first_name or self.user_sending} vous a envoyé une "
-"demande de connexion."
+msgid "{} sent you a connection request."
+msgstr "{} vous a envoyé une demande de connexion"
 
 #: accounts/templates/accounts/account.html:62
 #: photos/templates/photos/photo_detail.html:97
@@ -129,10 +125,6 @@ msgstr "et vous êtes connectés en tant que"
 #: accounts/templates/accounts/account.html:119
 msgid "...not the right relation type ? you can change it"
 msgstr "...pas le bon type de relation ? vous pouvez le modifier"
-
-#: accounts/templates/accounts/account.html:140
-msgid "disconnect"
-msgstr "Déconnecter la relation"
 
 #: accounts/templates/accounts/account_update.html:59
 msgid "Date of Birth"
@@ -311,19 +303,27 @@ msgstr ""
 msgid "Comments"
 msgstr "Commentaires"
 
-#: accounts/templates/partials/modal_request_confirmation.html:11
+#: accounts/templates/partials/modal_request_confirmation.html:12
 msgid "Connect"
 msgstr "Se connecter"
 
-#: accounts/templates/partials/modal_request_confirmation.html:16
+#: accounts/templates/partials/modal_request_confirmation.html:17
 msgid "Request Sent"
 msgstr "Demande envoyée"
 
-#: accounts/templates/partials/modal_request_confirmation.html:48
+#: accounts/templates/partials/modal_request_confirmation.html:24
+msgid "disconnect"
+msgstr "Déconnecter la relation"
+
+#: accounts/templates/partials/modal_request_confirmation.html:56
 msgid "Cancel request"
 msgstr "Annuler la demande"
 
-#: accounts/templates/partials/modal_request_confirmation.html:60
+#: accounts/templates/partials/modal_request_confirmation.html:63
+msgid "Disconnect user"
+msgstr "Déconnecter la relation"
+
+#: accounts/templates/partials/modal_request_confirmation.html:75
 #, python-format
 msgid ""
 "\n"
@@ -336,15 +336,32 @@ msgstr ""
 "connexion à  %(username)s ? </p>\n"
 "                    "
 
-#: accounts/templates/partials/modal_request_confirmation.html:64
+#: accounts/templates/partials/modal_request_confirmation.html:79
 msgid "Are you sure you want to cancel your connection request ?"
 msgstr "Êtes-vous sûr de vouloir annuler votre demande de connexion ?"
 
-#: accounts/templates/partials/modal_request_confirmation.html:68
+#: accounts/templates/partials/modal_request_confirmation.html:87
+#| msgid ""
+#| "\n"
+#| "                        <p>Are you sure you want to send %(username)s a "
+#| "connection request ?</p>\n"
+#| "                      "
+msgid ""
+"\n"
+"                        You are about to disconnect %(username)s from your "
+"account.\n"
+"                        "
+msgstr ""
+"\n"
+"                        Vous vous apprêtez à déconnecter %(username)s de votre "
+"compte.\n"
+"                     "
+
+#: accounts/templates/partials/modal_request_confirmation.html:94
 msgid "Cancel"
 msgstr "Annuler"
 
-#: accounts/templates/partials/modal_request_confirmation.html:69
+#: accounts/templates/partials/modal_request_confirmation.html:95
 msgid "Continue"
 msgstr "Continuer"
 
@@ -385,8 +402,6 @@ msgid "Connection created"
 msgstr "Connexion créee"
 
 #: accounts/views.py:269
-#| msgid ""
-#| "{self.request.user.get_full_name()} has accepted your connection request"
 msgid "{} has accepted your connection request"
 msgstr "{} a accepté(e) votre demande de connexion"
 
@@ -2114,6 +2129,13 @@ msgstr ""
 #: venv/lib/python3.10/site-packages/django/views/templates/default_urlconf.html:248
 msgid "Connect, get help, or contribute"
 msgstr ""
+
+#~ msgid ""
+#~ "{self.user_sending.first_name or self.user_sending} sent you a connection "
+#~ "request."
+#~ msgstr ""
+#~ "{self.user_sending.first_name or self.user_sending} vous a envoyé une "
+#~ "demande de connexion."
 
 #~ msgid "Photo description"
 #~ msgstr "Description de la photo"
