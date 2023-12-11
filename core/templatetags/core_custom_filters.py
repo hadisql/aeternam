@@ -41,6 +41,7 @@ def get_url_mapping(content_type):
     url_mappings = {
         'albumaccess': 'albums:album_detail',
         'relationrequest': 'accounts:account_view',
+        'relation': 'accounts:account_view',
         'comment': 'photos:photo_detail',
         'album': 'albums:album_detail',
         # ... more mapping if needed
@@ -55,6 +56,8 @@ def get_notif_param(notification):
         return content_object.commented_photo.pk
     elif content_object and content_type == 'albumaccess':
         return content_object.album.pk
+    elif content_object and content_type == 'relation':
+        return content_object.user_receiving.pk
     elif content_object and content_type == 'relationrequest':
         return content_object.user_sending.pk
     elif content_object and content_type == 'album':

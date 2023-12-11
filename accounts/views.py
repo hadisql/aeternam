@@ -16,6 +16,8 @@ from django.db.models import Q
 
 from .models import RelationRequest, Relation, Notification
 from .forms import RelationRequestForm, RelationAcceptForm, RelationRequestUndoForm, RelationDeleteForm, RegisterForm, RelationChangeForm
+from .models import create_notification
+from django.contrib.contenttypes.models import ContentType
 
 from photos.models import Photo
 from comments_likes.models import Comment
@@ -230,12 +232,13 @@ class UserView(LoginRequiredMixin, ListView):
 
     def post(self, request, *args, **kwargs):
         account_id = self.kwargs['pk']
+        account_id_user = CustomUser.objects.get(id=account_id)
 
         if "request_form" in request.POST:
             request_form = RelationRequestForm(request.POST)
             if request_form.is_valid():
                 sender = self.request.user
-                receiver = CustomUser.objects.get(id=account_id)
+                receiver = account_id_user
 
                 RelationRequest.objects.create(
                     user_receiving=receiver,
@@ -245,7 +248,7 @@ class UserView(LoginRequiredMixin, ListView):
         elif "accept_form" in request.POST:
             accept_form = RelationAcceptForm(request.POST)
             if accept_form.is_valid():
-                sender = CustomUser.objects.get(id=account_id)
+                sender = account_id_user
                 receiver = self.request.user
                 relation_type = accept_form.cleaned_data['relation_type']
 
@@ -260,12 +263,17 @@ class UserView(LoginRequiredMixin, ListView):
                     user_sending = sender,
                     relation_type=relation_type,
                 )
+                print(f"last relation object : {Relation.objects.last()}\nwith ID : {Relation.objects.last().pk}")
+                # notify the user that the request was accepted :
+                title = _("Connection created")
+                message = _("{} has accepted your connection request").format(self.request.user.get_full_name())
+                create_notification(user=account_id_user, user_from=self.request.user, content_type=ContentType.objects.get_for_model(Relation), object_id=Relation.objects.last().pk, message=message, title=title)
 
         elif "undo_request_form" in request.POST:
             undo_request_form = RelationRequestUndoForm(request.POST)
             if undo_request_form.is_valid():
                 sender = self.request.user
-                receiver = CustomUser.objects.get(id=account_id)
+                receiver = account_id_user
 
                 request_to_delete = RelationRequest.objects.get(
                     user_receiving=receiver,
@@ -277,7 +285,7 @@ class UserView(LoginRequiredMixin, ListView):
             delete_form = RelationDeleteForm(request.POST)
             if delete_form.is_valid():
                 sender = self.request.user
-                receiver = CustomUser.objects.get(id=account_id)
+                receiver = account_id_user
 
             request_to_delete = Relation.objects.filter(
                 Q(user_receiving=receiver,user_sending=sender) | Q(user_receiving=sender, user_sending=receiver))
