@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-10 11:18+0000\n"
+"POT-Creation-Date: 2023-12-11 01:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -92,6 +92,11 @@ msgstr "BEAU-FRERE/BELLE-SOEUR"
 msgid "FRIEND"
 msgstr "AMI(E)"
 
+#: accounts/models.py:146
+#: accounts/templates/partials/modal_request_confirmation.html:41
+msgid "Connection request"
+msgstr "Demande de connexion"
+
 #: accounts/models.py:147
 msgid ""
 "{self.user_sending.first_name or self.user_sending} sent you a connection "
@@ -153,15 +158,15 @@ msgstr "Retour"
 msgid "Save changes"
 msgstr "Sauvegarder"
 
-#: accounts/templates/accounts/activation_email.html:2
+#: accounts/templates/accounts/activation_email.html:3
 msgid "Hi"
 msgstr "Bonjour"
 
-#: accounts/templates/accounts/activation_email.html:4
+#: accounts/templates/accounts/activation_email.html:5
 msgid "Please click on the following link to activate your account:"
 msgstr "Veuillez clicker sur le lien ci-dessous afin d'activer votre compte:"
 
-#: accounts/templates/accounts/activation_email.html:8
+#: accounts/templates/accounts/activation_email.html:9
 msgid "Thank you!"
 msgstr "Merci !"
 
@@ -247,25 +252,29 @@ msgstr "Déjà un compte ?"
 msgid "Log in"
 msgstr "Se connecter"
 
-#: accounts/templates/partials/account_connection_buttons.html:8
+#: accounts/templates/partials/account_connection_buttons.html:10
 msgid "Connected"
 msgstr "Connectés"
 
-#: accounts/templates/partials/account_connection_buttons.html:16
-msgid "Request Sent"
-msgstr "Demande envoyée"
+#: accounts/templates/partials/account_connection_buttons.html:27
+msgid ""
+"\n"
+"        <input type=\"submit\" name=\"accept_form\" class=\"btn btn-outline "
+"btn-info\" value=\"Accept connection request\">\n"
+"        "
+msgstr ""
+"\n"
+"        <input type=\"submit\" name=\"accept_form\" class=\"btn btn-outline "
+"btn-info\" value=\"Accepter la demande de connexion\">\n"
+"        "
 
-#: accounts/templates/partials/account_connection_buttons.html:28
+#: accounts/templates/partials/account_connection_buttons.html:32
 msgid "Who is"
 msgstr "Qui est"
 
-#: accounts/templates/partials/account_connection_buttons.html:28
+#: accounts/templates/partials/account_connection_buttons.html:32
 msgid "to you ?"
 msgstr "pour vous ?"
-
-#: accounts/templates/partials/account_connection_buttons.html:44
-msgid "Connect"
-msgstr "Se connecter"
 
 #: accounts/templates/partials/account_connections_list.html:7
 msgid "Connected accounts"
@@ -302,37 +311,84 @@ msgstr ""
 msgid "Comments"
 msgstr "Commentaires"
 
+#: accounts/templates/partials/modal_request_confirmation.html:11
+msgid "Connect"
+msgstr "Se connecter"
+
+#: accounts/templates/partials/modal_request_confirmation.html:16
+msgid "Request Sent"
+msgstr "Demande envoyée"
+
+#: accounts/templates/partials/modal_request_confirmation.html:48
+msgid "Cancel request"
+msgstr "Annuler la demande"
+
+#: accounts/templates/partials/modal_request_confirmation.html:60
+#, python-format
+msgid ""
+"\n"
+"                        <p>Are you sure you want to send %(username)s a "
+"connection request ?</p>\n"
+"                      "
+msgstr ""
+"\n"
+"                    <p>Êtes-vous sûr de vouloir envoyer une demande de "
+"connexion à  %(username)s ? </p>\n"
+"                    "
+
+#: accounts/templates/partials/modal_request_confirmation.html:64
+msgid "Are you sure you want to cancel your connection request ?"
+msgstr "Êtes-vous sûr de vouloir annuler votre demande de connexion ?"
+
+#: accounts/templates/partials/modal_request_confirmation.html:68
+msgid "Cancel"
+msgstr "Annuler"
+
+#: accounts/templates/partials/modal_request_confirmation.html:69
+msgid "Continue"
+msgstr "Continuer"
+
 #: accounts/templates/partials/searchbar_results.html:35
 msgid "No results"
 msgstr "Pas de résultats"
 
-#: accounts/views.py:53
+#: accounts/views.py:55
 msgid "Please check your email to activate your account."
 msgstr "Veuillez consulter votre boîte mail afin d'activer votre compte."
 
-#: accounts/views.py:60
+#: accounts/views.py:62
 msgid "Aeternam - Activate Your Account"
 msgstr "Aeternam - Activez Votre Compte"
 
-#: accounts/views.py:88
+#: accounts/views.py:90
 msgid "Your account has been activated!"
 msgstr "Votre compte a été activé!"
 
-#: accounts/views.py:91
+#: accounts/views.py:93
 msgid "Activation link is invalid or expired."
 msgstr "Votre lien d'activation a expiré."
 
-#: accounts/views.py:110
+#: accounts/views.py:112
 msgid "Incorrect password. Please try again."
 msgstr "Mot de passe incorrect. Veuillez réessayer."
 
-#: accounts/views.py:113
+#: accounts/views.py:115
 msgid "Authentication failed. Please try again."
 msgstr "L'authentification a échoué. Veuillez réessayer."
 
-#: accounts/views.py:116
+#: accounts/views.py:118
 msgid "User with this email does not exist."
 msgstr "Aucun utilisateur n'existe pour cet identifiant."
+
+#: accounts/views.py:268
+msgid "Connection created"
+msgstr "Connexion créee"
+
+#: accounts/views.py:269
+#| msgid ""
+#| "{self.request.user.get_full_name()} has accepted your connection request"
+msgid "{} has accepted your connection request"
+msgstr "{} a accepté(e) votre demande de connexion"
 
 #: aeternam/settings.py:176
 msgid "French"
@@ -703,7 +759,7 @@ msgstr "Déconnexion"
 msgid "Confirm Delete"
 msgstr "Confirmer la suppression"
 
-#: core/templates/partials/notifications.html:54
+#: core/templates/partials/notifications.html:60
 #, python-format
 msgid "%(timing)s ago "
 msgstr "il y a %(timing)s"
