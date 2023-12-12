@@ -34,7 +34,9 @@ DEBUG = os.getenv('DEBUG', '0').lower() in ['true', 't', '1']
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
 
-
+CSRF_TRUSTED_ORIGINS = [
+    'http://192.168.1.26'
+]
 # Application definition
 
 INSTALLED_APPS = [
