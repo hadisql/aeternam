@@ -90,4 +90,4 @@ class PhotoAccess(models.Model):
         unique_together = ['photo', 'user']
 
     def __str__(self) -> str:
-        return f"Photo {self.photo.pk} accessible to {self.user.get_full_name() or self.user.email} (uploaded by {self.photo.uploaded_by.get_full_name() or self.uploaded_by.email})"
+        return f"Photo {self.photo.pk} accessible to {self.user.get_full_name() or self.user.email} (uploaded by {self.photo.uploaded_by.get_full_name() or self.photo.uploaded_by.email})"
