@@ -6,7 +6,7 @@ from accounts.models import CustomUser
 import os
 from io import BytesIO
 
-from utils.resize_image import resize_image
+from utils.edit_image import resize_image
 
 import logging
 logger = logging.getLogger(__name__)
@@ -43,7 +43,7 @@ class Photo(models.Model):
         if self.image.size > size_limit:
 
             # Get the resized image data
-            resized_image_data = resize_image(self.image.path, size_limit)
+            resized_image_data = resize_image(self.image, size_limit)
             logger.info(f"Resizing image {self.image.name}...")
             print(f"Resizing image {self.image.name}...")
 

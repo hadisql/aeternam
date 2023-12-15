@@ -58,8 +58,6 @@ INSTALLED_APPS = [
 
     'django_cleanup.apps.CleanupConfig',
 ]
-if DEBUG:
-    INSTALLED_APPS.append("whitenoise.runserver_nostatic")
 
 # Custom User model
 AUTH_USER_MODEL = 'accounts.CustomUser'
@@ -216,6 +214,7 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 if not DEBUG and not USE_S3:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    INSTALLED_APPS.append("whitenoise.runserver_nostatic")
 
 
 # AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')

@@ -8,7 +8,7 @@ from sorl.thumbnail import ImageField
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
-from utils.resize_image import resize_image
+from utils.edit_image import resize_image
 from django.core.files.images import ImageFile
 import os
 from io import BytesIO
