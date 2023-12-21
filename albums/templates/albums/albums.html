@@ -72,7 +72,9 @@
               </div>
               {% endif %}
             </div>
+            {% if album.photo_count > 0 %}
             <h3 class="mt-4 text-sm">{{ album.photo_count }} photo{{album.photo_count|pluralize}} | {% blocktrans count counter=album.photo_count %}uploaded by{% plural %}uploaded by{% endblocktrans %} {{ album.creator.first_name }} </h3>
+            {% endif %}
             <div class="flex flex-wrap gap-2">
               <p class="mt-1 text-lg font-medium">{{ album.title }}</p>
               {% if number_of_access|list_item:forloop.counter0 %}
@@ -165,7 +167,9 @@
               </div>
               {% endif %}
             </div>
+            {% if album.photo_count > 0 %}
             <h3 class="mt-4 text-sm">{{ album.photo_count }} photos | {% blocktrans count counter=album.photo_count %}uploaded by{% plural %}uploaded by{% endblocktrans %} {% firstof album.creator.get_full_name album.creator.email %} </h3>
+            {% endif %}
             <p class="mt-1 text-lg font-medium">{{ album.title }}</p>
           </a>
           {% endfor %}
