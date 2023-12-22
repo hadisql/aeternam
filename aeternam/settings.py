@@ -21,7 +21,7 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(BASE_DIR / '.env')
+# load_dotenv(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -214,6 +214,9 @@ if USE_S3:
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
     THUMBNAIL_FORCE_OVERWRITE = True
 
+    AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
+    AWS_CLOUDFRONT_KEY = os.getenv('AWS_CLOUDFRONT_KEY').encode('ascii').strip()
+    AWS_CLOUDFRONT_KEY_ID = os.getenv('AWS_CLOUDFRONT_KEY_ID').strip()
     # STORAGES = {
     #     "default": {
     #         "BACKEND": "storages.backends.s3.S3Storage",
