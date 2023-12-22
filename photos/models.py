@@ -6,7 +6,7 @@ from accounts.models import CustomUser
 import os
 from io import BytesIO
 
-from utils.resize_image import resize_image
+from utils.edit_image import resize_image
 
 import logging
 logger = logging.getLogger(__name__)
@@ -43,7 +43,7 @@ class Photo(models.Model):
         if self.image.size > size_limit:
 
             # Get the resized image data
-            resized_image_data = resize_image(self.image.path, size_limit)
+            resized_image_data = resize_image(self.image, size_limit)
             logger.info(f"Resizing image {self.image.name}...")
             print(f"Resizing image {self.image.name}...")
 
@@ -90,4 +90,4 @@ class PhotoAccess(models.Model):
         unique_together = ['photo', 'user']
 
     def __str__(self) -> str:
-        return f"Photo {self.photo.pk} accessible to {self.user.get_full_name() or self.user.email} (uploaded by {self.photo.uploaded_by.get_full_name() or self.uploaded_by.email})"
+        return f"Photo {self.photo.pk} accessible to {self.user.get_full_name() or self.user.email} (uploaded by {self.photo.uploaded_by.get_full_name() or self.photo.uploaded_by.email})"

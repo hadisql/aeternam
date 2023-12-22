@@ -39,6 +39,6 @@ urlpatterns += i18n_patterns(
     path("albums/", include(albums.urls)),
 )
 
-if settings.DEBUG:
+if settings.DEBUG and not settings.USE_S3:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

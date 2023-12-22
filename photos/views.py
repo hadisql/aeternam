@@ -24,6 +24,7 @@ from PIL import Image, ImageOps
 from io import BytesIO
 from django.core.files.images import ImageFile
 
+from utils.edit_image import rotate_image, flip_image
 
 # def add_photos_to_album(request, album_id):
 #     album = get_object_or_404(Album, pk=album_id)
@@ -206,25 +207,19 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
             elif rotation_angle or mirror_flip:
                 if photo.uploaded_by == self.request.user:
                     if rotation_angle:
-                        image = Image.open(photo.image.path)
-                        rotated_image = image.rotate(-rotation_angle, expand=True)
-                        rotated_image_io = BytesIO()
-                        rotated_image.save(rotated_image_io, format='JPEG')
+                        rotated_image_file = rotate_image(photo.image, rotation_angle)
                         photo.image.save(
                             os.path.basename(photo.image.name),
-                            ImageFile(rotated_image_io),
+                            rotated_image_file,
                             save=False
                         )
                         photo.save()
 
                     if mirror_flip:
-                        image = Image.open(photo.image.path)
-                        flipped_image = ImageOps.mirror(image)
-                        flipped_image_io = BytesIO()
-                        flipped_image.save(flipped_image_io, format='JPEG')
+                        flipped_image_file = flip_image(photo.image)
                         photo.image.save(
                             os.path.basename(photo.image.name),
-                            ImageFile(flipped_image_io),
+                            flipped_image_file,
                             save=False
                         )
                         photo.save()
