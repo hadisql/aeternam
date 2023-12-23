@@ -187,6 +187,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 USE_S3 = os.getenv('USE_S3', '0').lower() in ['true', 't', '1']
+USE_CLOUDFRONT = os.getenv('USE_CLOUDFRONT', '0').lower() in ['true', 't', '1']
 
 STATIC_URL = 'static/'
 
@@ -214,29 +215,13 @@ if USE_S3:
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
     THUMBNAIL_FORCE_OVERWRITE = True
 
-    AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
-    AWS_CLOUDFRONT_KEY = os.getenv('AWS_CLOUDFRONT_KEY').encode('ascii').strip()
-    AWS_CLOUDFRONT_KEY_ID = os.getenv('AWS_CLOUDFRONT_KEY_ID').strip()
-    # STORAGES = {
-    #     "default": {
-    #         "BACKEND": "storages.backends.s3.S3Storage",
-    #         "OPTIONS": {},
-    #     },
-    #     "staticfiles": {
-    #         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-    #     },
-    # }
+    if USE_CLOUDFRONT:
+        AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
+        AWS_CLOUDFRONT_KEY = os.getenv('AWS_CLOUDFRONT_KEY').encode('ascii').strip()
+        AWS_CLOUDFRONT_KEY_ID = os.getenv('AWS_CLOUDFRONT_KEY_ID').strip()
 
 else:
-    #     STORAGES = {
-    #     "default": {
-    #         "BACKEND":  "django.core.files.storage.FileSystemStorage",
-    #         "OPTIONS": {},
-    #     },
-    #     "staticfiles": {
-    #         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-    #     },
-    # }
+
     DEFAULT_FILE_STORAGE =  'django.core.files.storage.FileSystemStorage'
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 

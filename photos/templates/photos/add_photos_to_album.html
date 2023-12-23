@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load static %}
 {% load thumbnail %}
 {% load i18n %}
 {% block title %}Add photos{% endblock title %}
@@ -12,7 +13,7 @@
   <div class="mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-16 lg:max-w-7xl lg:px-8">
       <div class="rounded-lg bg-base-200 p-8 shadow-lg lg:p-12"">
 
-        <form method="post" enctype="multipart/form-data">
+        <form id="addPhotoForm" method="post" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="grid grid-cols-1 w-full max-w-xl mx-auto place-items-center">
             <h1 class="py-6 text-3xl font-bold tracking-tight">{% trans "Upload new photos:" %}</h1>
@@ -27,8 +28,8 @@
               <a>{% if rest > 0 %}+ {{rest}} {% trans "other" %}{{rest|pluralize}}{% endif %}</a>
             </div>
 
-            <input type="file" name="images" required multiple class="mt-6 block file-input file-inp file-input-bordered w-full max-w-xs">
-
+            <input id="fileInput" type="file" name="images" required multiple class="mt-6 block file-input file-input-sm file-input-bordered w-full max-w-xs">
+            <p id="load_spinner" class="hidden inline-flex align-middle items-center"><span class="loading loading-infinity loading-lg mr-3"></span>{% trans "loading" %}<span class="ml-2 loading loading-dots loading-xs"></span></p>
             <div class="h-px my-12 mx-2 bg-base-content opacity-50 w-full"></div>
             <div class="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
               <a href="{% url 'albums:album_detail' album.pk %}" class="btn btn-block btn-neutral">
@@ -38,7 +39,9 @@
                 </svg>
                 {% trans "Back" %}
               </a>
-              <button class="btn btn-block btn-outline" type="submit">{% trans "Save" %}</button>
+              <button id="save_btn" class="btn btn-block btn-outline gap-4" type="submit">
+                {% trans "Save" %}
+              </button>
             </div>
           </div>
         </form>
@@ -52,3 +55,7 @@
 
 
 {% endblock body %}
+
+{% block javascript %}
+  <script src="{% static 'photos/js/add_photo_spinner.js' %}"></script>
+{% endblock javascript %}

@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 
 from .models import Album
-from .forms import AlbumForm
+from .forms import AlbumForm, AlbumCreateForm
 from photos.models import Photo, PhotoAccess
 from .models import AlbumAccess
 
@@ -30,7 +30,7 @@ from django.utils.translation import gettext_lazy as _
 class AlbumCreateView(LoginRequiredMixin, CreateView):
     # -- template name is 'album_form.html'
     model = Album
-    form_class = AlbumForm
+    form_class = AlbumCreateForm
     # success_url = reverse_lazy('albums:albums_view')
     # "redirect" didn't work : The reverse_lazy function is used to lazily reverse the URL, ensuring that it's only evaluated when the view is executed.
 
