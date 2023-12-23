@@ -1,5 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
@@ -51,6 +50,19 @@ class CustomUserChangeForm(UserChangeForm):
         else:
             self.fields['hide_connections'].initial = False
 
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+    class Meta:
+        model = CustomUser
+        fields = ('old_password','new_password1','new_password2')
+
+    input_class = 'w-full input input-bordered text-sm'
+    old_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class':input_class, 'placeholder':_('Old password')}))
+    new_password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class':input_class, 'placeholder':_('New password')}))
+    new_password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class':input_class, 'placeholder':_('Confirm new password')}))
 
 class RelationRequestForm(forms.Form):
     pass

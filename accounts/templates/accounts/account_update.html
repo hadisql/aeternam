@@ -13,6 +13,18 @@
     <div class="grid grid-cols-1 gap-x-16 gap-y-8 lg:grid-cols-5">
       <div class="lg:col-span-2 lg:py-6">
         <div class="flex flex-wrap max-lg:place-content-center px-6 gap-10">
+          {% if messages %}
+            {% for message in messages %}
+            <div class="my-6 alert alert-{{message.tags}} w-full">
+              {% if message.tags == "success" %}
+              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              {% elif message.tags == "error" %}
+              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              {% endif %}
+              <span>{{message}}</span>
+            </div>
+            {% endfor %}
+          {% endif %}
           <!-- PROFILE PIC-->
           <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
@@ -61,27 +73,30 @@
             </div>
           </div>
 
-          <div class=" grid grid-cols-1 gap-3 text-center">
-            <div class="ml-2 mt-4 form-control">
-              <label class="flex gap-4 cursor-pointer">
+          <div class=" grid grid-cols-1 sm:grid-cols-2 gap-3 text-center">
+            <div class="ml-2 mt-4 sm:ml-0 form-control w-full flex items-center place-content-center">
+              <label class="flex gap-4 sm:gap-2 items-center cursor-pointer">
                 <svg class="w-6 h-6 flex-none" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" >
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
                 </svg>
-                <span class="label-text font-semibold">{% trans "hide connections on your profile" %}</span>
+                <p class="label-text font-semibold flex flex-wrap place-content-center">
+                  <span >{% trans "hide connections" %}</span>
+                  <span>&nbsp;{% trans "on my profile" %}</span>
+                </p>
                 {{form.hide_connections}}
               </label>
             </div>
+            <div class="ml-2 mt-4 sm:ml-0">
+              <a class="btn btn-outline w-full" href="{% url 'accounts:change_password' %}">
+                {% trans "Change my password" %}
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M21 8.5V6C21 4.89543 20.1046 4 19 4H5C3.89543 4 3 4.89543 3 6V11C3 12.1046 3.89543 13 5 13H10.875M19 14V12C19 10.8954 18.1046 10 17 10C15.8954 10 15 10.8954 15 12V14M14 20H20C20.5523 20 21 19.5523 21 19V15C21 14.4477 20.5523 14 20 14H14C13.4477 14 13 14.4477 13 15V19C13 19.5523 13.4477 20 14 20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <circle cx="7.5" cy="8.5" r="1.5" fill="currentColor"></circle> <circle cx="12" cy="8.5" r="1.5" fill="currentColor"></circle> </g></svg>
+              </a>
+            </div>
           </div>
 
-          {% comment %} <div>
-            <label class="sr-only" for="bio">Bio</label>
-            {{form.bio}}
-          </div> {% endcomment %}
-
-
-
-        {{form.errors}}
-        <div class="pt-10 lg:pt-28 grid grid-cols-1 sm:grid-cols-2 ml-2 gap-4">
+        <!-- {{form.errors}} -->
+        <div class="divider py-5 lg:py-14"></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 ml-2 gap-4">
             <a href="{% url 'accounts:account_view' account.pk  %}" class="btn btn-neutral sm:col-span-1">
               <svg class="w-6 h-6 stroke-2 fill-current" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
                 <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
@@ -91,7 +106,7 @@
             </a>
             <button
               type="submit"
-              class="inline-block btn btn-accent btn-block px-5 py-3 font-medium text-white sm:w-auto sm:col-span-1"
+              class="inline-block btn btn-outline btn-block px-5 py-3 font-medium sm:w-auto sm:col-span-1"
             >
               {% trans "Save changes" %}
             </button>
