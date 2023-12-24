@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-11 11:51+0000\n"
+"POT-Creation-Date: 2023-12-24 10:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,12 +30,12 @@ msgstr ""
 msgid "Important dates"
 msgstr ""
 
-#: accounts/forms.py:38 accounts/templates/accounts/account_update.html:43
+#: accounts/forms.py:38 accounts/templates/accounts/account_update.html:55
 #: accounts/templates/accounts/register.html:60
 msgid "First Name"
 msgstr "Prénom"
 
-#: accounts/forms.py:39 accounts/templates/accounts/account_update.html:47
+#: accounts/forms.py:39 accounts/templates/accounts/account_update.html:59
 #: accounts/templates/accounts/register.html:71
 msgid "Last Name"
 msgstr "Nom"
@@ -44,13 +44,41 @@ msgstr "Nom"
 msgid "Email Adress"
 msgstr "adresse mail"
 
-#: accounts/forms.py:64 accounts/models.py:103 accounts/models.py:136
+#: accounts/forms.py:62
+msgid "Old password"
+msgstr "Ancien mot de passe"
+
+#: accounts/forms.py:64 accounts/forms.py:175
+msgid "New password"
+msgstr "Nouveau mot de passe"
+
+#: accounts/forms.py:66 accounts/forms.py:183
+msgid "Confirm new password"
+msgstr "Confirmez le mot de passe"
+
+#: accounts/forms.py:87 accounts/templates/accounts/register.html:79
+msgid "Email"
+msgstr "Courriel"
+
+#: accounts/forms.py:103
+msgid "The provided email address does not match any user account."
+msgstr "L'email fournit ne correspond à aucun compte utilisateur."
+
+#: accounts/forms.py:176
+msgid "Enter new password"
+msgstr "Entrez un nouveau mot de passe"
+
+#: accounts/forms.py:181
+msgid "New password confirmation"
+msgstr "Confirmez le nouveau mot de passe"
+
+#: accounts/forms.py:195 accounts/models.py:103 accounts/models.py:136
 msgid "UNDEFINED"
 msgstr "NON DEFINI"
 
 #: accounts/models.py:23
 msgid "The given email must be set"
-msgstr "Un email doit être procuré"
+msgstr "Un email doit être établi"
 
 #: accounts/models.py:53
 msgid "email address"
@@ -126,25 +154,33 @@ msgstr "et vous êtes connectés en tant que"
 msgid "...not the right relation type ? you can change it"
 msgstr "...pas le bon type de relation ? vous pouvez le modifier"
 
-#: accounts/templates/accounts/account_update.html:59
+#: accounts/templates/accounts/account_update.html:71
 msgid "Date of Birth"
 msgstr "Date de naissance"
 
-#: accounts/templates/accounts/account_update.html:70
-msgid "hide connections on your profile"
-msgstr "masquer vos connexions sur votre profile"
+#: accounts/templates/accounts/account_update.html:83
+msgid "hide connections"
+msgstr "Cacher les connexions"
+
+#: accounts/templates/accounts/account_update.html:84
+msgid "on my profile"
+msgstr "sur mon profil"
 
 #: accounts/templates/accounts/account_update.html:91
+msgid "Change my password"
+msgstr "Changer mon mot de passe"
+
+#: accounts/templates/accounts/account_update.html:105
 #: albums/templates/albums/album_access.html:189
 #: albums/templates/albums/album_detail.html:179
-#: albums/templates/albums/album_form.html:40
-#: photos/templates/photos/add_photos_to_album.html:39
+#: albums/templates/albums/album_form.html:42
+#: photos/templates/photos/add_photos_to_album.html:40
 #: photos/templates/photos/photo_detail.html:87
 #: photos/templates/photos/photo_edit.html:136
 msgid "Back"
 msgstr "Retour"
 
-#: accounts/templates/accounts/account_update.html:97
+#: accounts/templates/accounts/account_update.html:111
 #: albums/templates/albums/album_access.html:57
 #: photos/templates/photos/photo_edit.html:141
 msgid "Save changes"
@@ -161,6 +197,20 @@ msgstr "Veuillez clicker sur le lien ci-dessous afin d'activer votre compte:"
 #: accounts/templates/accounts/activation_email.html:9
 msgid "Thank you!"
 msgstr "Merci !"
+
+#: accounts/templates/accounts/change_password.html:10
+msgid "Change Password"
+msgstr "Changer le mot de passe"
+
+#: accounts/templates/accounts/change_password.html:22
+#: accounts/templates/partials/modal_request_confirmation.html:94
+msgid "Cancel"
+msgstr "Annuler"
+
+#: accounts/templates/accounts/change_password.html:24
+#: accounts/templates/registration/password_reset_confirm.html:19
+msgid "Update"
+msgstr "Mettre à jour"
 
 #: accounts/templates/accounts/custom_widget.html:11
 #: photos/templates/photos/photo_edit.html:74
@@ -211,18 +261,18 @@ msgstr "Pas encore de compte ?"
 msgid "Sign up"
 msgstr "Inscrivez-vous"
 
-#: accounts/templates/accounts/login.html:78
+#: accounts/templates/accounts/login.html:77
 msgid "Sign in"
 msgstr "Valider"
+
+#: accounts/templates/accounts/login.html:79
+msgid "I forgot my password"
+msgstr "J'ai oublié mon mot de passe"
 
 #: accounts/templates/accounts/register.html:28
 #: accounts/templates/accounts/register.html:45
 msgid "Welcome to Æternam"
 msgstr "Bienvenue sur Æternam"
-
-#: accounts/templates/accounts/register.html:79
-msgid "Email"
-msgstr "Courriel"
 
 #: accounts/templates/accounts/register.html:90
 msgid "Password"
@@ -241,6 +291,7 @@ msgid "Already have an account?"
 msgstr "Déjà un compte ?"
 
 #: accounts/templates/accounts/register.html:131
+#: accounts/templates/registration/password_reset_complete.html:16
 msgid "Log in"
 msgstr "Se connecter"
 
@@ -341,11 +392,7 @@ msgid "Are you sure you want to cancel your connection request ?"
 msgstr "Êtes-vous sûr de vouloir annuler votre demande de connexion ?"
 
 #: accounts/templates/partials/modal_request_confirmation.html:87
-#| msgid ""
-#| "\n"
-#| "                        <p>Are you sure you want to send %(username)s a "
-#| "connection request ?</p>\n"
-#| "                      "
+#, python-format
 msgid ""
 "\n"
 "                        You are about to disconnect %(username)s from your "
@@ -353,13 +400,9 @@ msgid ""
 "                        "
 msgstr ""
 "\n"
-"                        Vous vous apprêtez à déconnecter %(username)s de votre "
-"compte.\n"
+"                        Vous vous apprêtez à déconnecter %(username)s de "
+"votre compte.\n"
 "                     "
-
-#: accounts/templates/partials/modal_request_confirmation.html:94
-msgid "Cancel"
-msgstr "Annuler"
 
 #: accounts/templates/partials/modal_request_confirmation.html:95
 msgid "Continue"
@@ -368,6 +411,56 @@ msgstr "Continuer"
 #: accounts/templates/partials/searchbar_results.html:35
 msgid "No results"
 msgstr "Pas de résultats"
+
+#: accounts/templates/registration/password_reset_complete.html:14
+msgid "Your password has been set.  You may go ahead and log in now."
+msgstr "Votre mot de passe a été recrée. Vous pouvez à présent vous connecter"
+
+#: accounts/templates/registration/password_reset_confirm.html:10
+msgid ""
+"\n"
+"              <h2 class=\"text-xl pb-6 font-semibold\">Please enter your new "
+"password twice.<br />\n"
+"                So we can verify you typed it in correctly.</h2>\n"
+"            "
+msgstr ""
+
+#: accounts/templates/registration/password_reset_done.html:10
+msgid ""
+"\n"
+"          <p>We've e-mailed you instructions for setting your password to "
+"the e-mail address you submitted.</p>\n"
+"          <p>You should be receiving it shortly.</p>\n"
+"        "
+msgstr ""
+"\n"
+"          <p>Nous vous avons transmis les instructions permettant de recréer votre mot de passe "
+"sur l'adresse mail que vous nous avez fournie.</p>\n"
+"          <p>Vous devriez recevoir les intructions sous peu.</p>\n"
+"        "
+
+#: accounts/templates/registration/password_reset_email.html:4
+#, python-format
+msgid ""
+"You're receiving this email because you requested a password reset for your "
+"user account at %(site_name)s."
+msgstr ""
+"Vous recevez ce mail car un demande de recréation de mot de passe "
+"pour votre sur %(site_name)s a été émise."
+
+#: accounts/templates/registration/password_reset_email.html:6
+msgid "Please go to the following page and choose a new password:"
+msgstr "Veuillez vous rendre sur la page suivante afin de choisir un nouveau mot de passe:"
+
+#: accounts/templates/registration/password_reset_email.html:10
+msgid "If you didn't request a password reset, you can ignore this email."
+msgstr "Si vous n'êtes pas à l'origine de cette demande, veuillez ignorer ce présent mail."
+
+#: accounts/templates/registration/password_reset_form.html:11
+msgid ""
+"Please specify your email address to receive instructions for resetting it."
+msgstr ""
+"Veuillez spécifier une adresse mail afin de recevoir les instructions nécessaire au renouvellement du mot de passe."
 
 #: accounts/views.py:55
 msgid "Please check your email to activate your account."
@@ -397,11 +490,16 @@ msgstr "L'authentification a échoué. Veuillez réessayer."
 msgid "User with this email does not exist."
 msgstr "Aucun utilisateur n'existe pour cet identifiant."
 
-#: accounts/views.py:268
+#: accounts/views.py:163
+#| msgid "Album was deleted successfully"
+msgid "Your password has been changed successfully"
+msgstr "Votre mot de passe a été modifié avec succès"
+
+#: accounts/views.py:289
 msgid "Connection created"
 msgstr "Connexion créee"
 
-#: accounts/views.py:269
+#: accounts/views.py:290
 msgid "{} has accepted your connection request"
 msgstr "{} a accepté(e) votre demande de connexion"
 
@@ -413,7 +511,7 @@ msgstr "Français"
 msgid "English"
 msgstr "Anglais"
 
-#: albums/forms.py:15
+#: albums/forms.py:15 albums/forms.py:31
 msgid "Add a description for this album"
 msgstr "Ajoutez une description pour cet album"
 
@@ -498,7 +596,7 @@ msgid "Delete the Album \"%(album)s\" ?"
 msgstr "Supprimer l'album \"%(album)s\" ?"
 
 #: albums/templates/albums/album_confirm_delete.html:20
-#: photos/templates/photos/add_photos_to_album.html:27
+#: photos/templates/photos/add_photos_to_album.html:28
 msgid "other"
 msgstr "autre"
 
@@ -541,25 +639,30 @@ msgstr "Partagé avec:"
 msgid "Album Settings"
 msgstr "Réglages"
 
-#: albums/templates/albums/album_form.html:14
 #: albums/templates/albums/album_form.html:15
+#: albums/templates/albums/album_form.html:16
 msgid "Create a new album"
 msgstr "Créez un nouvel album"
 
-#: albums/templates/albums/album_form.html:22
+#: albums/templates/albums/album_form.html:23
 msgid "Title"
 msgstr "Titre"
 
-#: albums/templates/albums/album_form.html:26
+#: albums/templates/albums/album_form.html:27
 msgid "Description"
 msgstr ""
 
-#: albums/templates/albums/album_form.html:32
+#: albums/templates/albums/album_form.html:33
 msgid "Upload photos:"
 msgstr "Uploadez des photos:"
 
-#: albums/templates/albums/album_form.html:42
-#: photos/templates/photos/add_photos_to_album.html:41
+#: albums/templates/albums/album_form.html:35
+#: photos/templates/photos/add_photos_to_album.html:32
+msgid "loading"
+msgstr ""
+
+#: albums/templates/albums/album_form.html:44
+#: photos/templates/photos/add_photos_to_album.html:43
 msgid "Save"
 msgstr "Sauvegarder"
 
@@ -569,38 +672,38 @@ msgid "Albums you created"
 msgstr "Vos albums crées"
 
 #: albums/templates/albums/albums.html:68
-#: albums/templates/albums/albums.html:161
+#: albums/templates/albums/albums.html:163
 msgid "Empty album"
 msgstr "Album vide"
 
 #: albums/templates/albums/albums.html:70
-#: albums/templates/albums/albums.html:163
+#: albums/templates/albums/albums.html:165
 msgid "No cover photo"
 msgstr "Pas d'image de couverture"
 
-#: albums/templates/albums/albums.html:75
-#: albums/templates/albums/albums.html:168
+#: albums/templates/albums/albums.html:76
+#: albums/templates/albums/albums.html:171
 msgid "uploaded by"
 msgid_plural "uploaded by"
-msgstr[0] "uploadée par"
-msgstr[1] "uploadées par"
+msgstr[0] "partagée par"
+msgstr[1] "partagées par"
 
-#: albums/templates/albums/albums.html:105
+#: albums/templates/albums/albums.html:107
 msgid "No albums yet !"
 msgstr "Pas encore d'album !"
 
-#: albums/templates/albums/albums.html:109
+#: albums/templates/albums/albums.html:111
 msgid "create a new album"
 msgstr "Créez un nouvel album"
 
-#: albums/templates/albums/albums.html:130
+#: albums/templates/albums/albums.html:132
 msgid "Albums shared with you"
 msgstr "Albums partagés avec vous"
 
-#
 #: albums/templates/partials/breadcrumb_add_album.html:11
-msgid "New album"
-msgstr "Nouvel album"
+#| msgid "Create a new album"
+msgid "Create album"
+msgstr "Créez un nouvel album"
 
 #: albums/templates/partials/breadcrumb_settings.html:13
 #: photos/templates/partials/breadcrumb_photo_settings.html:12
@@ -857,7 +960,7 @@ msgstr "Accès à la photo"
 msgid "Full Name"
 msgstr "Nom complet"
 
-#: photos/templates/photos/add_photos_to_album.html:18
+#: photos/templates/photos/add_photos_to_album.html:19
 msgid "Upload new photos:"
 msgstr "Uploadez de nouvelles photos:"
 
@@ -867,7 +970,7 @@ msgstr "Supprimer la photo"
 
 #: photos/templates/photos/photo_detail.html:27
 msgid "Uploaded by"
-msgstr "uploadée par"
+msgstr "partagée par"
 
 #: photos/templates/photos/photo_detail.html:106
 msgid "delete"
@@ -909,28 +1012,28 @@ msgstr "Remplacer cette photo :"
 msgid "Choose who can access this photo :"
 msgstr "Choisissez qui peut accéder à cette photo:"
 
-#: photos/views.py:97
+#: photos/views.py:98
 #, python-format
 msgid "You've reached 80% of your maximum photo upload limit"
 msgstr "Vous avez atteint 80% de votre limite de stockage"
 
-#: photos/views.py:101
+#: photos/views.py:102
 msgid "1 photo was uploaded successfully"
-msgstr "1 photo a été uploadée avec succès"
+msgstr "1 photo a été transmise avec succès"
 
-#: photos/views.py:103
+#: photos/views.py:104
 msgid "{} photos were uploaded successfully"
-msgstr "{} photos ont été uploadées avec succès"
+msgstr "{} photos ont été transmises avec succès"
 
-#: photos/views.py:105
+#: photos/views.py:106
 msgid "You have reached your maximum amount of photos to upload: {} photos"
 msgstr "Vous avez atteint le nombre maximal de photos à uploader: {} photos"
 
-#: photos/views.py:240
+#: photos/views.py:235
 msgid "{} has now access to your photo"
 msgstr "{} a maintenant accès à votre photo"
 
-#: photos/views.py:245
+#: photos/views.py:240
 msgid "{} photo access has been revoked"
 msgstr "L'accès de {} à la photo a été révoqué "
 
@@ -2129,6 +2232,13 @@ msgstr ""
 #: venv/lib/python3.10/site-packages/django/views/templates/default_urlconf.html:248
 msgid "Connect, get help, or contribute"
 msgstr ""
+
+#~ msgid "hide connections on your profile"
+#~ msgstr "masquer vos connexions sur votre profile"
+
+#
+#~ msgid "New album"
+#~ msgstr "Nouvel album"
 
 #~ msgid ""
 #~ "{self.user_sending.first_name or self.user_sending} sent you a connection "
