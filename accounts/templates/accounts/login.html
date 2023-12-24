@@ -69,13 +69,15 @@
         </div>
       </div>
 
-      <div class="flex items-center justify-between">
-        <p class="text-sm ">
+      <div class="grid grid-cols-12 grid-rows-2 gap-2">
+        <p class="text-sm col-span-9">
           {% trans "No account?" %}
           <a class="underline" href="{% url 'accounts:register' %}">{% trans "Sign up" %}</a>
         </p>
-
-        <button type="submit" class="btn btn-primary mt-2">{% trans "Sign in" %}</button>
+        <button type="submit" class="btn btn-primary mt-2 col-span-3 row-span-2">{% trans "Sign in" %}</button>
+        <p class="text-sm text-sm col-span-9">
+          <a class="underline" href="{% url 'accounts:password_reset' %}">{% trans "I forgot my password" %}</a>
+        </p>
       </div>
     </form>
 
