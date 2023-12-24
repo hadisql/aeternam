@@ -1,16 +1,16 @@
-from typing import Any, Dict
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, JsonResponse
 from django.template.loader import render_to_string
 
-from django.views.generic import FormView, UpdateView, ListView
+from django.views.generic import FormView, UpdateView, ListView, View
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 
 from .models import CustomUser
-from .forms import CustomUserChangeForm
+from .forms import CustomUserChangeForm, CustomPasswordChangeForm
 
 from django.db.models import Q
 
@@ -144,6 +144,27 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         print(form.changed_data)
         print("self.request.post", self.request.POST)
         return super().form_valid(form)
+
+class ChangePasswordView(LoginRequiredMixin, View):
+    template_name = 'accounts/change_password.html'
+    form_class = CustomPasswordChangeForm  # Use the custom form class you created
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(user=request.user)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Keep the user logged in
+            messages.success(
+                self.request,
+                _("Your password has been changed successfully")
+            )
+            return redirect('accounts:edit_account', pk=request.user.pk)
+        return render(request, self.template_name, {'form': form})
+
 
 def user_search(request):
     context = {}
