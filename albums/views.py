@@ -117,38 +117,6 @@ class AlbumListView(LoginRequiredMixin, ListView):
 
         return context
 
-
-# ----------------------------
-# ------ UPDATE ALBUM --------
-# ----------------------------
-
-# -----> defined in "album_access" function view, in accounts app
-
-# class AlbumUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-#     # -- template name is 'album_form.html'
-#     model = Album
-#     form_class = AlbumForm
-
-#     def test_func(self):
-#         album_id = self.kwargs['pk']
-#         album = Album.objects.get(id=album_id)
-#         return self.request.user == album.creator  # Check if the logged-in user owns the album
-
-#     def handle_no_permission(self):
-#         return HttpResponseForbidden("<h2>You don't have permission to view this page.</h2>")
-
-
-#     def get_success_url(self) -> str:
-#         return reverse('albums:album_detail', kwargs={'pk': self.kwargs['pk']})
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['type_of_view'] = 'update'
-#         album_id = self.kwargs['pk']
-#         context['photos'] = Photo.objects.filter(album=album_id)
-#         return context
-
-
 # ----------------------------
 # --------- DETAIL  ----------
 # ----------------------------
@@ -237,7 +205,7 @@ def album_access(request, album_id):
     photos_in_album = Photo.objects.filter(album=album)
     photo_count = photos_in_album.count()
 
-    # (keys,values) : (related users , number of allowed photos in album)
+    # (keys,values) : (related users , Queryset of allowed photos in album)
     relations_dict = {}
     for relation in relations:
         relations_dict[relation] = Photo.objects.filter(album=album).filter(accessed_photo__user__in=[relation])
@@ -246,31 +214,6 @@ def album_access(request, album_id):
         form = AlbumForm(request.POST, instance=album)
         if form.is_valid():
             form.save()
-
-            # # Process album access updates
-            # for relation in relations:
-            #     checkbox_name = f'user_{relation.id}'
-            #     if checkbox_name in request.POST:
-            #         if not AlbumAccess.objects.filter(album=album, user=relation).exists():
-            #             AlbumAccess.objects.create(album=album, user=relation)
-            #             messages.success(request, f'{relation.get_full_name() or relation.email} has now access to your album')
-            #     else:
-            #         access_to_delete = AlbumAccess.objects.filter(album=album, user=relation)
-            #         photo_accesses = PhotoAccess.objects.filter(photo__album=album, user=relation)
-            #         if access_to_delete:
-            #             related_notifications = Notification.objects.filter(user_from=request.user, content_type=ContentType.objects.get_for_model(AlbumAccess), object_id=access_to_delete.first().id)
-            #             print(f'related notifications to delete : {related_notifications}')
-            #             if related_notifications:
-            #                 for notification in related_notifications:
-            #                     notification.delete()
-            #             access_to_delete.delete()
-            #             for photo_access in photo_accesses:
-            #                 photo_access.delete()
-            #                 print(f'access {photo_access} revoked for user {relation}')
-            #             messages.info(request, f'{relation.get_full_name() or relation.email} access has been revoked')
-            #             print(f'album access for user {relation.get_full_name()} was deleted')
-
-
     else:
         form = AlbumForm(instance=album)
 
