@@ -96,23 +96,23 @@ def photo_access_manager(request):
             create_notification(user=user, user_from=request.user, content_type=ContentType.objects.get_for_model(Album), object_id=album.id, message=f"{request.user.get_full_name() or request.user.email} gave you access to {len(access_to_add)} photos", title="Photo access")
             # we change the default 'identifier' in order for it to contain the photos information
             notif_to_update = Notification.objects.last()
-            notif_to_update.identifier += '-photos:' + '+'.join(access_to_add)
+            notif_to_update.identifier += '-photos:' + '+'.join(str(access_to_add))
             notif_to_update.save()
             # we check if the photos revoked have a notification associated with them
-            notif_to_delete = Notification.objects.filter(identifier=f"album{album_id}-{user.id}-photos:{'+'.join(access_to_remove)}")
+            notif_to_delete = Notification.objects.filter(identifier=f"album{album_id}-{user.id}-photos:{'+'.join(str(access_to_remove))}")
             if notif_to_delete:
                 notif_to_delete.delete()
         elif len(access_to_add) and not len(access_to_remove):
             messages.success(request, _("You gave {username} access to {number} photos").format(username=(user.get_full_name() or user.email), number=len(access_to_add)) )
             create_notification(user=user, user_from=request.user, content_type=ContentType.objects.get_for_model(Album), object_id=album.id, message=f"{request.user.get_full_name() or request.user.email} gave you access to {len(access_to_add)} photos", title="Photo access")
             notif_to_update = Notification.objects.last()
-            notif_to_update.identifier += '-photos:' + '+'.join(access_to_add)
+            notif_to_update.identifier += '-photos:' + '+'.join(str(access_to_add))
             notif_to_update.save()
         else:
             message = _("You revoked {username} their access to {number} photos").format(username=(user.get_full_name() or user.email), number=len(access_to_remove))
             messages.success(request, message)
             # we check if the photos revoked have a notification associated with them
-            notif_to_delete = Notification.objects.filter(identifier=f"album{album_id}-{user.id}-photos:{'+'.join(access_to_remove)}")
+            notif_to_delete = Notification.objects.filter(identifier=f"album{album_id}-{user.id}-photos:{'+'.join(str(access_to_remove))}")
             if notif_to_delete:
                 notif_to_delete.delete()
 

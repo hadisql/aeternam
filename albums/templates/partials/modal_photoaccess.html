@@ -2,11 +2,11 @@
 <div x-data="{ modalOpen: false }" @keydown.escape.window="modalOpen = false" :class="{ 'z-40': modalOpen }"
   class="relative w-auto h-auto">
 
-  <button @click="modalOpen=true" type="button" id="albumaccess_button_{{relation.id}}"
-    class="relative font-semibold text-center py-0.5 px-1 sm:mx-1 text-{{color_class}}-950 bg-{{color_class}}-300/80 border border-{{color_class}}-300/30 rounded-lg w-full">
-    {{innertext}}
-    <span
-      class="absolute -top-3 -right-2 z-10  badge badge-sm border-{{color_class}}-400/60 border-2 text-base-content">{{allowed_photos.count}}/{{photo_count}}</span>
+  <button
+  @click="modalOpen=true"
+  type="button"
+  id="photoAccessBtn"
+  class="hidden">
   </button>
 
   <template x-teleport="body">
@@ -37,21 +37,21 @@
         <div class="relative mx-auto py-8">
           <ul role="list" class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
             {% for photo in photos_in_album %}
-            <li class="relative">
-              <input type="checkbox" id="checkbox_{{relation.id}}_{{photo.id}}" data-checkbox-photo-id="{{photo.id}}" data-checkbox-id="{{relation.id}}" value="" class="hidden" {% if photo in allowed_photos %}checked{% endif %}>
-              <label for="checkbox_{{relation.id}}_{{photo.id}}" class="photo-label group aspect-w-10 aspect-h-7 block w-full overflow-hidden rounded-lg cursor-pointer {% if photo in allowed_photos %}ring-2 ring-offset-2 ring-current {% else %} blur-sm {% endif %}">
-                  {% thumbnail photo.image "600x600" crop="center" as im %}
-                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}"
-                      class="pointer-events-none object-cover group-hover:opacity-75">
-                  {% endthumbnail %}
-              </label>
-            </li>
+              <li class="relative">
+                <input type="checkbox" id="checkbox_{{photo.id}}" data-checkbox-photo-id="{{photo.id}}" data-checkbox-id="" value="" class="hidden">
+                <label for="checkbox_{{photo.id}}" class="photo-label group aspect-w-10 aspect-h-7 block w-full overflow-hidden rounded-lg cursor-pointer">
+                    {% thumbnail photo.image "600x600" crop="center" as im %}
+                      <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ im.title }}"
+                        class="pointer-events-none object-cover group-hover:opacity-75">
+                    {% endthumbnail %}
+                </label>
+              </li>
             {% endfor %}
           </ul>
         </div>
         <div class="flex gap-4 sm:gap-3 flex-row justify-end sm:space-x-2">
             <button @click="modalOpen=false" type="button" class="btn btn-sm btn-outline">Cancel</button>
-            <button @click="modalOpen=false" type="button" class="btn btn-sm" id="continue-button" data-relation-id="{{relation.id}}">Save</button>
+            <button @click="modalOpen=false" type="button" class="btn btn-sm" id="continue-button" data-relation-id="">Save</button>
         </div>
       </div>
     </div>
