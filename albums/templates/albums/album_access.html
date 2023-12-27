@@ -74,6 +74,7 @@
               </div>
 
               <input class="hidden" id="album_id" value="{{album.id}}"/> {# used in the 'modal_photo_access.js' to fetch photo_access_manager with album.id info #}
+              <input class="hidden" id="photo_list" value="{% for photo in photos_in_album %}{{photo.id}},{% endfor %}"> {# used in the 'modal_photo_access.js' to grant access to all photos when clicking on the album access toggle button #}
 
               <div class="overflow-x-auto rounded-lg">
                 <table class="table">
@@ -111,7 +112,17 @@
                           </label>
                         </th>
                         <td>
-                          {% include 'partials/modal_photoaccess.html' %}
+                          <button
+                          id="click-me-btn"
+                          data-photolist="{% for obj in allowed_photos %}{{obj.pk}},{% endfor %}"
+                          type="button"
+                          data-relation-id="{{relation.id}}"
+                          class="relative font-semibold text-center py-0.5 px-1 sm:mx-1 text-{{color_class}}-950 bg-{{color_class}}-300/80 border border-{{color_class}}-300/30 rounded-lg w-full"
+                          >
+                          {{innertext}}
+                          <span
+                            class="absolute -top-3 -right-2 z-10  badge badge-sm border-{{color_class}}-400/60 border-2 text-base-content">{{allowed_photos.count}}/{{photo_count}}</span>
+                        </button>
                         </td>
                         <td>
                           <a href="{% url 'accounts:account_view' relation.pk %}" class="cursor-pointer">
@@ -144,7 +155,8 @@
                   </tbody>
                 </table>
               </div>
-
+              <!-- hidden modal button -->
+              {% include 'partials/modal_photoaccess.html' %}
             </div>
             {% endif %}
 
