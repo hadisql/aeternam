@@ -199,7 +199,8 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
             if new_photo:
                 if photo.uploaded_by == self.request.user:
                     old_photo = Photo.objects.get(pk=photo_id)
-                    old_photo.image.delete(save=False)
+                    # old_photo.image.delete(save=False)
+                    sorl.thumbnail.delete(old_photo.image.name)
 
                     old_photo.image = new_photo
                     old_photo.save()
@@ -224,6 +225,8 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                         )
                         photo.save()
 
+                    sorl.thumbnail.delete(photo.image.name, delete_file=False) # allows thumbnail to be updated
+
             for user in related_users:
                 checkbox_name = f'photoaccess_user_{user.id}'
                 if checkbox_name in self.request.POST:
@@ -241,7 +244,6 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                     # in case we revoke the last photo to the album, make sure the albumaccess is deleted :
                     is_there_any_photo = PhotoAccess.objects.filter(user=user, photo__album=photo.album)
                     if not is_there_any_photo:
-                        print(f'{is_there_any_photo} there is no photo left in this album')
                         albumaccess_to_delete = AlbumAccess.objects.filter(album=photo.album, user=user)
                         albumaccess_to_delete.delete()
 
