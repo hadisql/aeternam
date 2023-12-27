@@ -227,9 +227,16 @@
   <script src="{% static 'albums/js/modal_photo_access.js' %}"></script>
   <script>
     function showSaveButton() {
-      const btnToShow = document.getElementById('btn-access-form');
-      btnToShow.classList.add('slide-and-fade');
-      btnToShow.classList.remove('hidden');
-    }
+      // Check if the event is an input event
+        const btnToShow = document.getElementById('btn-access-form');
+        btnToShow.classList.add('slide-and-fade');
+        btnToShow.classList.remove('hidden');
+      }
+    document.getElementById('btn-access-form').addEventListener('click', () => {
+      const loadingSpan = document.createElement('span');
+      loadingSpan.className = 'loading loading-spinner';
+      document.getElementById('btn-access-form').classList.remove('slide-and-fade'); // otherwise the animation gets triggered also on clicking save
+      document.getElementById('btn-access-form').appendChild(loadingSpan);
+    });
   </script>
 {% endblock %}
