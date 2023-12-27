@@ -130,7 +130,7 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         photo = Photo.objects.get(id=photo_id)
         relations = Relation.objects.filter(user_sending=self.request.user) | Relation.objects.filter(user_receiving=self.request.user)
         related_users = CustomUser.objects.filter(relation_sender__in=relations) | CustomUser.objects.filter(relation_receiver__in=relations)
-        related_users = related_users.exclude(id=self.request.user.id)
+        related_users = related_users.distinct().exclude(id=self.request.user.id)
         # if a user doesn't own an album and uploads a photo -> shouldn't be able to allow access to relations without album access (given by owner)
         all_album_access = AlbumAccess.objects.filter(album=photo.album)
         users_with_album_access = CustomUser.objects.filter(album_accessing_user__in=all_album_access).exclude(id=self.request.user.id)
