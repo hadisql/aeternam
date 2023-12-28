@@ -194,6 +194,7 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                     #we first set the existing default photo for the same album to False
                     photo.is_default=True
                     photo.save()
+                    messages.success(request, _('the photo has been set as the album cover'))
 
 
             if new_photo:
@@ -201,9 +202,9 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                     old_photo = Photo.objects.get(pk=photo_id)
                     # old_photo.image.delete(save=False)
                     sorl.thumbnail.delete(old_photo.image.name)
-
                     old_photo.image = new_photo
                     old_photo.save()
+                    messages.success(request, _('the photo has been replaced successfully'))
 
             elif rotation_angle or mirror_flip:
                 if photo.uploaded_by == self.request.user:
@@ -215,6 +216,7 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                             save=False
                         )
                         photo.save()
+                        messages.success(request, _('the photo has been rotated successfully'))
 
                     if mirror_flip:
                         flipped_image_file = flip_image(photo.image)
@@ -224,6 +226,7 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                             save=False
                         )
                         photo.save()
+                        messages.success(request, _('the photo has been flipped successfully'))
 
                     sorl.thumbnail.delete(photo.image.name, delete_file=False) # allows thumbnail to be updated
 
@@ -250,7 +253,7 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         return self.form_valid(photo_update_form)
 
     def get_success_url(self):
-        return reverse_lazy('photos:photo_edit', kwargs={'pk': self.kwargs['pk']})
+        return reverse_lazy('photos:photo_detail', kwargs={'pk': self.kwargs['pk']})
 
 
 class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
