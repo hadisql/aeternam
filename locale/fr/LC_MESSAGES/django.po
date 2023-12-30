@@ -705,7 +705,7 @@ msgstr "Albums partagés avec vous"
 msgid "Create album"
 msgstr "Créez un nouvel album"
 
-#: albums/templates/partials/breadcrumb_settings.html:13
+#: albums/templates/partials/breadcrumb_album_settings.html:13
 #: photos/templates/partials/breadcrumb_photo_settings.html:12
 msgid "Settings"
 msgstr "réglages"

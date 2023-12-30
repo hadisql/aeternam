@@ -29,12 +29,8 @@
                   </div>
                 </div>
                 <div>
-                  <div class="font-bold">
-                    {% firstof relation_user.get_full_name "-" %}
-                  </div>
-                  <div class="text-sm opacity-50">
-                    {{relation_user.email|truncatechars:12}}
-                  </div>
+                  <p class="font-bold truncate-text">{% firstof relation_user.get_full_name "-" %}</p>
+                  <p class="text-sm opacity-50 truncate-text">{{relation_user.email}}</p>
                 </div>
               </div>
             </a>

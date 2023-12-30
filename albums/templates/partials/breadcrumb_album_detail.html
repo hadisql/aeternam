@@ -8,8 +8,20 @@
       <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
     </svg>
     <div class="ml-2 lg:ml-4 flex items-center gap-2 group">
-      <svg class="w-5 h-5 fill-gray-500 group-hover:fill-gray-700 flex-shrink-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M20 2H6c-1.206 0-3 .799-3 3v14c0 2.201 1.794 3 3 3h15v-2H6.012C5.55 19.988 5 19.806 5 19s.55-.988 1.012-1H21V3a1 1 0 0 0-1-1zM9.503 5a1.503 1.503 0 1 1 0 3.006 1.503 1.503 0 0 1 0-3.006zM12 13H7l3-3 1.5 1.399L14.5 8l3.5 5h-6z"></path></g></svg>
-      <a href="{% url 'albums:album_detail' album.id %}" class=" text-sm font-medium text-gray-500 group-hover:text-gray-700 line-clamp-1">{{album.title|title|truncatechars:25}}</a>
+      {# assigns lighter color if the visited page has a higher "b"readcrumb level" #}
+      {% if breadcrumb_level >= 2 %}
+        {% firstof '400' as bc_level_color %}
+        {% firstof '600' as bc_level_color_hover %}
+      {% else %}
+        {% firstof '500' as bc_level_color %}
+        {% firstof '700' as bc_level_color_hover %}
+      {% endif %}
+      <svg class="w-5 h-5 fill-gray-{{bc_level_color}} group-hover:fill-gray-{{bc_level_color_hover}} flex-shrink-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M20 2H6c-1.206 0-3 .799-3 3v14c0 2.201 1.794 3 3 3h15v-2H6.012C5.55 19.988 5 19.806 5 19s.55-.988 1.012-1H21V3a1 1 0 0 0-1-1zM9.503 5a1.503 1.503 0 1 1 0 3.006 1.503 1.503 0 0 1 0-3.006zM12 13H7l3-3 1.5 1.399L14.5 8l3.5 5h-6z"></path></g></svg>
+      <a href="{% url 'albums:album_detail' album.id %}" class="text-sm text-ellipsis overflow-hidden break-words block font-medium text-gray-{{bc_level_color}} group-hover:text-gray-{{bc_level_color_hover}} line-clamp-1">
+        {% if not is_photo_edit %}
+          {{album.title|title|truncatechars:25}}
+        {% endif %}
+      </a>
     </div>
   </div>
 </li>
@@ -18,3 +30,5 @@
 {% endblock subcrumb %}
 
 {% endblock crumb %}
+
+{# <p class="group-hover:fill-gray-600"></p> ##}

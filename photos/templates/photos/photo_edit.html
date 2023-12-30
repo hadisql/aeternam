@@ -6,7 +6,9 @@
 {% block title %}{% trans "Photo Settings" %}{% endblock title %}
 
 {% block breadcrumbs %}
-  {% include 'partials/breadcrumb_photo_settings.html' %}
+  {% with display_album_title=False %}
+    {% include 'partials/breadcrumb_photo_settings.html' %}
+  {% endwith %}
 {% endblock breadcrumbs %}
 
 {% block body %}

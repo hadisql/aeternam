@@ -229,6 +229,7 @@ def album_access(request, album_id):
         'relations_dict': relations_dict,
         'photos_in_album': photos_in_album,
         'modal_num_photos_to_show': 6,
+        'breadcrumb_level' : 2 # indicates the breadcrumb "level" , home being 0
     }
 
     if request.POST:

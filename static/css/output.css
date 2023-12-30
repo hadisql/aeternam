@@ -5194,10 +5194,6 @@ details.collapse summary::-webkit-details-marker {
   margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
 }
 
-.place-self-center {
-  place-self: center;
-}
-
 .self-center {
   align-self: center;
 }
@@ -5222,8 +5218,22 @@ details.collapse summary::-webkit-details-marker {
   overscroll-behavior-y: contain;
 }
 
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.overflow-ellipsis {
+  text-overflow: ellipsis;
+}
+
 .text-ellipsis {
   text-overflow: ellipsis;
+}
+
+.whitespace-nowrap {
+  white-space: nowrap;
 }
 
 .break-words {
@@ -5480,6 +5490,10 @@ details.collapse summary::-webkit-details-marker {
   fill: #9ca3af;
 }
 
+.fill-gray-500 {
+  fill: #6b7280;
+}
+
 .fill-none {
   fill: none;
 }
@@ -5492,20 +5506,8 @@ details.collapse summary::-webkit-details-marker {
   fill: transparent;
 }
 
-.fill-white {
-  fill: #fff;
-}
-
-.fill-gray-500 {
-  fill: #6b7280;
-}
-
 .stroke-current {
   stroke: currentColor;
-}
-
-.stroke-red-400 {
-  stroke: #f87171;
 }
 
 .stroke-gray-500 {
@@ -6534,18 +6536,9 @@ details.collapse summary::-webkit-details-marker {
   background-color: rgb(23 23 23 / var(--tw-bg-opacity));
 }
 
-.hover\:fill-gray-700:hover {
-  fill: #374151;
-}
-
 .hover\:text-accent-content:hover {
   --tw-text-opacity: 1;
   color: var(--fallback-ac,oklch(var(--ac)/var(--tw-text-opacity)));
-}
-
-.hover\:text-gray-500:hover {
-  --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity));
 }
 
 .hover\:text-gray-700:hover {
@@ -6632,12 +6625,16 @@ details.collapse summary::-webkit-details-marker {
   fill: #374151;
 }
 
-.group:hover .group-hover\:stroke-white {
-  stroke: #fff;
+.group:hover .group-hover\:fill-gray-600 {
+  fill: #4b5563;
 }
 
 .group:hover .group-hover\:stroke-gray-700 {
   stroke: #374151;
+}
+
+.group:hover .group-hover\:stroke-white {
+  stroke: #fff;
 }
 
 .group:hover .group-hover\:stroke-2 {
@@ -6647,6 +6644,11 @@ details.collapse summary::-webkit-details-marker {
 .group:hover .group-hover\:text-gray-700 {
   --tw-text-opacity: 1;
   color: rgb(55 65 81 / var(--tw-text-opacity));
+}
+
+.group:hover .group-hover\:text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
 }
 
 .group:hover .group-hover\:opacity-100 {

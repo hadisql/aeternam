@@ -63,6 +63,7 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
         context['album'] = get_object_or_404(Album, pk=album_id)
         context['album_photos'] = album_photos[:displayed_photos]
         context['rest'] = rest
+        context['breadcrumb_level'] = 2 # indicates the breadcrumb "level" , home being 0
         return context
 
     def form_valid(self, form):
@@ -154,6 +155,8 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         context['album_photo_pk_list'] = album_photo_pk_list # used for breadcrumbs
         context['photo_index'] = album_photo_pk_list.index(photo.id) # used for breadcrumbs
         context['users_with_album_access'] = users_with_album_access
+        context['is_photo_edit'] = True  # Indicates the album_detail breadcrumb to hide the album title when visiting photo settings
+        context['breadcrumb_level'] = 3 # indicates the breadcrumb "level" , home being 0
 
         return context
 
@@ -305,6 +308,7 @@ class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         context['album_photo_pk_list'] = album_photo_pk_list # for testing in template
         context['photo_index'] = album_photo_pk_list.index(photo.id) # used for breadcrumbs
         context['album'] = album # used fro breadcrumbs
+        context['breadcrumb_level'] = 2 # indicates the breadcrumb "level" , home being 0
 
         return context
 
