@@ -25,7 +25,8 @@ class CommentForm(forms.ModelForm):
 class PhotoUpdateForm(forms.Form):
     upload_photo = forms.ImageField(
         label="",
-        widget=forms.FileInput(attrs={'class':'file-input file-input-sm w-full'}),
+        widget=forms.FileInput(attrs={'class':'file-input file-input-sm w-full',
+                                      'accept':'images/*'}),
         required=False)
 
     rotation_angle = forms.IntegerField(
