@@ -1,6 +1,8 @@
 {% load i18n %}
 {% load get_full_name %}
 
+{# <p class="blur-sm"></p> #}
+
 <div x-data="{ modalOpen: false }"
       @keydown.escape.window="modalOpen = false"
       :class="{ 'z-40': modalOpen }" class="relative w-auto h-auto">
