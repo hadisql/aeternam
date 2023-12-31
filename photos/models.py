@@ -70,12 +70,16 @@ class Photo(models.Model):
                 next_photo.is_default = True
                 next_photo.save()
 
-        # Delete the photo file from storage when the Photo object is deleted
-        try:
-            os.remove(self.image.path)
-        except:
-            logger.warning('image file does not exist, associated photo object will be deleted anyway')
-
+      # Check if another Photo object references the same image file
+        other_photos = Photo.objects.filter(image=self.image)
+        if other_photos.count() == 1:
+            # If no other object references the image, delete the file
+            try:
+                os.remove(self.image.path)
+            except FileNotFoundError:
+                logger.warning('Image file not found during deletion')
+        else:
+            logger.info('Skipping image file deletion as other objects reference it')
 
         super().delete(*args, **kwargs)
 

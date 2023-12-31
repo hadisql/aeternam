@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "comments_likes",
     "sorl.thumbnail",
     "mathfilters",
+    "django_extensions",
 
     "django_browser_reload",
     "django.contrib.admin",
@@ -240,11 +241,10 @@ LOGGING = {
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-            'level': 'WARNING',
         },
     },
     'root': {
         'handlers': ['console'],
-        'level': 'DEBUG',  # 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
+        'level': 'INFO',  # 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
     },
 }

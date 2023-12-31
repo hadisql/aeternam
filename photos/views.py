@@ -380,10 +380,3 @@ class PhotosDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def get_success_url(self):
         album_id = self.object.album.pk
         return reverse('albums:album_detail', kwargs={'pk':album_id})
-
-    def delete(self, request, *args, **kwargs):
-        # Override the delete method to handle success URL redirection
-        self.object = self.get_object()
-        success_url = self.get_success_url()
-        sorl.thumbnail.delete(self.object)
-        return HttpResponseRedirect(success_url)
