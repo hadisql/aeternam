@@ -231,3 +231,20 @@ if not DEBUG and not USE_S3:
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# LOGS
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': 'WARNING',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',  # 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
+    },
+}
