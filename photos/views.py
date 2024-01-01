@@ -25,29 +25,7 @@ from io import BytesIO
 from django.core.files.images import ImageFile
 
 from utils.edit_image import rotate_image, flip_image
-
-# def add_photos_to_album(request, album_id):
-#     album = get_object_or_404(Album, pk=album_id)
-#     existing_photos = Photo.objects.filter(album=album)
-
-#     if request.method == 'POST':
-#         data = request.POST
-#         images = request.FILES.getlist('images')
-
-#         if not existing_photos.exists():
-#             first_image = images.pop(0)
-#             photo = Photo.objects.create(album=album, image=first_image, is_default=True)
-
-#         for image in images:
-#             photo = Photo.objects.create(album=album, image=image)
-
-
-#         #The messages framework allows you to store messages that persist across requests and can be displayed to the user
-#         messages.success(request, 'New photos were uploaded successfully')
-#         return redirect('photos:album_detail', pk=album_id)
-
-#     context = {'album': album}
-#     return render(request, 'photos/add_photos_to_album.html', context)
+from utils.upload_photos import upload_photos
 
 class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
     template_name = 'photos/add_photos_to_album.html'
@@ -70,50 +48,11 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
         album_id = self.kwargs['album_id']
         album = get_object_or_404(Album, pk=album_id)
         existing_photos = Photo.objects.filter(album=album)
-        total_photos = Photo.objects.filter(uploaded_by=self.request.user)
+        total_photos = Photo.objects.filter(uploaded_by=self.request.user) # total number of photos currently owned by user
 
         files = self.request.FILES.getlist('images')
-        allowed_image_types = ['image/jpeg', 'image/png', 'image/gif']
 
-        # Client-side validation: Check file types before uploading
-        for file in files:
-            if file.content_type not in allowed_image_types:
-                messages.warning(self.request, _("Skipped a non-photo file: {}").format(file.name))
-
-        valid_files = [file for file in files if file.content_type in allowed_image_types]
-
-        if len(total_photos) < self.request.user.photo_limit:
-            if not existing_photos.exists():
-                # Handle the first image separately
-                if valid_files:
-                    first_file = valid_files.pop(0)
-                    photo = Photo(album=album, image=first_file, is_default=True, uploaded_by=self.request.user)
-                    photo.save()
-                    PhotoAccess.objects.create(photo=photo, user=self.request.user)
-                    if self.request.user != album.creator:
-                        PhotoAccess.objects.create(photo=photo, user=album.creator)
-
-            for file in valid_files:
-                total_photos = Photo.objects.filter(uploaded_by=self.request.user)
-                photo = Photo(album=album, image=file, uploaded_by=self.request.user)
-                photo.save()
-                PhotoAccess.objects.create(photo=photo, user=self.request.user)
-                if self.request.user != album.creator:
-                    PhotoAccess.objects.create(photo=photo, user=album.creator)
-                total_photos = Photo.objects.filter(uploaded_by=self.request.user)
-                if len(total_photos) == int(0.8 * self.request.user.photo_limit):
-                    messages.warning(self.request, _("You've reached 80% of your maximum photo upload limit"))
-
-            if valid_files:
-                if len(valid_files) <= 1:
-                    messages.success(self.request, _('1 photo was uploaded successfully'))
-                else:
-                    messages.success(self.request, _('{} photos were uploaded successfully').format(len(valid_files)))
-            else:
-                messages.warning(self.request, _('No valid photos were uploaded'))
-
-        else:
-            messages.error(self.request, _("You have reached your maximum amount of photos to upload: {} photos").format(self.request.user.photo_limit))
+        upload_photos(self, album, files, existing_photos, total_photos)
 
         return super().form_valid(form)
 
