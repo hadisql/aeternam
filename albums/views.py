@@ -21,7 +21,7 @@ from .forms import AlbumAccessGrantForm, AlbumAccessRevokeForm
 from accounts.models import CustomUser, Relation, Notification
 
 from django.utils.translation import gettext_lazy as _
-
+from utils.upload_photos import upload_photos
 # ----------------------------
 # ------ CREATE ALBUM --------
 # ----------------------------
@@ -38,52 +38,21 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
 
         # Save associated photos to the album
         files = self.request.FILES.getlist('images')
-        allowed_image_types = ['image/jpeg', 'image/png', 'image/gif']
+        total_photos = Photo.objects.filter(uploaded_by=self.request.user) # total number of photos currently owned by user
 
-        valid_images = []
-        skipped_files = []
-
-        # Client-side validation: Check file types before uploading
-        for file in files:
-            if file.content_type not in allowed_image_types:
-                valid_images.append(file)
-            else:
-                skipped_files.append(file)
-
-        if valid_images:
-            # Handle the first image seperatly
-            first_image = valid_images.pop(0)
-            photo = Photo(album=album, image=first_image, is_default=True, uploaded_by=self.request.user)
-            photo.save()
-            PhotoAccess.objects.create(photo=photo, user=self.request.user)
-
-        for image in valid_images:
-            total_photos = Photo.objects.filter(uploaded_by=self.request.user)
-            if len(total_photos) < self.request.user.photo_limit:
-                photo = Photo(album=album, image=image, uploaded_by=self.request.user)
-                photo.save()
-                PhotoAccess.objects.create(photo=photo, user=self.request.user)
-            else:
-                messages.error(self.request, _("You have reached your maximum amount of photos to upload: {} photos").format(self.request.user.photo_limit))
-
-        if form.is_valid():
-            if valid_images:
-                if len(valid_images) == 1:
-                    messages.success(self.request, _('Album successfully created, with 1 photo'))
-                elif len(valid_images) == 0 and not first_image:
-                    messages.success(self.request, _('Empty album successfully created'))
-                else:
-                    messages.success(self.request, _('Album successfully created, with {} photos').format(len(valid_images) + 1))
-            else:
-                messages.warning(self.request, _('No valid photos were uploaded'))
-
-        if skipped_files:
-            for file in skipped_files:
-                messages.warning(self.request, _("Skipped a non-photo file: {}").format(file.name))
-
-            return redirect('albums:album_detail', album.id)
+        upload_photos(self, album, files, existing_photos=False, total_photos=total_photos)
 
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            _("Please correct the errors below and ensure two upload image files (jpeg/png).")
+        )
+        return super(AlbumCreateView, self).form_invalid(form)
+
+    def get_success_url(self) -> str:
+        return reverse_lazy('albums:albums_view')
 
 
 # ----------------------------
