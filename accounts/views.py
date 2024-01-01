@@ -97,7 +97,7 @@ def loginpage(request):
         email = request.POST['email']
         password = request.POST['password']
 
-        # Use eamail to authenticate instead of username
+        # Use email to authenticate instead of username
         user = authenticate(request, email=email, password=password)
 
         if user is not None:
@@ -118,7 +118,9 @@ def loginpage(request):
                 messages.error(request, _('User with this email does not exist.'))
 
             return render(request, 'accounts/login.html')
-    else:
+    elif request.user.is_authenticated:
+        return redirect('albums:albums_view')
+    else :
         return render(request, 'accounts/login.html')
 
 
