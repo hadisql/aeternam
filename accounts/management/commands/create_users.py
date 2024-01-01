@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 from accounts.models import Relation
+from django.contrib.auth.hashers import make_password
 
 
 User = get_user_model()
@@ -13,6 +14,7 @@ class Command(BaseCommand):
         parser.add_argument('--password', type=str, default='changez-moi', help='Common password for all users')
         parser.add_argument('--relationbetween', action='store_true', help='Create Relation objects between all created users')
         parser.add_argument('--relationwith', type=str, help='Create Relation objects with a specified user (provide the user email)')
+        parser.add_argument('--change_existing', action='store_true', help='Change password for existing users if they already exist')
 
     def handle(self, *args, **options):
         emails = options['emails']
@@ -27,12 +29,15 @@ class Command(BaseCommand):
             user, created = User.objects.get_or_create(email=email)
             users.append(user)
 
-            if created:
-                user.set_password(password)
+            if created or options['change_existing']:
+                user.password = make_password(password)
                 user.save()
-                self.stdout.write(self.style.SUCCESS(f"User '{email}' created successfully."))
+                if created:
+                    self.stdout.write(self.style.SUCCESS(f"User '{email}' created successfully."))
+                else:
+                    self.stdout.write(self.style.SUCCESS(f"Password updated for existing user '{email}'."))
             else:
-                self.stdout.write(self.style.WARNING(f"User '{email}' already exists."))
+                self.stdout.write(self.style.WARNING(f"User '{email}' already exists. Use --change_existing to update the password."))
 
         # Create Relation objects between all created users
         if create_relation_between:
