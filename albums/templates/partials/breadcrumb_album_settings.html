@@ -1,0 +1,21 @@
+{% extends 'partials/breadcrumb_album_detail.html' %}
+{% load i18n %}
+
+{% block addclass %}mb-10 sm:mb-16{% endblock %}
+
+{% block subcrumb %}
+    <li>
+      <div class="flex items-center">
+        <!-- Heroicon name: mini/chevron-right -->
+        <svg class="h-5 w-5 flex-shrink-0 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+        </svg>
+        <div class="ml-2 lg:ml-4 flex items-center gap-2 text-xs font-medium text-gray-500 group">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-5 h-5 fill-gray-500 group-hover:fill-gray-700">
+            <path d="M17 2.75a.75.75 0 0 0-1.5 0v5.5a.75.75 0 0 0 1.5 0v-5.5ZM17 15.75a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM3.75 15a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5a.75.75 0 0 1 .75-.75ZM4.5 2.75a.75.75 0 0 0-1.5 0v5.5a.75.75 0 0 0 1.5 0v-5.5ZM10 11a.75.75 0 0 1 .75.75v5.5a.75.75 0 0 1-1.5 0v-5.5A.75.75 0 0 1 10 11ZM10.75 2.75a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0v-1.5ZM10 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM3.75 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM16.25 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z" />
+          </svg>
+          <a href="{% url 'albums:album-access' album.id %}" class=group-hover:text-gray-700" aria-current="page">{% trans "Settings" %}</a>
+        </div>
+      </div>
+    </li>
+{% endblock subcrumb %}

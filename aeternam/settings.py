@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "comments_likes",
     "sorl.thumbnail",
     "mathfilters",
+    "django_extensions",
 
     "django_browser_reload",
     "django.contrib.admin",
@@ -233,3 +234,19 @@ if not DEBUG and not USE_S3:
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# LOGS
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',  # 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
+    },
+}

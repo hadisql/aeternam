@@ -7,7 +7,7 @@
 {% load i18n %}
 
 {% block  breadcrumbs %}
-  {% include 'partials/breadcrumb_settings.html' %}
+  {% include 'partials/breadcrumb_album_settings.html' %}
 {% endblock breadcrumbs %}
 
 {% block body %}
@@ -144,8 +144,8 @@
                                 </div>
                               </div>
                               <div>
-                                <div class="font-bold">{% firstof relation.get_full_name relation.email %}</div>
-                                <p class="text-sm opacity-50 text-ellipsis">{{relation.email|truncatechars:10}}</p>
+                                <div class="font-bold truncate-text">{% firstof relation.get_full_name relation.email %}</div>
+                                <p class="text-sm opacity-50 truncate-text">{{relation.email}}</p>
                               </div>
                             </div>
                           </a>
@@ -227,9 +227,16 @@
   <script src="{% static 'albums/js/modal_photo_access.js' %}"></script>
   <script>
     function showSaveButton() {
-      const btnToShow = document.getElementById('btn-access-form');
-      btnToShow.classList.add('slide-and-fade');
-      btnToShow.classList.remove('hidden');
-    }
+      // Check if the event is an input event
+        const btnToShow = document.getElementById('btn-access-form');
+        btnToShow.classList.add('slide-and-fade');
+        btnToShow.classList.remove('hidden');
+      }
+    document.getElementById('btn-access-form').addEventListener('click', () => {
+      const loadingSpan = document.createElement('span');
+      loadingSpan.className = 'loading loading-spinner';
+      document.getElementById('btn-access-form').classList.remove('slide-and-fade'); // otherwise the animation gets triggered also on clicking save
+      document.getElementById('btn-access-form').appendChild(loadingSpan);
+    });
   </script>
 {% endblock %}

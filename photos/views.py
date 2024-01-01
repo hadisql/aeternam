@@ -63,6 +63,7 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
         context['album'] = get_object_or_404(Album, pk=album_id)
         context['album_photos'] = album_photos[:displayed_photos]
         context['rest'] = rest
+        context['breadcrumb_level'] = 2 # indicates the breadcrumb "level" , home being 0
         return context
 
     def form_valid(self, form):
@@ -71,37 +72,46 @@ class AddPhotosToAlbumView(LoginRequiredMixin, FormView):
         existing_photos = Photo.objects.filter(album=album)
         total_photos = Photo.objects.filter(uploaded_by=self.request.user)
 
-        images = self.request.FILES.getlist('images')
+        files = self.request.FILES.getlist('images')
+        allowed_image_types = ['image/jpeg', 'image/png', 'image/gif']
+
+        # Client-side validation: Check file types before uploading
+        for file in files:
+            if file.content_type not in allowed_image_types:
+                messages.warning(self.request, _("Skipped a non-photo file: {}").format(file.name))
+
+        valid_files = [file for file in files if file.content_type in allowed_image_types]
 
         if len(total_photos) < self.request.user.photo_limit:
             if not existing_photos.exists():
-                first_image = images.pop(0)
-                photo = Photo(album=album, image=first_image, is_default=True, uploaded_by=self.request.user)
-                photo.save() #save the instance, applying resize from model save method
-                # when uploading a photo, the uploading user gets access to this photo:
-                PhotoAccess.objects.create(photo=photo, user=self.request.user)
-                # as well as the album owner if different
-                if self.request.user != album.creator:
-                    PhotoAccess.objects.create(photo=photo, user=album.creator)
+                # Handle the first image separately
+                if valid_files:
+                    first_file = valid_files.pop(0)
+                    photo = Photo(album=album, image=first_file, is_default=True, uploaded_by=self.request.user)
+                    photo.save()
+                    PhotoAccess.objects.create(photo=photo, user=self.request.user)
+                    if self.request.user != album.creator:
+                        PhotoAccess.objects.create(photo=photo, user=album.creator)
 
-            for image in images:
-                total_photos = Photo.objects.filter(uploaded_by=self.request.user) # refresh the number for each iteration
-                photo = Photo(album=album, image=image, uploaded_by=self.request.user)
-                photo.save() #save the instance, applying resize from model save method
-                # when uploading a photo, the uploading user gets access to this photo :
+            for file in valid_files:
+                total_photos = Photo.objects.filter(uploaded_by=self.request.user)
+                photo = Photo(album=album, image=file, uploaded_by=self.request.user)
+                photo.save()
                 PhotoAccess.objects.create(photo=photo, user=self.request.user)
-                # as well as the album owner if different
                 if self.request.user != album.creator:
                     PhotoAccess.objects.create(photo=photo, user=album.creator)
-                total_photos = Photo.objects.filter(uploaded_by=self.request.user) # refresh the number for each iteration
-                if len(total_photos) == int(.8 * self.request.user.photo_limit):
+                total_photos = Photo.objects.filter(uploaded_by=self.request.user)
+                if len(total_photos) == int(0.8 * self.request.user.photo_limit):
                     messages.warning(self.request, _("You've reached 80% of your maximum photo upload limit"))
 
-            if len(images)<=1:
-                # if you add 1 photo to an empty album -> the list length is 0 because of the default_photo pop(0) treatment
-                messages.success(self.request, _('1 photo was uploaded successfully'))
+            if valid_files:
+                if len(valid_files) <= 1:
+                    messages.success(self.request, _('1 photo was uploaded successfully'))
+                else:
+                    messages.success(self.request, _('{} photos were uploaded successfully').format(len(valid_files)))
             else:
-                messages.success(self.request, _('{} photos were uploaded successfully').format(len(images)))
+                messages.warning(self.request, _('No valid photos were uploaded'))
+
         else:
             messages.error(self.request, _("You have reached your maximum amount of photos to upload: {} photos").format(self.request.user.photo_limit))
 
@@ -130,7 +140,7 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         photo = Photo.objects.get(id=photo_id)
         relations = Relation.objects.filter(user_sending=self.request.user) | Relation.objects.filter(user_receiving=self.request.user)
         related_users = CustomUser.objects.filter(relation_sender__in=relations) | CustomUser.objects.filter(relation_receiver__in=relations)
-        related_users = related_users.exclude(id=self.request.user.id)
+        related_users = related_users.distinct().exclude(id=self.request.user.id)
         # if a user doesn't own an album and uploads a photo -> shouldn't be able to allow access to relations without album access (given by owner)
         all_album_access = AlbumAccess.objects.filter(album=photo.album)
         users_with_album_access = CustomUser.objects.filter(album_accessing_user__in=all_album_access).exclude(id=self.request.user.id)
@@ -154,6 +164,8 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         context['album_photo_pk_list'] = album_photo_pk_list # used for breadcrumbs
         context['photo_index'] = album_photo_pk_list.index(photo.id) # used for breadcrumbs
         context['users_with_album_access'] = users_with_album_access
+        context['is_photo_edit'] = True  # Indicates the album_detail breadcrumb to hide the album title when visiting photo settings
+        context['breadcrumb_level'] = 3 # indicates the breadcrumb "level" , home being 0
 
         return context
 
@@ -162,7 +174,12 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         description_form = self.form_description_form(data=self.request.POST)
 
         photo_id = self.kwargs['pk']
-        photo = Photo.objects.get(pk=photo_id)
+        photo = get_object_or_404(Photo, pk=photo_id)
+        new_photo = request.FILES.get('upload_photo')
+
+        # Server-side validation: Check if the uploaded file is an image
+        allowed_image_types = ['image/jpeg', 'image/png', 'image/gif']
+
         description_before_change = photo.description
 
         relations = Relation.objects.filter(user_sending=self.request.user) | Relation.objects.filter(user_receiving=self.request.user)
@@ -194,61 +211,69 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                     #we first set the existing default photo for the same album to False
                     photo.is_default=True
                     photo.save()
+                    messages.success(request, _('the photo has been set as the album cover'))
 
+        if new_photo and new_photo.content_type not in allowed_image_types:
+            messages.warning(request, _("You can only replace the photo with an image file."))
+            return redirect(reverse_lazy('photos:photo_detail', kwargs={'pk': self.kwargs['pk']})
+)
+        if new_photo:
+            if photo.uploaded_by == self.request.user:
+                old_photo = Photo.objects.get(pk=photo_id)
+                # old_photo.image.delete(save=False)
+                sorl.thumbnail.delete(old_photo.image.name)
+                old_photo.image = new_photo
+                old_photo.save()
+                messages.success(request, _('the photo has been replaced successfully'))
 
-            if new_photo:
-                if photo.uploaded_by == self.request.user:
-                    old_photo = Photo.objects.get(pk=photo_id)
-                    old_photo.image.delete(save=False)
+        elif rotation_angle or mirror_flip:
+            if photo.uploaded_by == self.request.user:
+                if rotation_angle:
+                    rotated_image_file = rotate_image(photo.image, rotation_angle)
+                    photo.image.save(
+                        os.path.basename(photo.image.name),
+                        rotated_image_file,
+                        save=False
+                    )
+                photo.save()
+                messages.success(request, _('the photo has been rotated successfully'))
 
-                    old_photo.image = new_photo
-                    old_photo.save()
+            if mirror_flip:
+                flipped_image_file = flip_image(photo.image)
+                photo.image.save(
+                    os.path.basename(photo.image.name),
+                    flipped_image_file,
+                    save=False
+                )
+                photo.save()
+                messages.success(request, _('the photo has been flipped successfully'))
 
-            elif rotation_angle or mirror_flip:
-                if photo.uploaded_by == self.request.user:
-                    if rotation_angle:
-                        rotated_image_file = rotate_image(photo.image, rotation_angle)
-                        photo.image.save(
-                            os.path.basename(photo.image.name),
-                            rotated_image_file,
-                            save=False
-                        )
-                        photo.save()
+            sorl.thumbnail.delete(photo.image.name, delete_file=False) # allows thumbnail to be updated
 
-                    if mirror_flip:
-                        flipped_image_file = flip_image(photo.image)
-                        photo.image.save(
-                            os.path.basename(photo.image.name),
-                            flipped_image_file,
-                            save=False
-                        )
-                        photo.save()
-
-            for user in related_users:
-                checkbox_name = f'photoaccess_user_{user.id}'
-                if checkbox_name in self.request.POST:
-                    if not PhotoAccess.objects.filter(photo=photo, user=user).exists():
-                        if not AlbumAccess.objects.filter(user=user, album=photo.album):
-                            AlbumAccess.objects.create(user=user, album=photo.album)
-                            print(f'created album access for user {user}')
-                        PhotoAccess.objects.create(photo=photo, user=user)
-                        messages.success(request, _('{} has now access to your photo').format(user.get_full_name() or user.email))
-                else: # delete PhotoAccess if it exist for that user with unchecked checkbox
-                    photo_access_to_delete = PhotoAccess.objects.filter(photo=photo, user=user)
-                    if photo_access_to_delete:
-                        photo_access_to_delete.delete()
-                        messages.info(request, _('{} photo access has been revoked').format(user.get_full_name() or user.email))
-                    # in case we revoke the last photo to the album, make sure the albumaccess is deleted :
-                    is_there_any_photo = PhotoAccess.objects.filter(user=user, photo__album=photo.album)
-                    if not is_there_any_photo:
-                        print(f'{is_there_any_photo} there is no photo left in this album')
-                        albumaccess_to_delete = AlbumAccess.objects.filter(album=photo.album, user=user)
-                        albumaccess_to_delete.delete()
+        for user in related_users:
+            checkbox_name = f'photoaccess_user_{user.id}'
+            if checkbox_name in self.request.POST:
+                if not PhotoAccess.objects.filter(photo=photo, user=user).exists():
+                    if not AlbumAccess.objects.filter(user=user, album=photo.album):
+                        AlbumAccess.objects.create(user=user, album=photo.album)
+                        print(f'created album access for user {user}')
+                    PhotoAccess.objects.create(photo=photo, user=user)
+                    messages.success(request, _('{} has now access to your photo').format(user.get_full_name() or user.email))
+            else: # delete PhotoAccess if it exist for that user with unchecked checkbox
+                photo_access_to_delete = PhotoAccess.objects.filter(photo=photo, user=user)
+                if photo_access_to_delete:
+                    photo_access_to_delete.delete()
+                    messages.info(request, _('{} photo access has been revoked').format(user.get_full_name() or user.email))
+                # in case we revoke the last photo to the album, make sure the albumaccess is deleted :
+                is_there_any_photo = PhotoAccess.objects.filter(user=user, photo__album=photo.album)
+                if not is_there_any_photo:
+                    albumaccess_to_delete = AlbumAccess.objects.filter(album=photo.album, user=user)
+                    albumaccess_to_delete.delete()
 
         return self.form_valid(photo_update_form)
 
     def get_success_url(self):
-        return reverse_lazy('photos:photo_edit', kwargs={'pk': self.kwargs['pk']})
+        return reverse_lazy('photos:photo_detail', kwargs={'pk': self.kwargs['pk']})
 
 
 class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
@@ -300,6 +325,7 @@ class PhotoDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         context['album_photo_pk_list'] = album_photo_pk_list # for testing in template
         context['photo_index'] = album_photo_pk_list.index(photo.id) # used for breadcrumbs
         context['album'] = album # used fro breadcrumbs
+        context['breadcrumb_level'] = 2 # indicates the breadcrumb "level" , home being 0
 
         return context
 
@@ -354,10 +380,3 @@ class PhotosDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def get_success_url(self):
         album_id = self.object.album.pk
         return reverse('albums:album_detail', kwargs={'pk':album_id})
-
-    def delete(self, request, *args, **kwargs):
-        # Override the delete method to handle success URL redirection
-        self.object = self.get_object()
-        success_url = self.get_success_url()
-        sorl.thumbnail.delete(self.object)
-        return HttpResponseRedirect(success_url)

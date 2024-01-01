@@ -42,3 +42,27 @@
 .slide-and-fade {
   animation: slideAndFade 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
+
+/* photo edit template */
+.truncate-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 320px) {
+    .truncate-text {
+      max-width: 5ch; /* Display only 5 characters on small screens */
+    }
+}
+@media (min-width: 321px) and (max-width: 360px) {
+    .truncate-text {
+      max-width: 8ch; /* Display 8 characters on screens between 321px and 460px */
+    }
+}
+@media (min-width: 361px) and (max-width: 460px) {
+    .truncate-text {
+      max-width: 12ch; /* Display 8 characters on screens between 321px and 460px */
+    }
+}

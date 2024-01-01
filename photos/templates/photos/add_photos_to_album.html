@@ -28,7 +28,7 @@
               <a>{% if rest > 0 %}+ {{rest}} {% trans "other" %}{{rest|pluralize}}{% endif %}</a>
             </div>
 
-            <input id="fileInput" type="file" name="images" required multiple class="mt-6 block file-input file-input-sm file-input-bordered w-full max-w-xs">
+            <input id="fileInput" type="file" name="images" accept="images/*" required multiple class="mt-6 block file-input file-input-sm file-input-bordered w-full max-w-xs">
             <p id="load_spinner" class="hidden inline-flex align-middle items-center"><span class="loading loading-infinity loading-lg mr-3"></span>{% trans "loading" %}<span class="ml-2 loading loading-dots loading-xs"></span></p>
             <div class="h-px my-12 mx-2 bg-base-content opacity-50 w-full"></div>
             <div class="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">

@@ -6,7 +6,9 @@
 {% block title %}{% trans "Photo Settings" %}{% endblock title %}
 
 {% block breadcrumbs %}
-  {% include 'partials/breadcrumb_photo_settings.html' %}
+  {% with display_album_title=False %}
+    {% include 'partials/breadcrumb_photo_settings.html' %}
+  {% endwith %}
 {% endblock breadcrumbs %}
 
 {% block body %}
@@ -103,26 +105,13 @@
         </div>
 
         {% if request.user != photo.album.creator and users_with_album_access %}
+        <!-- photo settings of a shared album (from the uploader pov) -->
           {% include 'partials/photoaccess_relations.html' with related_users_to_show=users_with_album_access %}
         {% else %}
           {% if related_users %}
+          <!-- photo settings from the album creator pov -->
             {% include 'partials/photoaccess_relations.html' with related_users_to_show=related_users %}
          {% endif %}
-        {% endif %}
-
-        {% if messages %}
-          <div class="toast">
-            {% for message in messages %}
-            <div class="alert alert-{{message.tags}}">
-              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span>{{message}}</span>
-            </div>
-            {% endfor %}
-          </div>
         {% endif %}
 
         <!-- Back + Save changes -->

@@ -27,12 +27,11 @@ from django.utils.translation import gettext_lazy as _
 # ----------------------------
 
 
+from django.http import HttpResponseBadRequest
+
 class AlbumCreateView(LoginRequiredMixin, CreateView):
-    # -- template name is 'album_form.html'
     model = Album
     form_class = AlbumCreateForm
-    # success_url = reverse_lazy('albums:albums_view')
-    # "redirect" didn't work : The reverse_lazy function is used to lazily reverse the URL, ensuring that it's only evaluated when the view is executed.
 
     def form_valid(self, form):
         album = form.save(commit=False)
@@ -40,34 +39,54 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
         album.save()
 
         # Save associated photos to the album
-        images = self.request.FILES.getlist('images')
+        files = self.request.FILES.getlist('images')
+        allowed_image_types = ['image/jpeg', 'image/png', 'image/gif']
 
-        if len(images):
-            first_image = images.pop(0)
+        valid_images = []
+        skipped_files = []
+
+        # Client-side validation: Check file types before uploading
+        for file in files:
+            if file.content_type not in allowed_image_types:
+                valid_images.append(file)
+            else:
+                skipped_files.append(file)
+
+        if valid_images:
+            # Handle the first image seperatly
+            first_image = valid_images.pop(0)
             photo = Photo(album=album, image=first_image, is_default=True, uploaded_by=self.request.user)
-            photo.save() #calls the customized save method (photo resize)
+            photo.save()
             PhotoAccess.objects.create(photo=photo, user=self.request.user)
 
-            for image in images:
-                total_photos = Photo.objects.filter(uploaded_by=self.request.user)
-                if len(total_photos) < self.request.user.photo_limit:
-                    print(f'len(total_photos): {len(total_photos)}, user photo limit: {self.request.user.photo_limit}')
-                    photo = Photo(album=album, image=image, uploaded_by=self.request.user)
-                    photo.save()
-                    PhotoAccess.objects.create(photo=photo, user=self.request.user)
-                else:
-                    messages.error(self.request, f"You have reached your maximum amount of photos to upload: {self.request.user.photo_limit} photos")
+        for image in valid_images:
+            total_photos = Photo.objects.filter(uploaded_by=self.request.user)
+            if len(total_photos) < self.request.user.photo_limit:
+                photo = Photo(album=album, image=image, uploaded_by=self.request.user)
+                photo.save()
+                PhotoAccess.objects.create(photo=photo, user=self.request.user)
+            else:
+                messages.error(self.request, _("You have reached your maximum amount of photos to upload: {} photos").format(self.request.user.photo_limit))
 
         if form.is_valid():
-            if len(images)==1:
-                messages.success(self.request, f'Album successfully created, with 1 photo')
-            elif len(images)==0 and not first_image:
-                messages.success(self.request, f'Empty album successfully created')
+            if valid_images:
+                if len(valid_images) == 1:
+                    messages.success(self.request, _('Album successfully created, with 1 photo'))
+                elif len(valid_images) == 0 and not first_image:
+                    messages.success(self.request, _('Empty album successfully created'))
+                else:
+                    messages.success(self.request, _('Album successfully created, with {} photos').format(len(valid_files) + 1))
             else:
-                messages.success(self.request, f'Album successfully created, with {len(images)+1} photos')
+                messages.warning(self.request, _('No valid photos were uploaded'))
+
+        if skipped_files:
+            for file in skipped_files:
+                messages.warning(self.request, _("Skipped a non-photo file: {}").format(file.name))
+
             return redirect('albums:album_detail', album.id)
 
         return super().form_valid(form)
+
 
 # ----------------------------
 # ------ LIST ALBUMS ---------
@@ -229,6 +248,7 @@ def album_access(request, album_id):
         'relations_dict': relations_dict,
         'photos_in_album': photos_in_album,
         'modal_num_photos_to_show': 6,
+        'breadcrumb_level' : 2 # indicates the breadcrumb "level" , home being 0
     }
 
     if request.POST:

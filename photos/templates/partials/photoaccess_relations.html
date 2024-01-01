@@ -2,7 +2,7 @@
 {% load thumbnail %}
 
 <div class="overflow-x-auto rounded-lg">
-  <table class="table">
+  <table class="table w-full">
     <thead>
       <tr class="bg-base-300">
         <th class="text-center">{% trans "Photo access" %}</th>
@@ -11,8 +11,8 @@
     </thead>
     <tbody class="bg-base-200">
       {% for user in related_users_to_show %}
-        <tr class="text-center">
-          <th >
+        <tr>
+          <th class="text-center">
             <input type="checkbox" class="checkbox checkbox-success checkbox-sm" {% if user in users_with_photo_access %}checked{% endif %} {% if user == photo.album.creator %}disabled{% endif %} name="photoaccess_user_{{user.id}}" >
           </th>
           <td>
@@ -34,9 +34,9 @@
                     {% endif %}
                   </div>
                 </div>
-                <div>
-                  <div class="font-bold">{% firstof user.get_full_name user.email %}</div>
-                  <p class="text-sm opacity-50 text-ellipsis">{{user.email|truncatechars:10}}</p>
+                <div class="flex-shrink-0">
+                  <p class="font-bold truncate-text">{% firstof user.get_full_name user.email %}</p>
+                  <p class="text-sm opacity-50 truncate-text">{{user.email}}</p>
                 </div>
               </div>
             </a>
