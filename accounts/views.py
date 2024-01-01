@@ -7,7 +7,6 @@ from django.views.generic import FormView, UpdateView, ListView, View
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from django.contrib.auth import login, authenticate, update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm
 
 from .models import CustomUser
 from .forms import CustomUserChangeForm, CustomPasswordChangeForm
@@ -30,6 +29,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token
 from django.core.mail import send_mail
+from django.contrib.auth.forms import SetPasswordForm
 
 from aeternam.settings import EMAIL_HOST_USER
 
@@ -40,7 +40,6 @@ class RegisterPage(FormView):
     success_url = reverse_lazy('albums:albums_view')
 
     def form_valid(self, form):
-        print('FORM IS VALID')
         user = form.save(commit=False)
         user.is_active = False  # User is not active until they click the activation link
         user.save()
@@ -54,6 +53,10 @@ class RegisterPage(FormView):
             self.request,
             _("Please check your email to activate your account.")
         )
+        # Set the user's password using SetPasswordForm to trigger password validation
+        set_password_form = SetPasswordForm(user=user, data={'new_password1': form.cleaned_data['password1'], 'new_password2': form.cleaned_data['password2']})
+        if set_password_form.is_valid():
+            set_password_form.save()
 
         return super(RegisterPage, self).form_valid(form)
 
@@ -74,6 +77,13 @@ class RegisterPage(FormView):
         if self.request.user.is_authenticated:
             return redirect('albums:albums_view') #forces to redirect to main page when user is authenticated
         return super(RegisterPage, self).get(*args, **kwargs) #otherwise we apply the original method
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            _("Please correct the errors below and ensure your password is strong.")
+        )
+        return super(RegisterPage, self).form_invalid(form)
 
 
 def activate_account(request, uidb64, token):
@@ -149,7 +159,7 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 class ChangePasswordView(LoginRequiredMixin, View):
     template_name = 'accounts/change_password.html'
-    form_class = CustomPasswordChangeForm  # Use the custom form class you created
+    form_class = CustomPasswordChangeForm  # Use the custom form class
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(user=request.user)
@@ -166,6 +176,13 @@ class ChangePasswordView(LoginRequiredMixin, View):
             )
             return redirect('accounts:edit_account', pk=request.user.pk)
         return render(request, self.template_name, {'form': form})
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            _("Please correct the errors below and ensure your new password is strong.")
+        )
+        return render(self.request, self.template_name, {'form': form})
 
 
 def user_search(request):
@@ -329,34 +346,3 @@ class UserView(LoginRequiredMixin, ListView):
                 relation_to_change.save()
 
         return redirect('accounts:account_view', pk=account_id)
-
-
-# class NotificationsView(LoginRequiredMixin, ListView):
-#     model = Notification
-#     template_name = 'accounts/notifications.html'
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['seen_notifications'] = Notification.objects.filter(user=self.request.user, is_read=True)
-#         context['unseen_notifications'] = Notification.objects.filter(user=self.request.user, is_read=False)
-#         return context
-
-#     def post(self, request, *args, **kwargs):
-#         if "album_access_seen" in request.POST:
-#             notif_to_update_id = request.POST['album_access_seen']
-#             Notification.objects.filter(id=notif_to_update_id).update(is_read=True)
-#             messages.success(self.request, f'Notification marked as seen')
-
-#         if "relation_request_seen" in request.POST:
-#             notif_to_update_id = request.POST['relation_request_seen']
-#             Notification.objects.filter(id=notif_to_update_id).update(is_read=True)
-#             messages.success(self.request, f'Notification marked as seen')
-
-#         if "delete_notif" in request.POST:
-#             notif_to_delete_id = request.POST['delete_notif']
-#             notif_to_delete = Notification.objects.get(id=notif_to_delete_id)
-#             if notif_to_delete:
-#                 messages.success(self.request, f"Notification deleted successfully")
-#                 notif_to_delete.delete()
-
-#         return redirect('accounts:notifications_view')
