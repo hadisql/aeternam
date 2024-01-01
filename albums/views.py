@@ -75,7 +75,7 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
                 elif len(valid_images) == 0 and not first_image:
                     messages.success(self.request, _('Empty album successfully created'))
                 else:
-                    messages.success(self.request, _('Album successfully created, with {} photos').format(len(valid_files) + 1))
+                    messages.success(self.request, _('Album successfully created, with {} photos').format(len(valid_images) + 1))
             else:
                 messages.warning(self.request, _('No valid photos were uploaded'))
 
