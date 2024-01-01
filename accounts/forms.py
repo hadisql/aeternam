@@ -2,6 +2,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm, Password
 from django.contrib.auth import password_validation
 from django import forms
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.password_validation import validate_password
 
 from .models import CustomUser, RelationRequest, Relation
 
@@ -22,6 +23,14 @@ class RegisterForm(UserCreationForm):
         widget=forms.PasswordInput(attrs={'class':input_class, 'id':'Password'}))
     password2 = forms.CharField(
         widget=forms.PasswordInput(attrs={'class':input_class, 'id':'PasswordConfirmation'}))
+
+    def clean_password1(self):
+        password1 = self.cleaned_data.get("password1")
+        try:
+            validate_password(password1, self.instance)
+        except forms.ValidationError as error:
+            self.add_error("password1", error)
+        return password1
 
 
 class CustomProfilePicWidget(forms.widgets.ClearableFileInput):
@@ -65,6 +74,14 @@ class CustomPasswordChangeForm(PasswordChangeForm):
     new_password2 = forms.CharField(
         widget=forms.PasswordInput(attrs={'class':input_class, 'placeholder':_('Confirm new password')}))
 
+    def clean_new_password1(self):
+        new_password1 = self.cleaned_data.get("new_password1")
+        try:
+            validate_password(new_password1, self.user)
+        except forms.ValidationError as error:
+            self.add_error("new_password1", error)
+        return new_password1
+
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode
@@ -83,6 +100,10 @@ def _unicode_ci_compare(s1, s2):
     )
 
 class CustomPasswordResetForm(PasswordResetForm):
+    '''
+    Overriding django's PasswordResetForm:
+    I simply replaced the default User model with my CustomUser model
+    '''
     email = forms.EmailField(
         label=_("Email"),
         max_length=254,

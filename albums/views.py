@@ -27,8 +27,6 @@ from django.utils.translation import gettext_lazy as _
 # ----------------------------
 
 
-from django.http import HttpResponseBadRequest
-
 class AlbumCreateView(LoginRequiredMixin, CreateView):
     model = Album
     form_class = AlbumCreateForm
