@@ -200,7 +200,7 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-MEDIA_URL = '/mediafiles/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'mediafiles'
 
 if USE_S3:
