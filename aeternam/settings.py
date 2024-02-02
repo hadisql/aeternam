@@ -34,9 +34,6 @@ DEBUG = os.getenv('DEBUG', '0').lower() in ['true', 't', '1']
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
 
-CSRF_TRUSTED_ORIGINS = [
-    'http://192.168.1.26'
-]
 # Application definition
 
 INSTALLED_APPS = [
@@ -74,9 +71,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 
 # Set your Gmail credentials as environment variables
-# EMAIL_HOST_USER = 'aeternam.service@gmail.com'
 EMAIL_HOST_USER = os.getenv('AETERNAM_GMAIL_USER')
-# EMAIL_HOST_PASSWORD = 'zolb dvdq yztt bwtx'
 EMAIL_HOST_PASSWORD = os.getenv('AETERNAM_GMAIL_PASSWORD')
 
 MIDDLEWARE = [
