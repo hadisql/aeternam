@@ -13,11 +13,12 @@
       <p class="my-8 px-4 text-justify">
         {% blocktrans %}
         A site dedicated to sharing old family photos. Dust off those old albums and bring them back to life! <br>
-        This is a first version of the site: it's experimental and under development.Please bear with the author for any bugs 😇
+        This is a first version of the site: it's experimental and under development. Please bear with the author for any bugs 😇
         {% endblocktrans %}
       </p>
-      <div class=" flex place-content-center">
-        <a href="{% url 'accounts:login' %}" class="btn btn-accent">{% trans "Get Started" %}</a>
+      <div class=" flex place-content-center gap-x-4">
+        <a href="{% url 'accounts:login' %}" class="btn btn-accent">{% trans "Get Started &nbsp;🎉" %}</a>
+        <a href="" class="btn btn-primary">{% trans "Get a Demo &nbsp;🔎" %}</a>
       </div>
     </div>
   </div>
