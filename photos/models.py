@@ -5,6 +5,8 @@ from accounts.models import CustomUser
 
 import os
 from io import BytesIO
+from django.core.files.images import ImageFile
+from PIL import Image as PILImage
 
 from utils.edit_image import resize_image
 
@@ -34,29 +36,39 @@ class Photo(models.Model):
         ]
 
     def save(self, *args, **kwargs):
-        # Call the parent class's save method
-        super().save(*args, **kwargs)
+        size_limit = 1024*1024  # 1MB (1024*1024=1048576 bytes)
 
-        size_limit = 1024*1024 # 1MB (1024*1024=1048576 bytes)
-
-        # Check if the image size exceeds size limit
+        # Check if the image size exceeds the size limit
         if self.image.size > size_limit:
-
             # Get the resized image data
             resized_image_data = resize_image(self.image, size_limit)
             logger.info(f"Resizing image {self.image.name}...")
-            print(f"Resizing image {self.image.name}...")
 
-            # Create a new ImageFile object and save it to the image field
-            from django.core.files.images import ImageFile
-            self.image.save(
-                os.path.basename(self.image.name),
-                ImageFile(BytesIO(resized_image_data)),
-                save=False
-            )
+            # Open the resized image using PIL
+            resized_image = PILImage.open(BytesIO(resized_image_data))
+
+            # Generate a new filename for the resized image
+            filename, ext = os.path.splitext(os.path.basename(self.image.name))
+            new_filename = f"{filename}_resized{ext}"
+
+            # Save the resized image to a BytesIO buffer
+            with BytesIO() as buffer:
+                resized_image.save(buffer, format=resized_image.format)
+                buffer.seek(0)
+
+                # Save the resized image to the same location as the original image
+                self.image.save(
+                    new_filename,
+                    ImageFile(buffer),
+                    save=False
+                )
             logger.info("Image resized successfully.")
-            print("Image resized successfully.")
-            super().save(*args, **kwargs)
+        else:
+            # Call the parent class's save method if no resizing is needed
+            logger.info("Image saved successfully without resizing.")
+
+        # Call the parent class's save method
+        super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         # Check if the photo being deleted is the default photo
@@ -76,6 +88,7 @@ class Photo(models.Model):
             # If no other object references the image, delete the file
             try:
                 os.remove(self.image.path)
+                logger.success(f'Image {self.image.path} removed')
             except FileNotFoundError:
                 logger.warning('Image file not found during deletion')
         else:

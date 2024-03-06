@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from accounts.models import Relation
 from django.contrib.auth.hashers import make_password
 
+import logging
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -15,12 +17,14 @@ class Command(BaseCommand):
         parser.add_argument('--relationbetween', action='store_true', help='Create Relation objects between all created users')
         parser.add_argument('--relationwith', type=str, help='Create Relation objects with a specified user (provide the user email)')
         parser.add_argument('--change_existing', action='store_true', help='Change password for existing users if they already exist')
+        parser.add_argument('--full_name', type=str, help='Sets the name of the user to save as first and last name')
 
     def handle(self, *args, **options):
         emails = options['emails']
         password = options['password']
         create_relation_between = options['relationbetween']
         relation_with_email = options['relationwith']
+        full_name = options['full_name']
 
         users = []
 
@@ -31,9 +35,22 @@ class Command(BaseCommand):
 
             if created or options['change_existing']:
                 user.password = make_password(password)
+
+                if full_name:
+                    # Split the full name into first and last names
+                    first_name, last_name = full_name.split(' ', 1) if ' ' in full_name else (full_name, '')
+
+                    if first_name:
+                        user.first_name = first_name
+                    if last_name:
+                        user.last_name = last_name
+                else:
+                    # If full name not provided, use the first part as first name
+                    user.first_name = email.split('@')[0]
+
                 user.save()
                 if created:
-                    self.stdout.write(self.style.SUCCESS(f"User '{email}' created successfully."))
+                    self.stdout.write(self.style.SUCCESS(f"User '{email}' created successfully. Full name : {user.get_full_name()}"))
                 else:
                     self.stdout.write(self.style.SUCCESS(f"Password updated for existing user '{email}'."))
             else:

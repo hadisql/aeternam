@@ -150,3 +150,56 @@ def update_photo_access(selected_photos, album_id, user_id):
     access_to_remove = list(set(initial_photo_id_list) - set(selected_photos))
 
     return access_to_add, access_to_remove
+
+
+
+#######################
+#######  DEMO  ########
+#######################
+
+from django.contrib.auth import authenticate, login, logout
+import os
+from django.conf import settings
+
+def listdir_nohidden(path):
+    # equivalent to listdir but without hidden files
+    for f in os.listdir(path):
+        if not f.startswith('.'):
+            yield f
+
+def get_demo(request):
+    # Generate fake data
+    # Create a temporary fake user account
+    fake_user = CustomUser.objects.create_user(email='demo@example.com', password='password123')
+    print(f'created fake user : {fake_user.email} with password {fake_user.password}')
+
+    # Path to the directory containing fake albums
+    fake_albums_dir = os.path.join(settings.MEDIA_ROOT, 'fake_albums')
+
+    # Iterate over subdirectories (albums)
+    for album_name in listdir_nohidden(fake_albums_dir):
+        album_path = os.path.join(fake_albums_dir, album_name)
+        if os.path.isdir(album_path):
+            album = Album.objects.create(creator=fake_user, title=album_name)
+            # Iterate over files (photos) in the album directory
+            for filename in listdir_nohidden(album_path):
+                if os.path.isfile(os.path.join(album_path, filename)):
+                    # Create photo object for each file
+                    photo = Photo.objects.create(album=album, image=os.path.join('fake_albums', album_name, filename), uploaded_by=fake_user)
+
+    # Authenticate the user
+    user = authenticate(request, email='demo@example.com', password='password123')
+    if user is not None:
+        # Log the user in
+        login(request, user)
+        # Redirect to the appropriate page
+        return redirect('accounts:account_view', pk=request.user.pk)
+    else:
+        # Handle authentication failure
+        return redirect('core:index')
+
+def logout_demo(request):
+    # Log out the user
+    logout(request)
+    # Redirect to the welcome page or another appropriate page
+    return redirect('core:index')
