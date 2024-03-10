@@ -13,6 +13,9 @@ from django.core.files.images import ImageFile
 import os
 from io import BytesIO
 
+import logging
+logger = logging.getLogger(__name__)
+
 class CustomUserManager(UserManager):
 
     def _create_user(self, email, password, **extra_fields):
@@ -78,15 +81,19 @@ class CustomUser(AbstractUser):
 
         # Check if the image size exceeds size limit
         if self.profile_picture and self.profile_picture.size > size_limit:
-            print(f"Resizing profile_picture {self.profile_picture.name}...")
+            logger.info(f"Resizing profile_picture {self.profile_picture.name}...")
 
             # Get the resized image data
-            resized_image_data = resize_image(self.profile_picture.path, size_limit)
-            print(f"Resizing image {self.profile_picture.name}...")
+            resized_image_data = resize_image(self.profile_picture, size_limit)
+            logger.info(f"Resizing image {self.profile_picture.name}...")
+
+            # Generate a new filename for the resized image
+            filename, ext = os.path.splitext(os.path.basename(self.profile_picture.name))
+            new_filename = f"{filename}_resized{ext}"
 
             # Create a new ImageFile object and save it to the image field
             self.profile_picture.save(
-                os.path.basename(self.profile_picture.name),
+                new_filename,
                 ImageFile(BytesIO(resized_image_data)),
                 save=False
             )
