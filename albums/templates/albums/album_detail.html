@@ -44,9 +44,13 @@
       {% endif %}
     </div>
 
+
     <div class="my-6">
+      {% if album.description %}
       <h2 class="text-xl font-semibold">{{album.description}}</h2>
+      {% endif %}
     </div>
+
 
     <!-- View / Swipe buttons -->
     {% if photos %}
