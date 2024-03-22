@@ -11,6 +11,9 @@ from photos.models import Photo, PhotoAccess
 from accounts.models import Notification, create_notification
 from django.contrib.contenttypes.models import ContentType
 
+import logging
+logger = logging.getLogger(__name__)
+
 # ----------------------
 # ------ Albums --------
 # ----------------------
@@ -28,11 +31,12 @@ class Album(models.Model):
         photos_to_delete = Photo.objects.filter(album=self)
         for photo in photos_to_delete:
             sorl.thumbnail.delete(photo)
-            print(f"deleted photo {photo.id} with sorl-thumbnail delete method")
+            logger.info(f"deleted photo {photo.id} with sorl-thumbnail delete method")
         # Delete the album folder along with its photos
         album_directory = os.path.join(settings.MEDIA_ROOT, album_directory_path(self, ''))
         if os.path.exists(album_directory):
             # shutil.remtree deletes the folder and its contents
+            logger.info(f"deleting album folder and its contents")
             shutil.rmtree(album_directory)
         super().delete(*args, **kwargs)
 
