@@ -31,8 +31,7 @@ venv/
 
 sync_and_run.sh
 fake_data_test.sh
-fake_data_creation.sh
-fake_data_deletion.sh
+
 
 # Byte-compiled / optimized / DLL files
 *.py[cod]
