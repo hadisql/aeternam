@@ -14,6 +14,9 @@ mediafiles/profile_pictures/*
 mediafiles/albums
 mediafiles/cache
 mediafiles/images
+mediafiles/fake_albums
+mediafiles/fake_photos
+mediafiles/fake_profile_pictures
 !mediafiles/profile_pictures/default.jpg
 
 jstoolchain/node_modules
@@ -27,7 +30,6 @@ accounts/templates/accounts/account_copy.html
 venv/
 
 sync_and_run.sh
-
 fake_data_test.sh
 
 # Byte-compiled / optimized / DLL files
