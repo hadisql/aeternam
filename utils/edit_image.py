@@ -17,6 +17,10 @@ def resize_image(image_file, size_limit=1024*1024):
     original_image_data = image_file.read()
     image = Image.open(BytesIO(original_image_data))
 
+    # Check if the image is RGBA/P, convert to RGB if necessary
+    if image.mode in ['RGBA', 'P']:
+        image = image.convert('RGB')
+
     # Check if the image size exceeds the size limit
     if len(original_image_data) > size_limit:
         # Calculate a new quality value to get the image size under the limit
