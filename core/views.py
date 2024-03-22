@@ -176,7 +176,7 @@ def demo_view(request):
         return redirect('albums:albums_view')
     if request.method == 'POST':
 
-        subprocess.run(['./fake_data_creation.sh'], check=True)
+        subprocess.run(['./staticfiles/shell_scripts/fake_data_creation.sh'], check=True)
 
         user_email = request.POST.get('user_email')
 
@@ -229,7 +229,7 @@ session_end_signal = Signal()
 def session_end_handler(sender, **kwargs):
     # Execute the second shell script here
     try:
-        subprocess.run(['./fake_data_deletion.sh'], check=True)
+        subprocess.run(['./staticfiles/shell_scripts/fake_data_deletion.sh'], check=True)
     except subprocess.CalledProcessError as e:
         logger.error(f"Error executing the second script: {e}")
 
