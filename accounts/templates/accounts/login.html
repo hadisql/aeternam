@@ -69,32 +69,27 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-12 grid-rows-2 gap-2">
+      <div class="grid grid-cols-12 grid-rows-3 gap-2">
         <p class="text-sm col-span-9">
           {% trans "No account?" %}
           <a class="underline" href="{% url 'accounts:register' %}">{% trans "Sign up" %}</a>
         </p>
         <button type="submit" class="btn btn-primary mt-2 col-span-3 row-span-2">{% trans "Sign in" %}</button>
-        <p class="text-sm text-sm col-span-9">
+        <p class="text-sm col-span-9">
           <a class="underline" href="{% url 'accounts:password_reset' %}">{% trans "I forgot my password" %}</a>
+        </p>
+      </div>
+      <div class="flex place-content-end">
+        <p class="text-sm">
+          {% trans "Or try a demo with a " %}
+          <a class="btn btn-xs" href="{% url 'core:get_a_demo' %}">{% trans "fake user 🥸" %}</a>
+
         </p>
       </div>
     </form>
 
-    {% if messages %}
-      {% for message in messages %}
-        <div role="alert" class="mt-6 alert alert-{{message.tags}}">
-          {% if message.tags == "success" %}
-            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          {% elif message.tags == "error" %}
-            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          {% endif %}
-          <span>{{message}}</span>
-        </div>
-      {% endfor %}
-    {% endif %}
+    {% include 'core/messages_banner.html' %}
   </div>
-  {# <p class="alert alert-error"></p> #}
 
   <div class="relative h-64 w-full sm:h-96 lg:h-full lg:w-1/2">
     <img alt="Welcome" src="https://images.unsplash.com/photo-1632679760635-55966a6e3d42?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" class="absolute inset-0 h-full w-full object-cover"/>

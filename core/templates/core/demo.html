@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Demo" %}{% endblock %}
+
+{% block body %}
+<div class="bg-base-100">
+  <div class="mx-auto max-w-2xl px-6 py-10 sm:px-8 sm:py-16 sm:pb-16 lg:max-w-7xl lg:px-8">
+    <div id="showAfterSubmission" class="hidden">
+      {% include 'partials/demo_typing.html' %}
+    </div>
+    <div id="targetElement" class="mt-6"></div>
+    <form id="demoForm" method="post" action="{% url 'core:get_a_demo' %}">
+      {% csrf_token %}
+      <select name="user_email" class="select select-bordered w-full max-w-xs">
+        <option disabled selected>Choose a fake user to connect with</option>
+        <option value="m.scott@dundermifflin.com">Michael Scott</option>
+        <option value="p.beesly@dundermifflin.com">Pam Beesly</option>
+        <option value="j.halpert@dundermifflin.com">Jim Halpert</option>
+        <option value="k.malone@dundermifflin.com">Kevin Malone</option>
+      </select>
+      <button type="submit" class="btn">{% trans "Get a Demo" %}</button>
+    </form>
+  </div>
+</div>
+
+{% endblock body %}
+
+{% block javascript %}
+<script src="{% static 'core/js/demo_progressbar.js' %}"></script>
+{% endblock javascript %}

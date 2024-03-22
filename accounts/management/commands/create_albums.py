@@ -50,20 +50,21 @@ class Command(BaseCommand):
             else:
                 album_title = f"Album {i}"
 
-            # ## TEST
-            # if fill_photos and i < len(fill_photos):
-            #     num_photos = int(fill_photos[i])
-            #     print(f"for album {i}, num_photos = {num_photos}")
-            #     self.test_photos(photo_files_cycle, num_photos)
-            # ##
-
             album = Album.objects.create(title=album_title, creator=user)
             self.stdout.write(self.style.WARNING(f"Album '{album_title}' created successfully."))
 
-            # Fill album with photos
+            # CASE 1 : album names are provided -> automatically fill with corresponding photos from "fake_albums"
+            if album_names:
+                # if album names are provided, it should check if a corresponding album exists in mediafiles/fake_albums
+                self.fill_given_photos(album)
+
+            # CASE 2 : Fill album with random photos from "fake_photos" folder
             if fill_photos and i < len(fill_photos):
-                num_photos = int(fill_photos[i])
-                self.create_photos(album, num_photos, photo_files_cycle)
+                if album_names:
+                    self.stdout.write(self.style.WARNING(f"if --album_names are provided, no need to use --fill_photos argument."))
+                else:
+                    num_photos = int(fill_photos[i])
+                    self.fill_random_photos(album, num_photos, photo_files_cycle)
 
 
             # Case where --access set to "all"
@@ -106,7 +107,7 @@ class Command(BaseCommand):
                         PhotoAccess.objects.create(photo=photo, user=user)
                 self.stdout.write(self.style.WARNING(f"No access was given to other users."))
 
-    def create_photos(self, album, num_photos, photo_files_cycle):
+    def fill_random_photos(self, album, num_photos, photo_files_cycle):
         fake_photos_dir = os.path.join(settings.MEDIA_ROOT, 'fake_photos')
 
         first = True # used to set first photo as cover photo
@@ -121,20 +122,40 @@ class Command(BaseCommand):
                     photo = Photo(album=album, uploaded_by=album.creator)
                 photo.image.save(photo_file, File(f))
 
-            if 'resized' in photo.image.name:
-                # delete the original copied photo if photo has been resized
-                resized_photo_dir = os.path.join(settings.MEDIA_ROOT, f'albums/{photo.album.id}')
-                try:
-                    os.remove(os.path.join(resized_photo_dir, photo_file))
-                    logger.info(f"original photo {photo_file} was deleted successfully from album directory.")
-                except:
-                    logger.warning(f"original photo {photo_file} not found in album directory.")
+            self.clean_after_resize(photo, photo_file)
 
         self.stdout.write(self.style.SUCCESS(f"{num_photos} photos added to the album."))
 
+    def fill_given_photos(self, album):
+        fake_albums_path = os.path.join(settings.MEDIA_ROOT, 'fake_albums')
+        fake_album_dir = os.listdir(fake_albums_path)
 
-    # def test_photos(self, photo_files_cycle, num_photos):
+        if album.title in fake_album_dir:
+            album_path = os.path.join(fake_albums_path, album.title)
+            photo_files = os.listdir(album_path)
+            first = True
+            for photo_file in photo_files:
+                photo_path = os.path.join(album_path, photo_file)
+                with open(photo_path, 'rb') as f:
+                    if first:
+                        first = False
+                        photo = Photo(album=album, uploaded_by=album.creator, is_default=True)
+                    else:
+                        photo = Photo(album=album, uploaded_by=album.creator)
+                    photo.image.save(photo_file, File(f))
+                    logger.info(f"photo {photo.image.name} successfully saved in album {album.id}")
 
-    #     for _ in range(num_photos):
-    #         photo_file = next(photo_files_cycle)
-    #         logger.info(f"adding photo {photo_file} to the album")
+                self.clean_after_resize(photo, photo_file)
+        else:
+            self.stdout.write(self.style.ERROR(f"{album.title} couldn't be found in database. Try again with corresponding name or avoid using --album_name"))
+
+
+    def clean_after_resize(self, photo, photo_file):
+        if 'resized' in photo.image.name:
+            # delete the original copied photo if photo has been resized
+            resized_photo_dir = os.path.join(settings.MEDIA_ROOT, f'albums/{photo.album.id}')
+            try:
+                os.remove(os.path.join(resized_photo_dir, photo_file))
+                logger.info(f"original photo {photo_file} was deleted successfully from album directory.")
+            except:
+                logger.warning(f"original photo {photo_file} not found in album directory.")

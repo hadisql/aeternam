@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-01 22:23+0000\n"
+"POT-Creation-Date: 2024-03-11 13:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -72,60 +72,60 @@ msgstr "Entrez un nouveau mot de passe"
 msgid "New password confirmation"
 msgstr "Confirmez le nouveau mot de passe"
 
-#: accounts/forms.py:216 accounts/models.py:103 accounts/models.py:136
+#: accounts/forms.py:216 accounts/models.py:110 accounts/models.py:143
 msgid "UNDEFINED"
 msgstr "NON DEFINI"
 
-#: accounts/models.py:23
+#: accounts/models.py:26
 msgid "The given email must be set"
 msgstr "Un email doit être établi"
 
-#: accounts/models.py:53
+#: accounts/models.py:56
 msgid "email address"
 msgstr "adresse mail"
 
-#: accounts/models.py:54
+#: accounts/models.py:57
 msgid "profile picture"
 msgstr "photo de profil"
 
-#: accounts/models.py:56
+#: accounts/models.py:59
 msgid "country"
 msgstr "pays"
 
-#: accounts/models.py:104
+#: accounts/models.py:111
 msgid "SIBLING"
 msgstr "FRERE/SOEUR"
 
-#: accounts/models.py:105
+#: accounts/models.py:112
 msgid "PARENT/CHILDREN"
 msgstr "PARENT/ENFANT"
 
-#: accounts/models.py:106
+#: accounts/models.py:113
 msgid "COUSIN"
 msgstr ""
 
-#: accounts/models.py:107
+#: accounts/models.py:114
 msgid "AUNT-UNCLE/NEPHEW-NIECE"
 msgstr "TANTE-ONCLE/NIECE-NEUVEU"
 
-#: accounts/models.py:108
+#: accounts/models.py:115
 msgid "GRANDPARENT/GRANDCHILDREN"
 msgstr "GRAND-PARENT/PETIT-ENFANT"
 
-#: accounts/models.py:109
+#: accounts/models.py:116
 msgid "BROTHER/SISTER IN LAW"
 msgstr "BEAU-FRERE/BELLE-SOEUR"
 
-#: accounts/models.py:110
+#: accounts/models.py:117
 msgid "FRIEND"
 msgstr "AMI(E)"
 
-#: accounts/models.py:146
+#: accounts/models.py:153
 #: accounts/templates/partials/modal_request_confirmation.html:51
 msgid "Connection request"
 msgstr "Demande de connexion"
 
-#: accounts/models.py:147
+#: accounts/models.py:154
 msgid "{} sent you a connection request."
 msgstr "{} vous a envoyé une demande de connexion"
 
@@ -172,7 +172,7 @@ msgstr "Changer mon mot de passe"
 
 #: accounts/templates/accounts/account_update.html:105
 #: albums/templates/albums/album_access.html:201
-#: albums/templates/albums/album_detail.html:179
+#: albums/templates/albums/album_detail.html:183
 #: albums/templates/albums/album_form.html:44
 #: photos/templates/photos/add_photos_to_album.html:40
 #: photos/templates/photos/photo_detail.html:103
@@ -503,10 +503,10 @@ msgid "Your password has been changed successfully"
 msgstr "Votre mot de passe a été modifié avec succès"
 
 #: accounts/views.py:183
-#| msgid "Please go to the following page and choose a new password:"
 msgid "Please correct the errors below and ensure your new password is strong."
 msgstr ""
-"Veuillez corriger les erreurs indiquées ci-dessous. Assurez-vous d'utiliser un nouveau mot de passe sécurisé."
+"Veuillez corriger les erreurs indiquées ci-dessous. Assurez-vous d'utiliser "
+"un nouveau mot de passe sécurisé."
 
 #: accounts/views.py:308
 msgid "Connection created"
@@ -516,11 +516,11 @@ msgstr "Connexion créee"
 msgid "{} has accepted your connection request"
 msgstr "{} a accepté(e) votre demande de connexion"
 
-#: aeternam/settings.py:179
+#: aeternam/settings.py:174
 msgid "French"
 msgstr "Français"
 
-#: aeternam/settings.py:180
+#: aeternam/settings.py:175
 msgid "English"
 msgstr "Anglais"
 
@@ -644,11 +644,11 @@ msgstr ""
 "tip=\"Réglages de l'album\">\n"
 "      "
 
-#: albums/templates/albums/album_detail.html:132
+#: albums/templates/albums/album_detail.html:136
 msgid "Shared with: "
 msgstr "Partagé avec:"
 
-#: albums/templates/albums/album_detail.html:186
+#: albums/templates/albums/album_detail.html:190
 msgid "Album Settings"
 msgstr "Réglages"
 
@@ -746,7 +746,8 @@ msgstr "je choisis"
 msgid ""
 "Please correct the errors below and ensure two upload image files (jpeg/png)."
 msgstr ""
-"Veuillez corriger les erreurs indiquées ci-dessous. Assurez-vous de partager des fichiers images (formats jpeg/png)"
+"Veuillez corriger les erreurs indiquées ci-dessous. Assurez-vous de partager "
+"des fichiers images (formats jpeg/png)"
 
 #: albums/views.py:147
 msgid "Album was deleted successfully"
@@ -830,6 +831,14 @@ msgstr "lien"
 msgid "Contact"
 msgstr ""
 
+#: core/templates/core/demo.html:5
+msgid "Demo"
+msgstr "Démo"
+
+#: core/templates/core/demo.html:18
+msgid "Get a Demo"
+msgstr "Lancer la Démo"
+
 #: core/templates/core/index.html:5
 msgid "Welcome"
 msgstr "Bienvenue"
@@ -844,7 +853,7 @@ msgid ""
 "        A site dedicated to sharing old family photos. Dust off those old "
 "albums and bring them back to life! <br>\n"
 "        This is a first version of the site: it's experimental and under "
-"development.Please bear with the author for any bugs 😇\n"
+"development. Please bear with the author for any bugs 😇\n"
 "        "
 msgstr ""
 "\n"
@@ -856,8 +865,13 @@ msgstr ""
 "        "
 
 #: core/templates/core/index.html:20
-msgid "Get Started"
-msgstr "Commencer"
+#| msgid "Get Started"
+msgid "Get Started &nbsp;🎉"
+msgstr "Commencer &nbsp;🎉"
+
+#: core/templates/core/index.html:21
+msgid "Get a Demo &nbsp;🔎"
+msgstr "Lancer une Démo &nbsp;🔎"
 
 #: core/templates/partials/navbar.html:44
 msgid "Notification Panel"
@@ -872,7 +886,6 @@ msgid "Profile"
 msgstr "Profil"
 
 #: core/templates/partials/navbar.html:114
-#| msgid "Album settings"
 msgid "Albums"
 msgstr "Albums"
 
@@ -905,7 +918,7 @@ msgstr "Confirmer la suppression"
 msgid "%(timing)s ago "
 msgstr "il y a %(timing)s"
 
-#: core/views.py:40
+#: core/views.py:43
 msgid ""
 "Your feedback has been successfully.\n"
 "Thank you! =)"
@@ -913,31 +926,37 @@ msgstr ""
 "Votre retour/avis a été envoyé.\n"
 "Merci! =)"
 
-#: core/views.py:95
+#: core/views.py:98
 #, python-brace-format
 msgid ""
 "You gave {username} access to {add} and revoked their access to {revoke}"
 msgstr "Vous avez donné à {username} {add} accès et révoqué {revoke} accès"
 
-#: core/views.py:106
+#: core/views.py:109
 #, python-brace-format
 msgid "You gave {username} access to {number} photos"
 msgstr "Vous avez donné à {username} accès à {number} photos"
 
-#: core/views.py:112
+#: core/views.py:115
 #, python-brace-format
 msgid "You revoked {username} their access to {number} photos"
 msgstr "Vous avez révoqué l'accès de {username} à {number} photos"
 
 #
-#: core/views.py:124
+#: core/views.py:127
 msgid "{} won't have access to your album anymore"
 msgstr "{} n'aura plus accès à votre album"
 
-#: core/views.py:133
+#: core/views.py:136
 #, python-brace-format
 msgid "{username} can now access your album ({number} photos)"
 msgstr "{username} a maintenant accès à votre album ({number} photos)"
+
+#: core/views.py:190
+msgid ""
+"You are connected as a demo user for the next hour. Enjoy exploring aeternam!"
+msgstr ""
+"Vous êtes à présent connecté en tant qu'utilisateur démo pendant 1h. Profitez-en pour explorer aeternam!"
 
 #: photos/forms.py:17
 msgid "Send a comment.."
@@ -1044,17 +1063,14 @@ msgid "You can only replace the photo with an image file."
 msgstr "Vous pouvez remplacer la photo par un fichier image uniquement."
 
 #: photos/views.py:166
-#| msgid "1 photo was uploaded successfully"
 msgid "the photo has been replaced successfully"
 msgstr "la photo a été remplacée avec succès"
 
 #: photos/views.py:178
-#| msgid "1 photo was uploaded successfully"
 msgid "the photo has been rotated successfully"
 msgstr "rotation de la photo effectuée avec succès"
 
 #: photos/views.py:188
-#| msgid "1 photo was uploaded successfully"
 msgid "the photo has been flipped successfully"
 msgstr "rotation miroir de la photo effectuée avec succès"
 
@@ -1088,7 +1104,6 @@ msgid "{} photos were uploaded successfully"
 msgstr "{} photos ont été transmises avec succès"
 
 #: utils/upload_photos.py:51
-#| msgid "{} photos were uploaded successfully"
 msgid "No valid photos were uploaded"
 msgstr "Aucune photo valide n'a été partagée"
 

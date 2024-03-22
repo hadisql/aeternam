@@ -36,6 +36,7 @@ class Command(BaseCommand):
             user, created = User.objects.get_or_create(email=email)
             users.append(user)
 
+            profile_picture = None
             if full_name:
                 # Split the full name into first and last names
                 first_name, last_name = full_name.split(' ', 1) if ' ' in full_name else (full_name, '')
@@ -47,7 +48,7 @@ class Command(BaseCommand):
 
                 # Try to find a profile picture based on the user's name
                 supported_formats = ['.jpg', '.jpeg', '.png']
-                profile_picture = None
+
                 for ext in supported_formats:
                     profile_picture_path = os.path.join('mediafiles', 'fake_profile_pictures', f'{first_name.lower()}_{last_name.lower()}{ext}')
                     if os.path.exists(profile_picture_path):

@@ -17,6 +17,9 @@ from django.urls import reverse_lazy
 from django.core.mail import send_mail
 from .models import Feedback
 
+import logging
+logger = logging.getLogger(__name__)
+
 def index(request):
 
     if request.method == 'GET' and request.user.is_authenticated:
@@ -151,55 +154,89 @@ def update_photo_access(selected_photos, album_id, user_id):
 
     return access_to_add, access_to_remove
 
-
-
-#######################
-#######  DEMO  ########
-#######################
-
+###################
+#### DEMO VIEW ####
+###################
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import get_user_model
+from django.http import HttpResponse
+
+from django.contrib.auth.signals import user_logged_out
+
 import os
-from django.conf import settings
+import subprocess
+from datetime import datetime, timedelta
+from json import dumps
 
-def listdir_nohidden(path):
-    # equivalent to listdir but without hidden files
-    for f in os.listdir(path):
-        if not f.startswith('.'):
-            yield f
+User = get_user_model()
+DEMO_DELAY = os.getenv('DEMO_DELAY_SECONDS')
 
-def get_demo(request):
-    # Generate fake data
-    # Create a temporary fake user account
-    fake_user = CustomUser.objects.create_user(email='demo@example.com', password='password123')
-    print(f'created fake user : {fake_user.email} with password {fake_user.password}')
+def demo_view(request):
+    if request.user.is_authenticated:
+        return redirect('albums:albums_view')
+    if request.method == 'POST':
 
-    # Path to the directory containing fake albums
-    fake_albums_dir = os.path.join(settings.MEDIA_ROOT, 'fake_albums')
+        subprocess.run(['./fake_data_creation.sh'], check=True)
 
-    # Iterate over subdirectories (albums)
-    for album_name in listdir_nohidden(fake_albums_dir):
-        album_path = os.path.join(fake_albums_dir, album_name)
-        if os.path.isdir(album_path):
-            album = Album.objects.create(creator=fake_user, title=album_name)
-            # Iterate over files (photos) in the album directory
-            for filename in listdir_nohidden(album_path):
-                if os.path.isfile(os.path.join(album_path, filename)):
-                    # Create photo object for each file
-                    photo = Photo.objects.create(album=album, image=os.path.join('fake_albums', album_name, filename), uploaded_by=fake_user)
+        user_email = request.POST.get('user_email')
 
-    # Authenticate the user
-    user = authenticate(request, email='demo@example.com', password='password123')
-    if user is not None:
-        # Log the user in
-        login(request, user)
-        # Redirect to the appropriate page
-        return redirect('accounts:account_view', pk=request.user.pk)
-    else:
-        # Handle authentication failure
-        return redirect('core:index')
+        # Set the selected user as active
+        user = User.objects.get(email=user_email)
+        logger.info(f'user found -> {user}')
 
-def logout_demo(request):
-    # Log out the user
-    logout(request)
-    # Redirect to the welcome page or another appropriate page
-    return redirect('core:index')
+        # Authenticate the visitor as the selected user
+        user = authenticate(email=user.email, password="password123")
+        if user is not None:
+            login(request, user)
+            logger.info(f"user {user.get_full_name()} authenticated and logged in")
+            # Set session timeout to DEMO_DELAY seconds (3600=1h)
+            delay = timedelta(seconds=int(DEMO_DELAY))
+            ## request.session.set_expiry(delay)
+
+            request.session['expiry_time'] = dumps(datetime.now() + delay, indent=4, sort_keys=True, default=str)
+
+             # Connect session_end_signal to user_logged_out signal
+            user_logged_out.connect(session_end_handler)
+
+            # Execute the bash script synchronously
+            try:
+                print(f"request.session.items() -> {request.session.items()}")
+                print(f"request.session['expiry_time'] -> {request.session.get('expiry_time')}")
+                print(f"datetime.now() -> {datetime.now()}")
+
+                # subprocess.run(['./fake_data.sh'], check=True)
+            except subprocess.CalledProcessError as e:
+                return HttpResponse(f"Error executing the script: {e}")
+
+            # Render a success page or redirect to a dashboard
+            logger.info(f"request -> {request}")
+            messages.success(request, _("You are now connected as a demo user for the next hour. Enjoy exploring aeternam!"))
+            return redirect('albums:albums_view')  # Adjust the URL name as per your project
+
+        else:
+            return HttpResponse("Authentication failed.")
+    # Render the form page if it's a GET request
+    return render(request, 'core/demo.html')
+
+
+
+from django.dispatch import Signal
+
+# Define a custom signal
+session_end_signal = Signal()
+
+# Define a signal handler
+def session_end_handler(sender, **kwargs):
+    # Execute the second shell script here
+    try:
+        subprocess.run(['./fake_data_deletion.sh'], check=True)
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Error executing the second script: {e}")
+
+     # Create a response with a refresh header to force a page refresh
+    response = HttpResponse()
+    response['Refresh'] = '0; url=/accounts/login'  # Adjust the URL as needed
+    return response
+
+# Connect the signal handler
+session_end_signal.connect(session_end_handler)
