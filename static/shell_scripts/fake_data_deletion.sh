@@ -2,24 +2,43 @@
 
 echo "Starting the user deletion script.."
 sleep 2
-echo "Deletion of the fake users.."
+echo "We retrieve the fake users list.."
+sleep 1
 
-python manage.py shell <<EOF
+# Retrieve Fake data from the creation script
+creation_script_path="staticfiles/shell_scripts/fake_data_creation.sh"
+if [ -f "$creation_script_path" ]; then
+    # Extract variable values using grep
+    names=$(grep '^NAMES=(' "$creation_script_path" | sed 's/NAMES=(//' | sed 's/)//')
+    emails=$(grep '^EMAILS=(' "$creation_script_path" | sed 's/EMAILS=(//' | sed 's/)//')
+    # Save extracted values as lists
+    NAMES=($names)
+    EMAILS=($emails)
+    # Print
+    echo "Names: $names"
+    echo "Emails: $emails"
+else
+    echo "Error: Script file not found"
+fi
+
+# FAKE DATA DELETION
+sleep 2
+echo "Deletion of the fake users.."
+sleep 1
+
+for i in "${!EMAILS[@]}"; do
+  email="${EMAILS[$i]}"
+  python manage.py shell <<EOF
 import os
 from django.contrib.auth import get_user_model
 
 # Get the CustomUser model
 User = get_user_model()
-
-# Define the list of emails
-emails = ["m.scott@dundermifflin.com", "j.halpert@dundermifflin.com", "p.beesly@dundermifflin.com", "k.malone@dundermifflin.com"]
-
-# Iterate through the list of emails and delete users with matching emails
-for email in emails:
-    try:
-        user = User.objects.get(email=email)
-        user.delete()
-        print(f"User with email {email} deleted successfully.")
-    except User.DoesNotExist:
-        print(f"User with email {email} does not exist.")
+try:
+  user = User.objects.get(email=$email)
+  user.delete()
+  print(f'User with email $email deleted successfully.')
+except User.DoesNotExist:
+  print(f'User with email $email does not exist.')
 EOF
+done
