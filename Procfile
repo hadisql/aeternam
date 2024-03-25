@@ -1,5 +1,5 @@
-web: gunicorn aeternam.wsgi:application
-
-predeploy: echo "echoing pwd ->" && pwd && cd jstoolchain && npm run tailwind-build
+web: gunicorn aeternam.wsgi:application & npm run tailwind-build & wait -n
 
 release: django-admin migrate --no-input && django-admin collectstatic --no-input
+
+postdeploy: echo "postdeploy.."
