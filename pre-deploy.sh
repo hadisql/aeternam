@@ -16,7 +16,7 @@ if [ -d "$directory" ]; then
     echo "Checking for folders starting with 'fake_' in $directory"
 
     # Find folders starting with 'fake_' and delete them recursively
-    find "$directory" -type d -name 'fake_*' -exec rm -rf {} +
+    find "$directory" -type d -name 'fake_*' -exec rm -rfv {} +
 
     echo "Folders starting with 'fake_' deleted"
 else

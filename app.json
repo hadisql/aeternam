@@ -1,8 +1,7 @@
 {
   "scripts": {
     "dokku": {
-      "predeploy": "sh pre-deploy.sh",
-      "postdeploy": "sh post-deploy.sh"
+      "predeploy": "sh pre-deploy.sh"
     }
   }
 }
