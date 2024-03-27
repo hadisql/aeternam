@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-11 13:51+0000\n"
+"POT-Creation-Date: 2024-03-27 14:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -269,6 +269,14 @@ msgstr "Valider"
 msgid "I forgot my password"
 msgstr "J'ai oublié mon mot de passe"
 
+#: accounts/templates/accounts/login.html:84
+msgid "Or try a demo with a "
+msgstr "Ou essayez une session démo avec un"
+
+#: accounts/templates/accounts/login.html:85
+msgid "fake user"
+msgstr "faux compte"
+
 #: accounts/templates/accounts/register.html:28
 #: accounts/templates/accounts/register.html:45
 msgid "Welcome to Æternam"
@@ -516,11 +524,11 @@ msgstr "Connexion créee"
 msgid "{} has accepted your connection request"
 msgstr "{} a accepté(e) votre demande de connexion"
 
-#: aeternam/settings.py:174
+#: aeternam/settings.py:176
 msgid "French"
 msgstr "Français"
 
-#: aeternam/settings.py:175
+#: aeternam/settings.py:177
 msgid "English"
 msgstr "Anglais"
 
@@ -679,37 +687,37 @@ msgstr "en chargement"
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: albums/templates/albums/albums.html:42
-#: albums/templates/albums/albums.html:43
+#: albums/templates/albums/albums.html:31
+#: albums/templates/albums/albums.html:32
 msgid "Albums you created"
 msgstr "Vos albums créés"
 
-#: albums/templates/albums/albums.html:74
-#: albums/templates/albums/albums.html:169
+#: albums/templates/albums/albums.html:63
+#: albums/templates/albums/albums.html:158
 msgid "Empty album"
 msgstr "Album vide"
 
-#: albums/templates/albums/albums.html:76
-#: albums/templates/albums/albums.html:171
+#: albums/templates/albums/albums.html:65
+#: albums/templates/albums/albums.html:160
 msgid "No cover photo"
 msgstr "Pas d'image de couverture"
 
-#: albums/templates/albums/albums.html:82
-#: albums/templates/albums/albums.html:177
+#: albums/templates/albums/albums.html:71
+#: albums/templates/albums/albums.html:166
 msgid "uploaded by"
 msgid_plural "uploaded by"
 msgstr[0] "partagée par"
 msgstr[1] "partagées par"
 
-#: albums/templates/albums/albums.html:113
+#: albums/templates/albums/albums.html:102
 msgid "No albums yet !"
 msgstr "Pas encore d'album !"
 
-#: albums/templates/albums/albums.html:117
+#: albums/templates/albums/albums.html:106
 msgid "create a new album"
 msgstr "Créez un nouvel album"
 
-#: albums/templates/albums/albums.html:138
+#: albums/templates/albums/albums.html:127
 msgid "Albums shared with you"
 msgstr "Albums partagés avec vous"
 
@@ -756,6 +764,10 @@ msgstr "L'album a été supprimé avec succès"
 #: core/forms.py:8
 msgid "Give a feedback and/or ideas.."
 msgstr "Donner votre avis et/ou des idées.."
+
+#: core/middleware.py:37
+msgid "You were logged out of the demo session."
+msgstr "Votre session démo a expirée."
 
 #: core/templates/core/about.html:5 core/templates/core/about.html:12
 #: core/templates/core/base.html:41
@@ -835,7 +847,11 @@ msgstr ""
 msgid "Demo"
 msgstr "Démo"
 
-#: core/templates/core/demo.html:18
+#: core/templates/core/demo.html:17
+msgid "Choose a fake user to connect with"
+msgstr "Choisissez un faux compte"
+
+#: core/templates/core/demo.html:23
 msgid "Get a Demo"
 msgstr "Lancer la Démo"
 
@@ -865,7 +881,6 @@ msgstr ""
 "        "
 
 #: core/templates/core/index.html:20
-#| msgid "Get Started"
 msgid "Get Started &nbsp;🎉"
 msgstr "Commencer &nbsp;🎉"
 
@@ -952,11 +967,14 @@ msgstr "{} n'aura plus accès à votre album"
 msgid "{username} can now access your album ({number} photos)"
 msgstr "{username} a maintenant accès à votre album ({number} photos)"
 
-#: core/views.py:190
+#: core/views.py:204
+#, python-brace-format
 msgid ""
-"You are connected as a demo user for the next hour. Enjoy exploring aeternam!"
+"You are now connected as a demo user for the next {duration} mins. Enjoy "
+"exploring aeternam!"
 msgstr ""
-"Vous êtes à présent connecté en tant qu'utilisateur démo pendant 1h. Profitez-en pour explorer aeternam!"
+"Vous êtes à présent connecté en tant qu'utilisateur démo pendant {duration} "
+"mins. Profitez-en pour explorer aeternam!"
 
 #: photos/forms.py:17
 msgid "Send a comment.."

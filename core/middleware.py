@@ -3,10 +3,15 @@
 from datetime import datetime
 import subprocess
 from django.contrib.auth import logout
+from django.contrib import messages
+import os
+from django.utils.translation import gettext_lazy as _
+
 
 import logging
 logger = logging.getLogger(__name__)
 
+DEMO_DELAY = os.getenv('DEMO_DELAY_SECONDS')
 
 class SessionExpiryMiddleware:
     def __init__(self, get_response):
@@ -29,6 +34,8 @@ class SessionExpiryMiddleware:
                 try:
                     #subprocess.run(['./fake_data_test.sh'], check=True)
                     logout(request)
+                    messages.WARNING(_("You were logged out of the demo session."))
+                    logger.info(f"User logged out of demo session after {int(int(DEMO_DELAY)/60)} mins.")
                 except subprocess.CalledProcessError as e:
                     # Handle script execution errors
                     pass

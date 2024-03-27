@@ -14,7 +14,7 @@
     <form id="demoForm" method="post" action="{% url 'core:get_a_demo' %}">
       {% csrf_token %}
       <select name="user_email" class="select select-bordered w-full max-w-xs">
-        <option disabled selected>Choose a fake user to connect with</option>
+        <option disabled selected>{% trans "Choose a fake user to connect with" %}</option>
         <option value="m.scott@dundermifflin.com">Michael Scott</option>
         <option value="p.beesly@dundermifflin.com">Pam Beesly</option>
         <option value="j.halpert@dundermifflin.com">Jim Halpert</option>
