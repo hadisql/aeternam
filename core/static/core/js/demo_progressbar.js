@@ -36,7 +36,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearInterval(progressInterval);
             }
         }, 100);
-  })
+  });
+
+
+  // demo form submission -> send form only when option selected
+  function toggleSubmitButton() {
+    var selectElement = document.getElementById("user_email");
+    var submitButton = document.getElementById("submitBtn");
+
+    if (selectElement.value === "") {
+      submitButton.disabled = true;
+    } else {
+      submitButton.disabled = false;
+    }
+  }
 
 
 });
