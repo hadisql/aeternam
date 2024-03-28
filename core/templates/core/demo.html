@@ -13,7 +13,7 @@
     <div id="targetElement" class="mt-6"></div>
     <form id="demoForm" method="post" action="{% url 'core:get_a_demo' %}">
       {% csrf_token %}
-      <select name="user_email" id="user_email" class="select select-bordered w-full max-w-xs text-base" onchange="toggleSubmitButton()">
+      <select name="user_email" id="user_email" onchange="toggleSubmitButton()" class="select select-bordered w-full max-w-xs text-base">
         <option disabled selected>{% trans "Choose a fake user to connect with" %}</option>
         <option value="m.scott@dundermifflin.com">🕶️ Michael Scott </option>
         <option value="p.beesly@dundermifflin.com">🎨 Pam Beesly </option>
@@ -29,4 +29,18 @@
 
 {% block javascript %}
 <script src="{% static 'core/js/demo_progressbar.js' %}"></script>
+
+<script>
+  // demo form submission -> send form only when option selected
+  function toggleSubmitButton() {
+  var selectElement = document.getElementById("user_email");
+  var submitButton = document.getElementById("submitBtn");
+
+  if (selectElement.value === "") {
+    submitButton.disabled = true;
+  } else {
+    submitButton.disabled = false;
+  }
+}
+</script>
 {% endblock javascript %}
