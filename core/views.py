@@ -176,7 +176,10 @@ def demo_view(request):
         return redirect('albums:albums_view')
     if request.method == 'POST':
 
-        subprocess.run(['./fake_data_creation.sh'], check=True)
+        try:
+            subprocess.run(['./staticfiles/shell_scripts/fake_data_creation.sh'], check=True)
+        except subprocess.CalledProcessError as e:
+                return HttpResponse(f"Error executing the script: {e}")
 
         user_email = request.POST.get('user_email')
 
@@ -191,28 +194,15 @@ def demo_view(request):
             logger.info(f"user {user.get_full_name()} authenticated and logged in")
             # Set session timeout to DEMO_DELAY seconds (3600=1h)
             delay = timedelta(seconds=int(DEMO_DELAY))
-            ## request.session.set_expiry(delay)
-
-            request.session['expiry_time'] = dumps(datetime.now() + delay, indent=4, sort_keys=True, default=str)
+            request.session['expiry_time'] = dumps(datetime.now() + delay, indent=4, sort_keys=True, default=str) # prevents json-serialized format error
 
              # Connect session_end_signal to user_logged_out signal
             user_logged_out.connect(session_end_handler)
 
-            # Execute the bash script synchronously
-            try:
-                print(f"request.session.items() -> {request.session.items()}")
-                print(f"request.session['expiry_time'] -> {request.session.get('expiry_time')}")
-                print(f"datetime.now() -> {datetime.now()}")
-
-                # subprocess.run(['./fake_data.sh'], check=True)
-            except subprocess.CalledProcessError as e:
-                return HttpResponse(f"Error executing the script: {e}")
-
             # Render a success page or redirect to a dashboard
             logger.info(f"request -> {request}")
-            messages.success(request, _("You are now connected as a demo user for the next hour. Enjoy exploring aeternam!"))
+            messages.success(request, _("You are now connected as a demo user for the next {duration} mins. Enjoy exploring aeternam!").format(duration=int(int(DEMO_DELAY)/60)))
             return redirect('albums:albums_view')  # Adjust the URL name as per your project
-
         else:
             return HttpResponse("Authentication failed.")
     # Render the form page if it's a GET request
@@ -229,7 +219,7 @@ session_end_signal = Signal()
 def session_end_handler(sender, **kwargs):
     # Execute the second shell script here
     try:
-        subprocess.run(['./fake_data_deletion.sh'], check=True)
+        subprocess.run(['./staticfiles/shell_scripts/fake_data_deletion.sh'], check=True)
     except subprocess.CalledProcessError as e:
         logger.error(f"Error executing the second script: {e}")
 

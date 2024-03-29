@@ -50,13 +50,15 @@ class Command(BaseCommand):
             else:
                 album_title = f"Album {i}"
 
-            album = Album.objects.create(title=album_title, creator=user)
-            self.stdout.write(self.style.WARNING(f"Album '{album_title}' created successfully."))
+            album, created = Album.objects.get_or_create(title=album_title, creator=user)
+            self.stdout.write(self.style.SUCCESS(f"Album '{album_title}' created successfully."))
 
             # CASE 1 : album names are provided -> automatically fill with corresponding photos from "fake_albums"
-            if album_names:
+            if album_names and created:
                 # if album names are provided, it should check if a corresponding album exists in mediafiles/fake_albums
                 self.fill_given_photos(album)
+            else:
+                logger.info(f"Album {album.title} already exists. Skipped.")
 
             # CASE 2 : Fill album with random photos from "fake_photos" folder
             if fill_photos and i < len(fill_photos):
@@ -83,14 +85,14 @@ class Command(BaseCommand):
                 for email in access_emails:
                     try:
                         access_user = User.objects.get(email=email)
-                        AlbumAccess.objects.create(album=album, user=access_user)
+                        AlbumAccess.objects.get_or_create(album=album, user=access_user)
                         self.stdout.write(self.style.SUCCESS(f"Access is given to {email}."))
                         album_photos = Photo.objects.filter(album=album)
                         # logger.info(f"album has photos : {album_photos}")
                         if album_photos:
                             for photo in album_photos:
                                 # logger.info(f"granting photo access to photo {photo.id}")
-                                PhotoAccess.objects.create(photo=photo, user=access_user)
+                                PhotoAccess.objects.get_or_create(photo=photo, user=access_user)
                                 self.stdout.write(self.style.SUCCESS(f"Access is given for photo {photo.id}."))
                     except User.DoesNotExist:
                         self.stdout.write(self.style.ERROR(f"User with email '{email}' does not exist."))
@@ -98,13 +100,13 @@ class Command(BaseCommand):
                 if album_photos:
                     for photo in album_photos:
                         logger.info(f"granting photo access to photo {photo.id} for album creator himself.")
-                        PhotoAccess.objects.create(photo=photo, user=user)
+                        PhotoAccess.objects.get_or_create(photo=photo, user=user)
             else:
                 album_photos = Photo.objects.filter(album=album)
                 if album_photos:
                     for photo in album_photos:
                         logger.info(f"granting photo access to photo {photo.id} for the user himself.")
-                        PhotoAccess.objects.create(photo=photo, user=user)
+                        PhotoAccess.objects.get_or_create(photo=photo, user=user)
                 self.stdout.write(self.style.WARNING(f"No access was given to other users."))
 
     def fill_random_photos(self, album, num_photos, photo_files_cycle):

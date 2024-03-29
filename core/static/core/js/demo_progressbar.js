@@ -30,13 +30,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Simulate progress animation
         var progress = 0;
         var progressInterval = setInterval(function() {
-            progress += 1;
+            progress += .75; //control the speed
             progressBar.style.width = progress + "%";
             if (progress >= 100) {
                 clearInterval(progressInterval);
             }
         }, 100);
-  })
-
-
+  });
 });

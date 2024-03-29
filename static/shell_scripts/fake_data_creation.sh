@@ -12,6 +12,21 @@ for i in "${!EMAILS[@]}"; do
   email="${EMAILS[$i]}"
   name="${NAMES[$i]}"
 
+  # Check if fake data already in db
+  echo "Checking if fake data already in db.."
+  sleep 1
+  python manage.py shell <<EOF
+from django.contrib.auth import get_user_model
+User = get_user_model()
+try:
+  user = User.objects.get(email="$email")
+  if user:
+    user.delete()
+    print(f'user with email $email was in db. it is now deleted')
+except User.DoesNotExist:
+  print('User with email $email does not exist. It will be created')
+EOF
+
   # Create user
   python manage.py create_users "$email" --password 'password123' --full_name "$name" --change_existing
 done
