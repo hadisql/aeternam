@@ -3,8 +3,8 @@
 # Define arrays for fake data
 # NAMES=("John Doe" "Jane Smith" "Michael Johnson" "Emily Brown" "Robert Williams")
 # EMAILS=("john@example.com" "jane@example.com" "michael@example.com" "emily@example.com" "robert@example.com")
-NAMES=("Michael Scott" "Jim Halpert" "Pam Beesly" "Kevin Malone")
-EMAILS=("m.scott@dundermifflin.com" "j.halpert@dundermifflin.com" "p.beesly@dundermifflin.com" "k.malone@dundermifflin.com")
+NAMES=("Michael Scott" "Jim Halpert" "Pam Beesly" "Kevin Malone" "Dwight Schrute")
+EMAILS=("m.scott@dundermifflin.com" "j.halpert@dundermifflin.com" "p.beesly@dundermifflin.com" "k.malone@dundermifflin.com" "d.schrute@dundermifflin.com")
 
 # Create users
 echo "Creating users from the office.."
@@ -33,5 +33,6 @@ done
 
 echo "Creating albums for our 'the office' characters.."
 python manage.py create_albums 2 "m.scott@dundermifflin.com" --access "all" --album_name "Holidays" "Personal"
-python manage.py create_albums 1 "j.halpert@dundermifflin.com" --access "p.beesly@dundermifflin.com" --album_name "Pam and I"
+python manage.py create_albums 1 "j.halpert@dundermifflin.com" --access "all" --album_name "Pam and I"
 python manage.py create_albums 1 "k.malone@dundermifflin.com" --access "all" --album_name "Kevin"
+python manage.py create_albums 1 "d.schrute@dundermifflin.com" --access "all" --album_name "Halloween"
