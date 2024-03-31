@@ -1,5 +1,9 @@
 #!/bin/bash
 
+############################################################
+############# PREDEPLOYMENT : ERASING MEDIAFILES ###########
+############################################################
+
 # Check if the correct number of arguments is provided
 if [ "$#" -ne 1 ]; then
     echo "Usage: $0 [aeternam | aeternam-dev]"
@@ -18,7 +22,6 @@ echo "Pre-deployment script.."
 echo "Trying to delete fake folders in mediafiles if present.."
 sleep 1
 
-
 # Define the directory path
 directory="/var/lib/dokku/data/storage/$parameter/mediafiles"
 
@@ -35,6 +38,11 @@ ssh root@aeternam.hadisqalli.com "
 "
 echo '-----------------------------------'
 sleep 1
+
+############################################################
+############# DEPLOYMENT : PUSHING DOKKU PROJECT ###########
+############################################################
+
 echo 'pushing the local script to dokku..'
 
 if [ "$1" = "aeternam-dev" ]; then
@@ -53,9 +61,20 @@ fi
 
 echo '-----------------------------------'
 sleep 1
-echo "giving -x permissions to fake_data shell scripts.."
-ssh root@aeternam.hadisqalli.com "chmod +x /var/lib/dokku/data/storage/$parameter/staticfiles/shell_scripts/fake_data_creation.sh"
-ssh root@aeternam.hadisqalli.com "chmod +x /var/lib/dokku/data/storage/$parameter/staticfiles/shell_scripts/fake_data_deletion.sh"
 
-echo "Copying fake data files from 'temp' folder.."
+#################################################################
+############# POSTEPLOYMENT : COPYING MEDIAFILES BACK ###########
+#################################################################
+
+echo "giving -x permissions to fake_data shell scripts.."
+ssh root@aeternam.hadisqalli.com "chmod +x /var/lib/dokku/data/storage/$parameter/staticfiles/shell_scripts/*"
+ssh root@aeternam.hadisqalli.com "./var/lib/dokku/data/storage/$parameter/staticfiles/shell_scripts/emails_to_json.sh"
+
+echo '----- first step: syncing local fake data files with temp folder -----'
+rsync -azP mediafiles/fake_profile_pictures/ root@aeternam.hadisqalli.com:/var/lib/dokku/data/storage/$parameter/temp/fake_profile_pictures
+rsync -azP mediafiles/fake_photos/ root@aeternam.hadisqalli.com:/var/lib/dokku/data/storage/$parameter/temp/fake_photos
+rsync -azP mediafiles/fake_albums/ root@aeternam.hadisqalli.com:/var/lib/dokku/data/storage/$parameter/temp/fake_albums
+
+
+echo "----- second step: Copying fake data files from 'temp' folder.. -----"
 ssh root@aeternam.hadisqalli.com "cp -rv /var/lib/dokku/data/storage/$parameter/temp/fake_* /var/lib/dokku/data/storage/$parameter/mediafiles"

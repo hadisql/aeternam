@@ -160,7 +160,7 @@ def update_photo_access(selected_photos, album_id, user_id):
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
-
+from .forms import DemoForm
 from django.contrib.auth.signals import user_logged_out
 
 import os
@@ -171,43 +171,79 @@ from json import dumps
 User = get_user_model()
 DEMO_DELAY = os.getenv('DEMO_DELAY_SECONDS')
 
-def demo_view(request):
-    if request.user.is_authenticated:
-        return redirect('albums:albums_view')
-    if request.method == 'POST':
+# def demo_view(request):
+#     if request.user.is_authenticated:
+#         return redirect('albums:albums_view')
+#     if request.method == 'POST':
 
-        try:
-            subprocess.run(['./staticfiles/shell_scripts/fake_data_creation.sh'], check=True)
-        except subprocess.CalledProcessError as e:
-                return HttpResponse(f"Error executing the script: {e}")
+#         try:
+#             subprocess.run(['./staticfiles/shell_scripts/fake_data_creation.sh'], check=True)
+#         except subprocess.CalledProcessError as e:
+#                 return HttpResponse(f"Error executing the script: {e}")
 
-        user_email = request.POST.get('user_email')
+#         user_email = request.POST.get('user_email')
 
-        # Set the selected user as active
-        user = User.objects.get(email=user_email)
+#         # Set the selected user as active
+#         user = User.objects.get(email=user_email)
+#         logger.info(f'user found -> {user}')
+
+#         # Authenticate the visitor as the selected user
+#         user = authenticate(email=user.email, password="password123")
+#         if user is not None:
+#             login(request, user)
+#             logger.info(f"user {user.get_full_name()} authenticated and logged in")
+#             # Set session timeout to DEMO_DELAY seconds (3600=1h)
+#             delay = timedelta(seconds=int(DEMO_DELAY))
+#             request.session['expiry_time'] = dumps(datetime.now() + delay, indent=4, sort_keys=True, default=str) # prevents json-serialized format error
+
+#              # Connect session_end_signal to user_logged_out signal
+#             user_logged_out.connect(session_end_handler)
+
+#             # Render a success page or redirect to a dashboard
+#             logger.info(f"request -> {request}")
+#             messages.success(request, _("You are now connected as a demo user for the next {duration} mins. Enjoy exploring aeternam!").format(duration=int(int(DEMO_DELAY)/60)))
+#             return redirect('albums:albums_view')  # Adjust the URL name as per your project
+#         else:
+#             return HttpResponse("Authentication failed.")
+#     # Render the form page if it's a GET request
+#     return render(request, 'core/demo.html')
+
+class DemoView(FormView):
+    form_class = DemoForm
+    template_name = 'core/demo.html'
+    success_url = reverse_lazy('main')
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('main')
+
+        return self.render_to_response(self.get_context_data())
+
+    def form_valid(self, form):
+
+        subprocess.run(['./staticfiles/shell_scripts/fake_data_creation.sh'], check=True)
+
+        email = self.request.POST.get('user_email')
+        user = User.objects.get(email=email)
         logger.info(f'user found -> {user}')
-
-        # Authenticate the visitor as the selected user
         user = authenticate(email=user.email, password="password123")
+
         if user is not None:
-            login(request, user)
+            login(self.request, user)
             logger.info(f"user {user.get_full_name()} authenticated and logged in")
             # Set session timeout to DEMO_DELAY seconds (3600=1h)
             delay = timedelta(seconds=int(DEMO_DELAY))
-            request.session['expiry_time'] = dumps(datetime.now() + delay, indent=4, sort_keys=True, default=str) # prevents json-serialized format error
+            self.request.session['expiry_time'] = dumps(datetime.now() + delay, indent=4, sort_keys=True, default=str) # prevents json-serialized format error
 
              # Connect session_end_signal to user_logged_out signal
             user_logged_out.connect(session_end_handler)
 
             # Render a success page or redirect to a dashboard
-            logger.info(f"request -> {request}")
-            messages.success(request, _("You are now connected as a demo user for the next {duration} mins. Enjoy exploring aeternam!").format(duration=int(int(DEMO_DELAY)/60)))
+            logger.info(f"request -> {self.request}")
+            messages.success(self.request, _("You are now connected as a demo user for the next {duration} mins. Enjoy exploring aeternam!").format(duration=int(int(DEMO_DELAY)/60)))
             return redirect('albums:albums_view')  # Adjust the URL name as per your project
         else:
             return HttpResponse("Authentication failed.")
-    # Render the form page if it's a GET request
-    return render(request, 'core/demo.html')
-
 
 
 from django.dispatch import Signal
