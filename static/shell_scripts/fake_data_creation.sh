@@ -32,6 +32,6 @@ done
 # python manage.py create_albums 3 "robert@example.com" --fill_photos 4 4 4 --access "john@example.com"
 
 echo "Creating albums for our 'the office' characters.."
-# python manage.py create_albums 2 "m.scott@dundermifflin.com" --access "all" --album_name "Holidays" "Personal"
-# python manage.py create_albums 1 "j.halpert@dundermifflin.com" --access "p.beesly@dundermifflin.com" --album_name "Pam and I"
-# python manage.py create_albums 1 "k.malone@dundermifflin.com" --access "all" --album_name "Kevin"
+python manage.py create_albums 2 "m.scott@dundermifflin.com" --access "all" --album_name "Holidays" "Personal"
+python manage.py create_albums 1 "j.halpert@dundermifflin.com" --access "p.beesly@dundermifflin.com" --album_name "Pam and I"
+python manage.py create_albums 1 "k.malone@dundermifflin.com" --access "all" --album_name "Kevin"
