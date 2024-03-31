@@ -218,10 +218,15 @@ session_end_signal = Signal()
 # Define a signal handler
 def session_end_handler(sender, **kwargs):
     # Execute the second shell script here
-    try:
-        subprocess.run(['./staticfiles/shell_scripts/fake_data_deletion.sh'], check=True)
-    except subprocess.CalledProcessError as e:
-        logger.error(f"Error executing the second script: {e}")
+    # try:
+    #     subprocess.run(['./staticfiles/shell_scripts/fake_data_deletion.sh'], check=True)
+    # except subprocess.CalledProcessError as e:
+    #     logger.error(f"Error executing the second script: {e}")
+
+    user = kwargs.get('user')
+    if user:
+        logger.info(f"User {user.email} will be deleted.")
+        user.delete()
 
      # Create a response with a refresh header to force a page refresh
     response = HttpResponse()

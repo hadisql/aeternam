@@ -51,14 +51,15 @@ class Command(BaseCommand):
                 album_title = f"Album {i}"
 
             album, created = Album.objects.get_or_create(title=album_title, creator=user)
-            self.stdout.write(self.style.SUCCESS(f"Album '{album_title}' created successfully."))
+            if created:
+                self.stdout.write(self.style.SUCCESS(f"Album '{album_title}' created successfully."))
 
             # CASE 1 : album names are provided -> automatically fill with corresponding photos from "fake_albums"
             if album_names and created:
                 # if album names are provided, it should check if a corresponding album exists in mediafiles/fake_albums
                 self.fill_given_photos(album)
             else:
-                logger.info(f"Album {album.title} already exists. Skipped.")
+                self.stdout.write(self.style.WARNING(f"Album {album.title} already exists. Skipped."))
 
             # CASE 2 : Fill album with random photos from "fake_photos" folder
             if fill_photos and i < len(fill_photos):
@@ -69,7 +70,7 @@ class Command(BaseCommand):
                     self.fill_random_photos(album, num_photos, photo_files_cycle)
 
 
-            # Case where --access set to "all"
+            # Case where --access set to "all" -> fill access_emails list with user emails
             if access_emails and len(access_emails) == 1 and access_emails[0] == "all":
                 logger.info(f"Access will be given to ALL user's relations")
                 relations = Relation.objects.filter(models.Q(user_receiving=user) | models.Q(user_sending=user))
@@ -85,15 +86,21 @@ class Command(BaseCommand):
                 for email in access_emails:
                     try:
                         access_user = User.objects.get(email=email)
-                        AlbumAccess.objects.get_or_create(album=album, user=access_user)
-                        self.stdout.write(self.style.SUCCESS(f"Access is given to {email}."))
+                        _, a_access_created = AlbumAccess.objects.get_or_create(album=album, user=access_user)
+                        if a_access_created:
+                            self.stdout.write(self.style.SUCCESS(f"Access is given to {access_user.get_full_name() or email}."))
+                        else:
+                            self.stdout.write(self.style.WARNING(f"Album Access already existing for {access_user.get_full_name() or email}."))
                         album_photos = Photo.objects.filter(album=album)
                         # logger.info(f"album has photos : {album_photos}")
                         if album_photos:
                             for photo in album_photos:
                                 # logger.info(f"granting photo access to photo {photo.id}")
-                                PhotoAccess.objects.get_or_create(photo=photo, user=access_user)
-                                self.stdout.write(self.style.SUCCESS(f"Access is given for photo {photo.id}."))
+                                _, p_access_created = PhotoAccess.objects.get_or_create(photo=photo, user=access_user)
+                                if p_access_created:
+                                    self.stdout.write(self.style.SUCCESS(f"Access given for photo {photo.id}."))
+                                else:
+                                    self.stdout.write(self.style.WARNING(f"Photo Access already existing for {access_user.get_full_name() or email}."))
                     except User.DoesNotExist:
                         self.stdout.write(self.style.ERROR(f"User with email '{email}' does not exist."))
                 # we add photo accesses for the user himself

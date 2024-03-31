@@ -7,33 +7,22 @@ NAMES=("Michael Scott" "Jim Halpert" "Pam Beesly" "Kevin Malone")
 EMAILS=("m.scott@dundermifflin.com" "j.halpert@dundermifflin.com" "p.beesly@dundermifflin.com" "k.malone@dundermifflin.com")
 
 # Create users
-echo "Creating users..."
+echo "Creating users from the office.."
 for i in "${!EMAILS[@]}"; do
-  email="${EMAILS[$i]}"
-  name="${NAMES[$i]}"
-
-  # Check if fake data already in db
-  echo "Checking if fake data already in db.."
-  sleep 1
-  python manage.py shell <<EOF
-from django.contrib.auth import get_user_model
-User = get_user_model()
-try:
-  user = User.objects.get(email="$email")
-  if user:
-    user.delete()
-    print(f'user with email $email was in db. it is now deleted')
-except User.DoesNotExist:
-  print('User with email $email does not exist. It will be created')
-EOF
-
-  # Create user
-  python manage.py create_users "$email" --password 'password123' --full_name "$name" --change_existing
+  EMAIL="${EMAILS[$i]}"
+  NAME="${NAMES[$i]}"
+  python manage.py create_user "$EMAIL" --password 'password123' --full_name "$NAME"
 done
 
 # Create Relation object that bonds all users
 echo "Creating relation between users..."
-python manage.py create_users "${EMAILS[@]}" --relationbetween
+for i in "${!EMAILS[@]}";do
+  for ((j=i+1; j<${#EMAILS[@]}; j++)); do
+      # incrementing j because the relation object is unique by pair (symmetry)
+      echo "creating relation between ${NAMES[$i]} and ${NAMES[$j]}"
+      python manage.py create_relation ${EMAILS[$i]} ${EMAILS[$j]}
+  done
+done
 
 # Create albums for 3 users
 # echo "Creating albums for 3 users..."
@@ -43,6 +32,6 @@ python manage.py create_users "${EMAILS[@]}" --relationbetween
 # python manage.py create_albums 3 "robert@example.com" --fill_photos 4 4 4 --access "john@example.com"
 
 echo "Creating albums for our 'the office' characters.."
-python manage.py create_albums 2 "m.scott@dundermifflin.com" --access "all" --album_name "Holidays" "Personal"
-python manage.py create_albums 1 "j.halpert@dundermifflin.com" --access "p.beesly@dundermifflin.com" --album_name "Pam and I"
-python manage.py create_albums 1 "k.malone@dundermifflin.com" --access "all" --album_name "Kevin"
+# python manage.py create_albums 2 "m.scott@dundermifflin.com" --access "all" --album_name "Holidays" "Personal"
+# python manage.py create_albums 1 "j.halpert@dundermifflin.com" --access "p.beesly@dundermifflin.com" --album_name "Pam and I"
+# python manage.py create_albums 1 "k.malone@dundermifflin.com" --access "all" --album_name "Kevin"
