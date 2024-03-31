@@ -4,6 +4,10 @@
 ############# PREDEPLOYMENT : ERASING MEDIAFILES ###########
 ############################################################
 
+# Executing the emails_to_json.sh script
+chmod +x static/shell_scripts/emails_to_json.sh
+static/shell_scripts/emails_to_json.sh
+
 # Check if the correct number of arguments is provided
 if [ "$#" -ne 1 ]; then
     echo "Usage: $0 [aeternam | aeternam-dev]"
@@ -68,7 +72,6 @@ sleep 1
 
 echo "giving -x permissions to fake_data shell scripts.."
 ssh root@aeternam.hadisqalli.com "chmod +x /var/lib/dokku/data/storage/$parameter/staticfiles/shell_scripts/*"
-ssh root@aeternam.hadisqalli.com "dokku enter $parameter web && cd static/shell_scripts && chmod +x ./emails_to_json.sh && ./emails_to_json.sh && python manage.py collectstatic --no-input"
 
 echo '----- first step: syncing local fake data files with temp folder -----'
 rsync -azP mediafiles/fake_profile_pictures/ root@aeternam.hadisqalli.com:/var/lib/dokku/data/storage/$parameter/temp/fake_profile_pictures

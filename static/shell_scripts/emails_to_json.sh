@@ -2,7 +2,7 @@
 
 echo "Importing demo users email list to json file"
 # Retrieve Fake data from the creation script
-creation_script_path="./fake_data_creation.sh"
+creation_script_path="static/shell_scripts/fake_data_creation.sh"
 if [ -f "$creation_script_path" ]; then
     # Extract variable values using grep
     NAMES_STR=$(grep '^NAMES=(' "$creation_script_path" | sed 's/)$//')
@@ -23,7 +23,7 @@ else
 fi
 
 # Path to the JSON file
-json_file="./emails.json"
+json_file="static/shell_scripts/emails.json"
 
 # Create a JSON array
 echo "[" > "$json_file"
