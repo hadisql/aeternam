@@ -24,8 +24,8 @@ if [ -f "$json_file" ]; then
     # Compare the checksums to determine if the file was modified
     if [ "$initial_checksum" != "$final_checksum" ]; then
         current_date_time=$(date +"%Y-%m-%d %T")
-        # git commit -am "Demo emails update during predeployment - $current_date_time"
-        echo "Demo emails update during predeployment - $current_date_time"
+        git commit -am "Demo emails update during predeployment - $current_date_time"
+        # echo "Demo emails update during predeployment - $current_date_time"
     else
         echo "Warning: Failed to detect modifications to emails.json."
     fi
