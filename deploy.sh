@@ -4,9 +4,38 @@
 ############# PREDEPLOYMENT : ERASING MEDIAFILES ###########
 ############################################################
 
-# Executing the emails_to_json.sh script
-chmod +x static/shell_scripts/emails_to_json.sh
-static/shell_scripts/emails_to_json.sh
+###### 1 : Building emails.json based on "fake_data_creation" script
+
+# Set the path to emails.json
+json_file="static/shell_scripts/emails.json"
+
+# Check if emails.json exists
+if [ -f "$json_file" ]; then
+    # Get the initial checksum of the file
+    initial_checksum=$(md5sum "$json_file" | awk '{ print $1 }')
+
+    # Execute the script to generate/update emails.json
+    chmod +x static/shell_scripts/emails_to_json.sh
+    static/shell_scripts/emails_to_json.sh
+
+    # Get the checksum of the file after execution
+    final_checksum=$(md5sum "$json_file" | awk '{ print $1 }')
+
+    # Compare the checksums to determine if the file was modified
+    if [ "$initial_checksum" != "$final_checksum" ]; then
+        current_date_time=$(date +"%Y-%m-%d %T")
+        # git commit -am "Demo emails update during predeployment - $current_date_time"
+        echo "Demo emails update during predeployment - $current_date_time"
+    else
+        echo "Warning: Failed to detect modifications to emails.json."
+    fi
+else
+    # File doesn't exist, create it
+    echo "Error: emails.json doesn't exist. Run \"emails_to_json.sh\" manually before executing this script."
+    exit 1
+fi
+
+###### 2 : Check if deploy script passed with correct argument
 
 # Check if the correct number of arguments is provided
 if [ "$#" -ne 1 ]; then
@@ -21,6 +50,8 @@ if [ "$1" != "aeternam" ] && [ "$1" != "aeternam-dev" ]; then
 fi
 
 parameter="$1"
+
+###### 3 : Cleaning dokku mediafiles
 
 echo "Pre-deployment script.."
 echo "Trying to delete fake folders in mediafiles if present.."
