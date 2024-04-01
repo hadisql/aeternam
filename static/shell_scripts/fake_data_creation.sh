@@ -3,8 +3,8 @@
 # Define arrays for fake data
 # NAMES=("John Doe" "Jane Smith" "Michael Johnson" "Emily Brown" "Robert Williams")
 # EMAILS=("john@example.com" "jane@example.com" "michael@example.com" "emily@example.com" "robert@example.com")
-NAMES=("Michael Scott" "Jim Halpert" "Pam Beesly" "Kevin Malone" "Dwight Schrute")
-EMAILS=("m.scott@dundermifflin.com" "j.halpert@dundermifflin.com" "p.beesly@dundermifflin.com" "k.malone@dundermifflin.com" "d.schrute@dundermifflin.com")
+NAMES=("Michael Scott" "Jim Halpert" "Pam Beesly" "Kevin Malone" "Dwight Schrute" "Andy Bernard")
+EMAILS=("m.scott@dundermifflin.com" "j.halpert@dundermifflin.com" "p.beesly@dundermifflin.com" "k.malone@dundermifflin.com" "d.schrute@dundermifflin.com" "a.bernard@dundermifflin.com")
 
 # Create users
 echo "Creating users from the office.."
