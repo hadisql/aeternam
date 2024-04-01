@@ -35,6 +35,8 @@ fake_data_test.sh
 local_postdeploy.sh
 local_predeploy.sh
 
+quicktest.sh
+
 # Byte-compiled / optimized / DLL files
 *.py[cod]
 *$py.class

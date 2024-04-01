@@ -5,34 +5,15 @@
 {% block title %}{% trans "Demo" %}{% endblock %}
 
 {% block body %}
-<!-- <div class="bg-base-100">
+<div class="bg-base-100 min-h-screen">
   <div class="mx-auto max-w-2xl px-6 py-10 sm:px-8 sm:py-16 sm:pb-16 lg:max-w-7xl lg:px-8">
     <div id="showAfterSubmission" class="hidden">
       {% include 'partials/demo_typing.html' %}
     </div>
     <div id="targetElement" class="mt-6"></div>
-    <form id="demoForm" method="post" action="{% url 'core:get_a_demo' %}">
-      <select name="user_email" id="user_email" onchange="toggleSubmitButton()" class="select select-bordered w-full max-w-xs text-base">
-        <option disabled selected>{% trans "Choose a fake user to connect with" %}</option>
-        <option value="m.scott@dundermifflin.com">🕶️ Michael Scott </option>
-        <option value="p.beesly@dundermifflin.com">🎨 Pam Beesly </option>
-        <option value="j.halpert@dundermifflin.com">✏️ Jim Halpert </option>
-        <option value="k.malone@dundermifflin.com">🍪 Kevin Malone </option>
-        <option value="d.schrute@dundermifflin.com">🌽 Dwight Schrute</option>
-      </select>
-      <button type="submit" id="submitBtn" class="btn" disabled>{% trans "Get a Demo" %}</button>
-    </form>
-  </div>
-</div> -->
-<div class="bg-base-100">
-  <div class="mx-auto max-w-2xl px-6 py-10 sm:px-8 sm:py-16 sm:pb-16 lg:max-w-7xl lg:px-8">
-    <div id="showAfterSubmission" class="hidden">
-      {% include 'partials/demo_typing.html' %}
-    </div>
-    <div id="targetElement" class="mt-6"></div>
-    <form id="demoForm" method="post" action="{% url 'core:get_a_demo' %}">
+    <h2 class="font-semibold ">Choose a fake user to connect with: </h2>
+    <form class="flex gap-3" id="demoForm" method="post" action="{% url 'core:get_a_demo' %}">
       {% csrf_token %}
-      <h2 class="font-semibold">Choose a fake user to connect with: </h2>
       {{ form.user_email }}
       <button type="submit" id="submitBtn" class="btn" >{% trans "Get a Demo" %}</button>
     </form>

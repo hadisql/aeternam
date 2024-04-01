@@ -40,7 +40,10 @@ ssh root@aeternam.hadisqalli.com "
         echo 'Error: Directory $directory not found'
     fi
 "
-echo '-----------------------------------'
+echo '--------------------------------------------------------------------------------------'
+echo '----------------- step 1 : predeployment done, mediafiles erased ---------------------'
+echo '--------------------------------------------------------------------------------------'
+
 sleep 1
 
 ############################################################
@@ -63,7 +66,9 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-echo '-----------------------------------'
+echo '--------------------------------------------------------------------------------------'
+echo '--------------------- step 2 : deployment done to $parameter -------------------------'
+echo '--------------------------------------------------------------------------------------'
 sleep 1
 
 #################################################################
@@ -81,3 +86,7 @@ rsync -azP mediafiles/fake_albums/ root@aeternam.hadisqalli.com:/var/lib/dokku/d
 
 echo "----- second step: Copying fake data files from 'temp' folder.. -----"
 ssh root@aeternam.hadisqalli.com "cp -rv /var/lib/dokku/data/storage/$parameter/temp/fake_* /var/lib/dokku/data/storage/$parameter/mediafiles"
+
+echo '--------------------------------------------------------------------------------------'
+echo '-------------------------- step 3 : postdeployment done  -----------------------------'
+echo '--------------------------------------------------------------------------------------'
