@@ -36,3 +36,4 @@ python manage.py create_albums 2 "m.scott@dundermifflin.com" --access "all" --al
 python manage.py create_albums 1 "j.halpert@dundermifflin.com" --access "all" --album_name "Pam and I"
 python manage.py create_albums 1 "k.malone@dundermifflin.com" --access "all" --album_name "Kevin"
 python manage.py create_albums 1 "d.schrute@dundermifflin.com" --access "all" --album_name "Halloween"
+python manage.py create_albums 1 "a.bernard@dundermifflin.com" --access "all" --album_name "Andy"

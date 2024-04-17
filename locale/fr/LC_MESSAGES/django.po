@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-27 14:45+0000\n"
+"POT-Creation-Date: 2024-04-17 13:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -765,10 +765,6 @@ msgstr "L'album a été supprimé avec succès"
 msgid "Give a feedback and/or ideas.."
 msgstr "Donner votre avis et/ou des idées.."
 
-#: core/middleware.py:37
-msgid "You were logged out of the demo session."
-msgstr "Votre session démo a expirée."
-
 #: core/templates/core/about.html:5 core/templates/core/about.html:12
 #: core/templates/core/base.html:41
 msgid "About"
@@ -847,11 +843,7 @@ msgstr ""
 msgid "Demo"
 msgstr "Démo"
 
-#: core/templates/core/demo.html:17
-msgid "Choose a fake user to connect with"
-msgstr "Choisissez un faux compte"
-
-#: core/templates/core/demo.html:23
+#: core/templates/core/demo.html:18
 msgid "Get a Demo"
 msgstr "Lancer la Démo"
 
@@ -967,7 +959,7 @@ msgstr "{} n'aura plus accès à votre album"
 msgid "{username} can now access your album ({number} photos)"
 msgstr "{username} a maintenant accès à votre album ({number} photos)"
 
-#: core/views.py:204
+#: core/views.py:243
 #, python-brace-format
 msgid ""
 "You are now connected as a demo user for the next {duration} mins. Enjoy "
@@ -2324,6 +2316,12 @@ msgstr ""
 #: venv/lib/python3.10/site-packages/django/views/templates/default_urlconf.html:248
 msgid "Connect, get help, or contribute"
 msgstr ""
+
+#~ msgid "You were logged out of the demo session."
+#~ msgstr "Votre session démo a expirée."
+
+#~ msgid "Choose a fake user to connect with"
+#~ msgstr "Choisissez un faux compte"
 
 #~ msgid "hide connections on your profile"
 #~ msgstr "masquer vos connexions sur votre profile"

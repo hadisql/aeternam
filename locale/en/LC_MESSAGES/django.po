@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-11 13:51+0000\n"
+"POT-Creation-Date: 2024-04-17 13:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -256,6 +256,14 @@ msgstr ""
 msgid "I forgot my password"
 msgstr ""
 
+#: accounts/templates/accounts/login.html:84
+msgid "Or try a demo with a "
+msgstr ""
+
+#: accounts/templates/accounts/login.html:85
+msgid "fake user"
+msgstr ""
+
 #: accounts/templates/accounts/register.html:28
 #: accounts/templates/accounts/register.html:45
 msgid "Welcome to Æternam"
@@ -471,11 +479,11 @@ msgstr ""
 msgid "{} has accepted your connection request"
 msgstr ""
 
-#: aeternam/settings.py:174
+#: aeternam/settings.py:176
 msgid "French"
 msgstr ""
 
-#: aeternam/settings.py:175
+#: aeternam/settings.py:177
 msgid "English"
 msgstr ""
 
@@ -617,37 +625,37 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: albums/templates/albums/albums.html:42
-#: albums/templates/albums/albums.html:43
+#: albums/templates/albums/albums.html:31
+#: albums/templates/albums/albums.html:32
 msgid "Albums you created"
 msgstr ""
 
-#: albums/templates/albums/albums.html:74
-#: albums/templates/albums/albums.html:169
+#: albums/templates/albums/albums.html:63
+#: albums/templates/albums/albums.html:158
 msgid "Empty album"
 msgstr ""
 
-#: albums/templates/albums/albums.html:76
-#: albums/templates/albums/albums.html:171
+#: albums/templates/albums/albums.html:65
+#: albums/templates/albums/albums.html:160
 msgid "No cover photo"
 msgstr ""
 
-#: albums/templates/albums/albums.html:82
-#: albums/templates/albums/albums.html:177
+#: albums/templates/albums/albums.html:71
+#: albums/templates/albums/albums.html:166
 msgid "uploaded by"
 msgid_plural "uploaded by"
 msgstr[0] ""
 msgstr[1] ""
 
-#: albums/templates/albums/albums.html:113
+#: albums/templates/albums/albums.html:102
 msgid "No albums yet !"
 msgstr ""
 
-#: albums/templates/albums/albums.html:117
+#: albums/templates/albums/albums.html:106
 msgid "create a new album"
 msgstr ""
 
-#: albums/templates/albums/albums.html:138
+#: albums/templates/albums/albums.html:127
 msgid "Albums shared with you"
 msgstr ""
 
@@ -873,9 +881,11 @@ msgstr ""
 msgid "{username} can now access your album ({number} photos)"
 msgstr ""
 
-#: core/views.py:190
+#: core/views.py:243
+#, python-brace-format
 msgid ""
-"You are connected as a demo user for the next hour. Enjoy exploring aeternam!"
+"You are now connected as a demo user for the next {duration} mins. Enjoy "
+"exploring aeternam!"
 msgstr ""
 
 #: photos/forms.py:17
