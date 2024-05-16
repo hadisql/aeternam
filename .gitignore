@@ -34,6 +34,7 @@ fake_data_test.sh
 
 local_postdeploy.sh
 local_predeploy.sh
+deploy.sh
 
 quicktest.sh
 
