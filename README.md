@@ -1,5 +1,9 @@
 # aeternam
 ## The purpose of this project is to create a functional website which allows users to share photos with other members, comment photos and more.
+
+
+<img src="static/images/website_presentation.gif">
+
 <h2> A good opportunity for me to improve my skills in full-stack web development using:
 <br><br>
 
