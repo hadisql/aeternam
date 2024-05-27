@@ -17,6 +17,9 @@ from django.urls import reverse_lazy
 from django.core.mail import send_mail
 from .models import Feedback
 
+import json
+from django.conf import settings
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -166,7 +169,6 @@ from django.contrib.auth.signals import user_logged_out
 import os
 import subprocess
 from datetime import datetime, timedelta
-from json import dumps
 
 User = get_user_model()
 DEMO_DELAY = os.getenv('DEMO_DELAY_SECONDS')
@@ -233,7 +235,7 @@ class DemoView(FormView):
             logger.info(f"user {user.get_full_name()} authenticated and logged in")
             # Set session timeout to DEMO_DELAY seconds (3600=1h)
             delay = timedelta(seconds=int(DEMO_DELAY))
-            self.request.session['expiry_time'] = dumps(datetime.now() + delay, indent=4, sort_keys=True, default=str) # prevents json-serialized format error
+            self.request.session['expiry_time'] = json.dumps(datetime.now() + delay, indent=4, sort_keys=True, default=str) # prevents json-serialized format error
 
              # Connect session_end_signal to user_logged_out signal
             user_logged_out.connect(session_end_handler)
@@ -261,9 +263,11 @@ def session_end_handler(sender, **kwargs):
 
     user = kwargs.get('user')
     if user:
-        logger.info(f"User {user.email} will be deleted.")
-        user.delete()
-
+        if check_emails_in_json(user):
+            logger.info(f"User {user.email} is a fake user and will be deleted.")
+            user.delete()
+        else:
+            logger.info(f"User {user.email} is not a fake user and will not be deleted.")
      # Create a response with a refresh header to force a page refresh
     response = HttpResponse()
     response['Refresh'] = '0; url=/accounts/login'  # Adjust the URL as needed
@@ -271,3 +275,17 @@ def session_end_handler(sender, **kwargs):
 
 # Connect the signal handler
 session_end_signal.connect(session_end_handler)
+
+
+def check_emails_in_json(user):
+    file_path = os.path.join(settings.STATIC_ROOT, 'shell_scripts/emails.json')
+
+    with open(file_path, 'r') as file:
+        email_data = json.load(file)
+
+    # Extract emails from the JSON data
+    email_list = [entry['email'] for entry in email_data]
+    # Check if user email is in the email_list
+    if user.email in email_list:
+        return True
+    return False
